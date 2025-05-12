@@ -62,7 +62,7 @@
 }
 
 #footer{
-    width: 100%;
+    width: auto;
     max-width: none;
     grid-area: footer;
     background-color: #fff8e4;
@@ -89,11 +89,23 @@
 
 #language{
     text-align: center;
-    padding: 10px;
+    justify-self: center;
+    background-color: #945c31;
+    margin: 5px;
+    border-radius: 20px;
+    border-color: transparent;
+    width: 120px;
+    height: 30px;
 }
 #country{
     text-align: center;
-    padding: 10px;
+    justify-self: center;
+    background-color: #945c31;
+    margin: 5px;
+    border-radius: 20px;
+    border-color: transparent;
+    width: 120px;
+    height: 30px;
 }
 #theme{
     text-align: center;
@@ -103,6 +115,7 @@
     height: 30px;
     border-radius: 20px;
     border-color: transparent;
+    margin: 5px;
 }
 
 #footer-logo{
