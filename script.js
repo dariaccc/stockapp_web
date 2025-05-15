@@ -1,11 +1,15 @@
 
-link = "https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=API_KEY"
+import {API_KEY} from './config.js';
+const link = `https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=${API_KEY}`
 
 if ("geolocation" in navigator){
     console.log("Geolocation is available");
 } else {
     console.log("Geolocation is not available");
 }
+
+let lat = ""
+let lng = ""
 
 function success(position) {
     console.log(position)
