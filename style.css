@@ -1,5 +1,6 @@
 *{
     font-family: 'Times New Roman', Times, serif;
+    margin: 0px;
 }
 
 .container{
@@ -16,15 +17,15 @@
 }
 
 #menu{
-    background-color: #eeae77;
+    background-color: #172033;
     padding: 20px;
     text-align: center;
 }
 
 .buttons{
     grid-area: menu;
-    color: rgb(0, 0, 0);
-    background-color: #ffffff;
+    color: rgb(255, 255, 255);
+    background-color: #111827;
     border-color: transparent;
     width: 12%;
     height: 30px;
@@ -34,19 +35,19 @@
 }
 
 .buttons:hover{
-    background-color: #945c31;
+    background-color: #857b9e;
 }
 
 #dash_button{
-    background-color: #e27c2e !important;
+    background-color: #4F46E5 !important;
 }
 
 #dash_button:hover{
-    background-color: rgb(255, 198, 155) !important;
+    background-color: rgb(160, 156, 223) !important;
 }
 
 #logout_button{
-    background-color: #910c0c !important;
+    background-color: #EF4444 !important;
     color: white !important;
     margin-right: 0px !important;
 }
@@ -57,7 +58,9 @@
 
 .content{
     grid-area: content;
+    height: 550px;
     padding: 10px;
+    margin: 0px;
     text-align: center;
 }
 
@@ -65,7 +68,8 @@
     width: auto;
     max-width: none;
     grid-area: footer;
-    background-color: #fff8e4;
+    background-color: #172033;
+    color:rgb(255, 255, 255);
     text-align: center;
     padding: 20px;
     display: grid;
