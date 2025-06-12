@@ -1,0 +1,541 @@
+/* ===================================
+   VANTYX - Registration Page Styles
+   =================================== */
+
+/* Main Layout */
+.main-container {
+    display: flex;
+    min-height: 100vh;
+    padding-top: 80px; /* Account for fixed header */
+    justify-content: center;
+    align-items: flex-start;
+    padding-bottom: 120px; /* Account for footer */
+}
+
+/* Registration Section */
+.register-section {
+    flex: 1;
+    max-width: 800px;
+    padding: var(--spacing-xl);
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+    position: relative;
+    overflow: hidden;
+}
+
+.register-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(74, 144, 226, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(231, 76, 60, 0.1) 0%, transparent 50%);
+    animation: backgroundShift 8s ease-in-out infinite alternate;
+    z-index: 1;
+}
+
+@keyframes backgroundShift {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.6; }
+}
+
+/* Registration Container */
+.register-container {
+    background: var(--glass-bg);
+    border: 2px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xxl);
+    backdrop-filter: blur(15px);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    z-index: 10;
+    animation: slideUp 0.8s ease-out;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.register-container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+    border-radius: var(--radius-xl);
+    z-index: -1;
+    opacity: 0.4;
+    animation: borderGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes borderGlow {
+    0% { opacity: 0.2; }
+    100% { opacity: 0.6; }
+}
+
+/* Brand Title */
+.brand-title {
+    color: var(--text-primary);
+    font-size: 3rem;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    text-shadow: var(--shadow-text);
+    letter-spacing: 3px;
+    background: linear-gradient(45deg, var(--primary-color), var(--text-primary), var(--primary-light));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: titleShine 4s ease-in-out infinite;
+}
+
+@keyframes titleShine {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Registration Form */
+.register-form-wrapper {
+    animation: fadeIn 1s ease-out 0.3s both;
+}
+
+.register-title {
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.register-form .form-group {
+    margin-bottom: var(--spacing-lg);
+    position: relative;
+    transition: var(--transition-standard);
+}
+
+.register-form .form-group:hover {
+    transform: translateY(-2px);
+}
+
+.register-form .form-group:focus-within {
+    transform: translateY(-3px);
+}
+
+.register-form .form-group label {
+    display: block;
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.register-form .form-group input {
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 2px solid var(--input-border);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    font-size: var(--font-size-base);
+    transition: var(--transition-standard);
+    backdrop-filter: blur(5px);
+}
+
+.register-form .form-group input:focus {
+    border-color: var(--input-focus);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 
+        0 0 0 3px rgba(74, 144, 226, 0.1),
+        0 0 20px rgba(74, 144, 226, 0.3);
+    outline: none;
+}
+
+.register-form .form-group input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.8;
+}
+
+/* Form Row for Side-by-Side Fields */
+.form-row {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-group-half {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* Date Input Styling */
+input[type="date"] {
+    position: relative;
+    cursor: pointer;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="%23ffffff" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>') no-repeat;
+    background-size: 20px;
+    color: transparent;
+    cursor: pointer;
+}
+
+/* Checkbox Styling */
+.checkbox-group {
+    margin-bottom: var(--spacing-xl);
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+    color: var(--text-secondary);
+}
+
+.checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--input-border);
+    border-radius: var(--radius-sm);
+    background: var(--input-bg);
+    position: relative;
+    transition: var(--transition-standard);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.checkbox-label a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+.checkbox-label a:hover {
+    text-decoration: underline;
+    color: var(--primary-light);
+}
+
+/* Register Button */
+.register-btn {
+    width: 100%;
+    padding: var(--spacing-lg);
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+    color: var(--text-primary);
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: var(--transition-standard);
+    margin-bottom: var(--spacing-lg);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+.register-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: var(--transition-standard);
+}
+
+.register-btn:hover {
+    background: linear-gradient(45deg, var(--primary-dark), var(--primary-color));
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+}
+
+.register-btn:hover::before {
+    left: 100%;
+}
+
+.register-btn:active {
+    transform: translateY(-1px);
+}
+
+.register-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Button Loading State */
+.btn-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.loader {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid var(--text-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Login Link */
+.login-link {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    animation: fadeIn 1s ease-out 0.6s both;
+}
+
+.login-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-standard);
+    position: relative;
+}
+
+.login-link a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: var(--transition-standard);
+}
+
+.login-link a:hover::after {
+    width: 100%;
+}
+
+.login-link a:hover {
+    color: var(--primary-light);
+}
+
+/* Field Validation States */
+.form-group.error input {
+    border-color: var(--accent-red);
+    background: rgba(255, 68, 68, 0.1);
+}
+
+.form-group.success input {
+    border-color: var(--accent-color);
+    background: rgba(0, 255, 65, 0.1);
+}
+
+.field-error {
+    color: var(--accent-red);
+    font-size: var(--font-size-xs);
+    margin-top: var(--spacing-xs);
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 68, 68, 0.1);
+    border-left: 3px solid var(--accent-red);
+}
+
+.field-success {
+    color: var(--accent-color);
+    font-size: var(--font-size-xs);
+    margin-top: var(--spacing-xs);
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-sm);
+    background: rgba(0, 255, 65, 0.1);
+    border-left: 3px solid var(--accent-color);
+}
+
+/* Success Modal */
+.modal .modal-content {
+    max-width: 500px;
+    text-align: center;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--bg-primary);
+    margin: 0 auto var(--spacing-lg);
+    animation: successPulse 2s ease-in-out infinite;
+}
+
+@keyframes successPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.modal-body p {
+    margin-bottom: var(--spacing-md);
+    color: var(--text-secondary);
+}
+
+.modal-body p:last-child {
+    margin-bottom: 0;
+}
+
+.modal-footer {
+    margin-top: var(--spacing-xl);
+}
+
+/* Input Formatting */
+#cardDetails {
+    letter-spacing: 2px;
+}
+
+#expiry {
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+#cvv {
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+#pin {
+    text-align: center;
+    letter-spacing: 3px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-container {
+        padding: var(--spacing-md);
+        padding-top: 90px;
+        padding-bottom: 140px;
+    }
+    
+    .register-section {
+        padding: var(--spacing-md);
+    }
+    
+    .register-container {
+        padding: var(--spacing-xl);
+    }
+    
+    .brand-title {
+        font-size: 2.5rem;
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .form-group-half {
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .register-form .form-group input {
+        padding: var(--spacing-md);
+        font-size: var(--font-size-base);
+    }
+    
+    .register-btn {
+        padding: var(--spacing-md);
+        font-size: var(--font-size-base);
+    }
+}
+
+@media (max-width: 576px) {
+    .register-container {
+        padding: var(--spacing-lg);
+        margin: var(--spacing-sm);
+    }
+    
+    .brand-title {
+        font-size: 2rem;
+        letter-spacing: 2px;
+    }
+    
+    .register-title {
+        font-size: 1.5rem;
+    }
+    
+    .checkbox-label {
+        font-size: var(--font-size-xs);
+    }
+    
+    .modal-content {
+        margin: var(--spacing-md);
+        padding: var(--spacing-lg);
+    }
+    
+    .success-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+}
+
+/* Animation Delays for Form Fields */
+.register-form .form-group:nth-child(1) { animation-delay: 0.1s; }
+.register-form .form-group:nth-child(2) { animation-delay: 0.2s; }
+.register-form .form-group:nth-child(3) { animation-delay: 0.3s; }
+.register-form .form-group:nth-child(4) { animation-delay: 0.4s; }
+.register-form .form-group:nth-child(5) { animation-delay: 0.5s; }
+.register-form .form-group:nth-child(6) { animation-delay: 0.6s; }
+.register-form .form-group:nth-child(7) { animation-delay: 0.7s; }
+.register-form .form-row { animation-delay: 0.8s; }
+.register-form .form-group:nth-last-child(3) { animation-delay: 0.9s; }
+.register-form .checkbox-group { animation-delay: 1s; }
+.register-btn { animation-delay: 1.1s; }
+
+.register-form .form-group,
+.register-form .form-row,
+.register-form .checkbox-group,
+.register-btn {
+    animation: slideInLeft 0.6s ease-out both;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

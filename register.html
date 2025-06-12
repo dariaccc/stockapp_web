@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VANTYX - Registration</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/register.css">
+</head>
+<body class="dark-theme">
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">Registration</div>
+            <nav class="nav-links">
+                <a href="#home" data-page="home">Home</a>
+                <a href="#radar" data-page="radar">Radar</a>
+                <a href="#pro" data-page="pro">Pro</a>
+            </nav>
+            <div class="nav-buttons">
+                <a href="#dashboard" class="btn btn-primary" data-page="dashboard">Dashboard</a>
+                <a href="#logout" class="btn btn-secondary" id="logoutBtn">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Registration Form Section -->
+        <section class="register-section">
+            <div class="register-container">
+                <h1 class="brand-title">VANTYX</h1>
+                
+                <div class="register-form-wrapper">
+                    <h2 class="register-title">REGISTER</h2>
+                    
+                    <form id="registerForm" class="register-form">
+                        <!-- Full Name -->
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input 
+                                type="text" 
+                                id="fullName" 
+                                name="fullName" 
+                                placeholder="Enter your full name" 
+                                required
+                                autocomplete="name"
+                            >
+                        </div>
+                        
+                        <!-- Customer ID -->
+                        <div class="form-group">
+                            <label for="customerId">Customer ID</label>
+                            <input 
+                                type="text" 
+                                id="customerId" 
+                                name="customerId" 
+                                placeholder="Choose your Customer ID" 
+                                required
+                                autocomplete="username"
+                            >
+                        </div>
+                        
+                        <!-- Date of Birth -->
+                        <div class="form-group">
+                            <label for="dateOfBirth">Date of Birth</label>
+                            <input 
+                                type="date" 
+                                id="dateOfBirth" 
+                                name="dateOfBirth" 
+                                required
+                                autocomplete="bday"
+                            >
+                        </div>
+                        
+                        <!-- National Card Number -->
+                        <div class="form-group">
+                            <label for="nationalCardNumber">National Card Number</label>
+                            <input 
+                                type="text" 
+                                id="nationalCardNumber" 
+                                name="nationalCardNumber" 
+                                placeholder="Enter your national ID number" 
+                                required
+                            >
+                        </div>
+                        
+                        <!-- Phone Number -->
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input 
+                                type="tel" 
+                                id="phoneNumber" 
+                                name="phoneNumber" 
+                                placeholder="Enter your phone number" 
+                                required
+                                autocomplete="tel"
+                            >
+                        </div>
+                        
+                        <!-- Email ID -->
+                        <div class="form-group">
+                            <label for="emailId">Email ID</label>
+                            <input 
+                                type="email" 
+                                id="emailId" 
+                                name="emailId" 
+                                placeholder="Enter your email address" 
+                                required
+                                autocomplete="email"
+                            >
+                        </div>
+                        
+                        <!-- Card Details -->
+                        <div class="form-group">
+                            <label for="cardDetails">Card Details</label>
+                            <input 
+                                type="text" 
+                                id="cardDetails" 
+                                name="cardDetails" 
+                                placeholder="Enter your card number" 
+                                required
+                                autocomplete="cc-number"
+                            >
+                        </div>
+                        
+                        <!-- Card Expiry and CVV -->
+                        <div class="form-row">
+                            <div class="form-group form-group-half">
+                                <label for="expiry">Expiry</label>
+                                <input 
+                                    type="text" 
+                                    id="expiry" 
+                                    name="expiry" 
+                                    placeholder="MM/YY" 
+                                    required
+                                    autocomplete="cc-exp"
+                                    maxlength="5"
+                                >
+                            </div>
+                            <div class="form-group form-group-half">
+                                <label for="cvv">CVV</label>
+                                <input 
+                                    type="text" 
+                                    id="cvv" 
+                                    name="cvv" 
+                                    placeholder="123" 
+                                    required
+                                    autocomplete="cc-csc"
+                                    maxlength="4"
+                                >
+                            </div>
+                        </div>
+                        
+                        <!-- PIN -->
+                        <div class="form-group">
+                            <label for="pin">PIN</label>
+                            <input 
+                                type="password" 
+                                id="pin" 
+                                name="pin" 
+                                placeholder="Create a 4-digit PIN" 
+                                required
+                                autocomplete="new-password"
+                                maxlength="8"
+                            >
+                        </div>
+                        
+                        <!-- Terms and Conditions -->
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                                <span class="checkmark"></span>
+                                I agree to the <a href="#terms" target="_blank">Terms and Conditions</a> and <a href="#privacy" target="_blank">Privacy Policy</a>
+                            </label>
+                        </div>
+                        
+                        <!-- Register Button -->
+                        <button type="submit" class="register-btn" id="registerBtn">
+                            <span class="btn-text">REGISTER</span>
+                            <span class="btn-loader" style="display: none;">
+                                <span class="loader"></span>
+                            </span>
+                        </button>
+                        
+                        <div class="error-message" id="errorMessage" style="display: none;"></div>
+                    </form>
+                    
+                    <div class="login-link">
+                        <p>Already have an account? <a href="index.html">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="disclaimer">
+                <p>VANTYX is not a registered broker-dealer or investment advisor. Trading involves risk 
+                and may result in financial loss. Market data is provided for informational purposes 
+                only and is not intended for trading or investment advice. Past performance does not 
+                guarantee future results. Always do your own research before making financial decisions.</p>
+            </div>
+            
+            <div class="footer-controls">
+                <div class="language-selector">
+                    <span class="country-flag">🌍 Germany</span>
+                    <select id="languageSelect" class="language-dropdown">
+                        <option value="en">English(US)</option>
+                        <option value="de">Deutsch</option>
+                        <option value="fr">Français</option>
+                        <option value="es">Español</option>
+                    </select>
+                </div>
+                
+                <div class="theme-toggle" id="themeToggle">
+                    <span class="toggle-slider"></span>
+                </div>
+                
+                <div class="company-logo">
+                    <span class="logo-text">VYX</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Creating your account...</p>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Registration Successful!</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="success-icon">✓</div>
+                <p>Your account has been created successfully.</p>
+                <p><strong>Customer ID:</strong> <span id="generatedCustomerId"></span></p>
+                <p>You can now login with your credentials.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="goToLogin">Go to Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/config.js" defer></script>
+    <script src="assets/js/utils.js" defer></script>
+    <script src="assets/js/userManager.js" defer></script>
+    <script src="assets/js/apiService.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
+    <script src="assets/js/register.js" defer></script>
+
+</body>
+</html>

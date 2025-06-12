@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VANTYX - Stock Details</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/stock.css">
+</head>
+<body class="dark-theme">
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">Stock Page</div>
+            <nav class="nav-links">
+                <a href="index.html" data-page="home">Home</a>
+                <a href="radar.html" data-page="radar">Radar</a>
+                <a href="#pro" data-page="pro">Pro</a>
+            </nav>
+            <div class="nav-buttons">
+                <a href="dashboard.html" class="btn btn-primary" data-page="dashboard">Dashboard</a>
+                <a href="#logout" class="btn btn-secondary" id="logoutBtn">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Stock Header -->
+        <section class="stock-header">
+            <div class="stock-main-info">
+                <!-- Stock Logo and Title -->
+                <div class="stock-title-section">
+                    <div class="stock-logo" id="stockLogo">
+                        <span class="logo-text">🍎</span>
+                    </div>
+                    <div class="stock-title-info">
+                        <h1 class="stock-symbol" id="stockSymbol">APPLE</h1>
+                        <p class="stock-name" id="stockName">Apple Inc.</p>
+                    </div>
+                </div>
+
+                <!-- Chart and Trading Section -->
+                <div class="stock-content-grid">
+                    <!-- Chart Section -->
+                    <div class="chart-section">
+                        <div class="chart-container">
+                            <canvas id="stockChart" width="400" height="300"></canvas>
+                        </div>
+                        
+                        <!-- Trading Buttons -->
+                        <div class="trading-buttons">
+                            <button class="trade-btn buy-btn" id="buyBtn">
+                                <span class="btn-text">BUY</span>
+                                <span class="btn-price" id="buyPrice">$3300</span>
+                            </button>
+                            <button class="trade-btn sell-btn" id="sellBtn">
+                                <span class="btn-text">SELL</span>
+                                <span class="btn-price" id="sellPrice">$3300</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Performance Table -->
+                    <div class="performance-section">
+                        <div class="performance-table-container">
+                            <h3 class="table-title">Key Performance Table</h3>
+                            <div class="performance-table">
+                                <div class="performance-row">
+                                    <span class="metric-label">1 Month Return</span>
+                                    <span class="metric-value positive" id="oneMonthReturn">3.54%</span>
+                                </div>
+                                <div class="performance-row">
+                                    <span class="metric-label">3 Month Return</span>
+                                    <span class="metric-value negative" id="threeMonthReturn">-0.3%</span>
+                                </div>
+                                <div class="performance-row">
+                                    <span class="metric-label">1 Year Return</span>
+                                    <span class="metric-value positive" id="oneYearReturn">15.2%</span>
+                                </div>
+                                <div class="performance-row">
+                                    <span class="metric-label">Previous Close</span>
+                                    <span class="metric-value" id="previousClose">$3325</span>
+                                </div>
+                                <div class="performance-row">
+                                    <span class="metric-label">52 Week High</span>
+                                    <span class="metric-value" id="weekHigh">$3500</span>
+                                </div>
+                                <div class="performance-row">
+                                    <span class="metric-label">52 Week Low</span>
+                                    <span class="metric-value" id="weekLow">$2900</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- More About Section -->
+                <div class="about-section">
+                    <button class="about-btn" id="aboutBtn">MORE ABOUT APPLE</button>
+                    <div class="about-content" id="aboutContent">
+                        <p>Apple Inc. is a global tech leader, driving innovation with iPhones, Macs, and services. Known for premium design, brand loyalty, and steady growth, Apple remains a top pick for long-term investors and market watchers.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- News and Related Stocks Section -->
+        <div class="bottom-sections">
+            <!-- Latest Articles -->
+            <section class="news-section">
+                <h2 class="section-title">Latest Articles</h2>
+                <div class="news-list" id="newsList">
+                    <!-- News items will be populated here -->
+                </div>
+            </section>
+
+            <!-- Related Stocks -->
+            <section class="related-section">
+                <h2 class="section-title">Related Stocks</h2>
+                <div class="related-stocks" id="relatedStocks">
+                    <!-- Related stocks will be populated here -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="disclaimer">
+                <p>VANTYX is not a registered broker-dealer or investment advisor. Trading involves risk 
+                and may result in financial loss. Market data is provided for informational purposes 
+                only and is not intended for trading or investment advice. Past performance does not 
+                guarantee future results. Always do your own research before making financial decisions.</p>
+            </div>
+            
+            <div class="footer-controls">
+                <div class="language-selector">
+                    <span class="country-flag">🌍 Germany</span>
+                    <select id="languageSelect" class="language-dropdown">
+                        <option value="en">English(US)</option>
+                        <option value="de">Deutsch</option>
+                        <option value="fr">Français</option>
+                        <option value="es">Español</option>
+                    </select>
+                </div>
+                
+                <div class="theme-toggle" id="themeToggle">
+                    <span class="toggle-slider"></span>
+                </div>
+                
+                <div class="company-logo">
+                    <span class="logo-text">VYX</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Trade Modal -->
+    <div class="modal" id="tradeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="tradeModalTitle">Place Order</h3>
+                <button class="modal-close" id="tradeModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="tradeForm">
+                    <div class="form-group">
+                        <label for="tradeSymbol">Symbol</label>
+                        <input type="text" id="tradeSymbol" name="symbol" readonly>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group form-group-half">
+                            <label for="tradeType">Order Type</label>
+                            <select id="tradeType" name="type">
+                                <option value="market">Market</option>
+                                <option value="limit">Limit</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-group-half">
+                            <label for="tradeSide">Side</label>
+                            <select id="tradeSide" name="side">
+                                <option value="buy">Buy</option>
+                                <option value="sell">Sell</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group form-group-half">
+                            <label for="tradeQuantity">Quantity</label>
+                            <input type="number" id="tradeQuantity" name="quantity" min="1" required>
+                        </div>
+                        <div class="form-group form-group-half">
+                            <label for="tradePrice">Price</label>
+                            <input type="number" id="tradePrice" name="price" step="0.01" min="0">
+                        </div>
+                    </div>
+                    <div class="trade-summary">
+                        <div class="summary-row">
+                            <span>Estimated Total:</span>
+                            <span id="estimatedTotal">$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Available Balance:</span>
+                            <span id="availableBalance">$0.00</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="submitTradeBtn">Place Order</button>
+                <button class="btn btn-secondary" id="cancelTradeBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading stock data...</p>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/userManager.js"></script>
+    <script src="assets/js/apiService.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/stock.js"></script>
+</body>
+</html>

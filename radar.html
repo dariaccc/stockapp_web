@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VANTYX - Radar</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/radar.css">
+</head>
+<body class="dark-theme">
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">Radar</div>
+            <nav class="nav-links">
+                <a href="index.html" data-page="home">Home</a>
+                <a href="radar.html" data-page="radar" class="active">Radar</a>
+                <a href="#pro" data-page="pro">Pro</a>
+            </nav>
+            <div class="nav-buttons">
+                <a href="dashboard.html" class="btn btn-primary" data-page="dashboard">Dashboard</a>
+                <a href="#logout" class="btn btn-secondary" id="logoutBtn">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h1 class="page-title">Radar</h1>
+            
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input type="text" id="stockSearch" class="search-input" placeholder="Search Stocks..." autocomplete="off">
+                <div class="search-results" id="searchResults" style="display: none;"></div>
+            </div>
+        </section>
+
+        <!-- News Section -->
+        <section class="news-section">
+            <div class="news-card">
+                <div class="news-content">
+                    <div class="news-indicator">
+                        <span class="news-dot"></span>
+                        <span class="news-dot"></span>
+                        <span class="news-dot"></span>
+                    </div>
+                    <h3 class="news-title" id="newsTitle">Multiple French prisons attacked in response to government's narco crackdown</h3>
+                    <p class="news-subtitle" id="newsSubtitle">Multiple French prisons have been attacked in recent nights by people wielding automatic weapons, in what the justice minister said...</p>
+                </div>
+                <div class="news-visual">
+                    <div class="market-chart">
+                        <canvas id="newsChart" width="400" height="200"></canvas>
+                    </div>
+                    <div class="bull-silhouette">
+                        <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20,80 Q30,60 50,65 Q70,50 90,55 Q110,45 130,50 Q150,40 170,45 Q180,35 190,40" 
+                                  stroke="#4a90e2" stroke-width="3" fill="none" opacity="0.8"/>
+                            <path d="M80,85 Q85,75 95,80 Q105,70 120,75 Q130,65 140,70 Q150,60 165,65 Q175,55 185,60" 
+                                  fill="#4a90e2" opacity="0.6"/>
+                            <!-- Bull silhouette -->
+                            <path d="M100,60 Q120,50 140,60 Q150,65 145,75 Q140,85 120,80 Q100,85 95,75 Q90,65 100,60 Z" 
+                                  fill="url(#bullGradient)" opacity="0.8"/>
+                            <defs>
+                                <linearGradient id="bullGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#4a90e2"/>
+                                    <stop offset="100%" stop-color="#ffffff"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Market Sections -->
+        <div class="market-sections">
+            <!-- Top Recommended Section -->
+            <section class="market-section">
+                <div class="section-header">
+                    <h2 class="section-title">Top Recommended on Radar Today</h2>
+                </div>
+                <div class="stocks-grid" id="topRecommendedGrid">
+                    <!-- Stock cards will be populated here -->
+                </div>
+            </section>
+
+            <!-- Top Worst Performers Section -->
+            <section class="market-section">
+                <div class="section-header">
+                    <h2 class="section-title">Top Worst Performers</h2>
+                </div>
+                <div class="stocks-grid" id="worstPerformersGrid">
+                    <!-- Stock cards will be populated here -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Market Overview -->
+        <section class="market-overview">
+            <div class="overview-cards">
+                <div class="overview-card">
+                    <h3>Market Sentiment</h3>
+                    <div class="sentiment-indicator">
+                        <div class="sentiment-bar">
+                            <div class="sentiment-fill bullish" style="width: 65%;"></div>
+                        </div>
+                        <span class="sentiment-text">Bullish (65%)</span>
+                    </div>
+                </div>
+                <div class="overview-card">
+                    <h3>Active Traders</h3>
+                    <div class="stat-value">2,847</div>
+                    <div class="stat-change positive">+12.5%</div>
+                </div>
+                <div class="overview-card">
+                    <h3>Volume Today</h3>
+                    <div class="stat-value">$2.1B</div>
+                    <div class="stat-change positive">+8.3%</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="disclaimer">
+                <p>VANTYX is not a registered broker-dealer or investment advisor. Trading involves risk 
+                and may result in financial loss. Market data is provided for informational purposes 
+                only and is not intended for trading or investment advice. Past performance does not 
+                guarantee future results. Always do your own research before making financial decisions.</p>
+            </div>
+            
+            <div class="footer-controls">
+                <div class="language-selector">
+                    <span class="country-flag">🌍 Germany</span>
+                    <select id="languageSelect" class="language-dropdown">
+                        <option value="en">English(US)</option>
+                        <option value="de">Deutsch</option>
+                        <option value="fr">Français</option>
+                        <option value="es">Español</option>
+                    </select>
+                </div>
+                
+                <div class="theme-toggle" id="themeToggle">
+                    <span class="toggle-slider"></span>
+                </div>
+                
+                <div class="company-logo">
+                    <span class="logo-text">VYX</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Stock Details Modal -->
+    <div class="modal" id="stockModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalStockTitle">Stock Details</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body" id="modalStockBody">
+                <!-- Stock details will be populated here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="modalBuyBtn">BUY</button>
+                <button class="btn btn-outline" id="modalWatchlistBtn">Add to Watchlist</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading market data...</p>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/userManager.js"></script>
+    <script src="assets/js/apiService.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/radar.js"></script>
+</body>
+</html>

@@ -1,0 +1,651 @@
+/* ===================================
+   VANTYX - Stock Page Styles
+   =================================== */
+
+/* Main Layout */
+.main-container {
+    padding-top: 70px;
+    padding-bottom: 120px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.95));
+}
+
+/* Stock Header */
+.stock-header {
+    padding: var(--spacing-xxl);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.stock-main-info {
+    background: var(--glass-bg);
+    border: 2px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xxl);
+    backdrop-filter: blur(15px);
+    position: relative;
+    overflow: hidden;
+}
+
+.stock-main-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(74, 144, 226, 0.05), rgba(231, 76, 60, 0.05));
+    animation: stockGlow 8s ease-in-out infinite alternate;
+    z-index: 1;
+}
+
+@keyframes stockGlow {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.6; }
+}
+
+/* Stock Title Section */
+.stock-title-section {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xxl);
+    position: relative;
+    z-index: 2;
+}
+
+.stock-logo {
+    width: 80px;
+    height: 80px;
+    background: var(--glass-bg);
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-lg);
+}
+
+.logo-text {
+    filter: drop-shadow(0 0 10px rgba(74, 144, 226, 0.5));
+}
+
+.stock-title-info h1 {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-sm) 0;
+    text-shadow: var(--shadow-text);
+    letter-spacing: 2px;
+}
+
+.stock-name {
+    color: var(--text-secondary);
+    font-size: var(--font-size-lg);
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Content Grid */
+.stock-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xxl);
+    margin-bottom: var(--spacing-xxl);
+    position: relative;
+    z-index: 2;
+}
+
+/* Chart Section */
+.chart-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.chart-container {
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+}
+
+.chart-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(74, 144, 226, 0.1), rgba(0, 255, 65, 0.1));
+    animation: chartShimmer 3s ease-in-out infinite alternate;
+}
+
+@keyframes chartShimmer {
+    0% { opacity: 0.2; }
+    100% { opacity: 0.5; }
+}
+
+#stockChart {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+/* Trading Buttons */
+.trading-buttons {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.trade-btn {
+    flex: 1;
+    padding: var(--spacing-lg);
+    border: none;
+    border-radius: var(--radius-lg);
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition-standard);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    position: relative;
+    overflow: hidden;
+    min-height: 80px;
+    justify-content: center;
+}
+
+.trade-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: var(--transition-standard);
+}
+
+.trade-btn:hover::before {
+    left: 100%;
+}
+
+.buy-btn {
+    background: linear-gradient(45deg, var(--accent-color), #00cc33);
+    color: var(--bg-primary);
+    box-shadow: var(--shadow-md);
+}
+
+.buy-btn:hover {
+    background: linear-gradient(45deg, #00cc33, var(--accent-color));
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.sell-btn {
+    background: linear-gradient(45deg, var(--accent-red), #cc3333);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-md);
+}
+
+.sell-btn:hover {
+    background: linear-gradient(45deg, #cc3333, var(--accent-red));
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-text {
+    font-size: var(--font-size-lg);
+    letter-spacing: 1px;
+}
+
+.btn-price {
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
+}
+
+/* Performance Section */
+.performance-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.performance-table-container {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    backdrop-filter: blur(10px);
+}
+
+.table-title {
+    background: var(--primary-color);
+    color: var(--text-primary);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    margin: 0 0 var(--spacing-lg) 0;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.performance-table {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.performance-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: var(--transition-fast);
+}
+
+.performance-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+    padding-left: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+}
+
+.performance-row:last-child {
+    border-bottom: none;
+}
+
+.metric-label {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+.metric-value {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: var(--font-size-base);
+}
+
+.metric-value.positive {
+    color: var(--accent-color);
+}
+
+.metric-value.negative {
+    color: var(--accent-red);
+}
+
+/* About Section */
+.about-section {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.about-btn {
+    background: var(--primary-color);
+    color: var(--text-primary);
+    border: none;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: var(--transition-standard);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.about-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.about-content {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin: 0 auto;
+    max-width: 600px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: var(--transition-standard);
+}
+
+.about-content.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.about-content p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+    font-size: var(--font-size-base);
+}
+
+/* Bottom Sections */
+.bottom-sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xxl);
+    padding: 0 var(--spacing-xxl);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xl);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* News Section */
+.news-section {
+    background: var(--glass-bg);
+    border: 2px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    backdrop-filter: blur(15px);
+}
+
+.news-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.news-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    cursor: pointer;
+    transition: var(--transition-standard);
+}
+
+.news-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+.news-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-base);
+    line-height: 1.4;
+}
+
+.news-date {
+    color: var(--text-muted);
+    font-size: var(--font-size-xs);
+}
+
+/* Related Stocks Section */
+.related-section {
+    background: var(--glass-bg);
+    border: 2px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    backdrop-filter: blur(15px);
+}
+
+.related-stocks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.related-stock-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: var(--transition-standard);
+}
+
+.related-stock-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.related-stock-info {
+    flex: 1;
+}
+
+.related-stock-symbol {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-xs);
+}
+
+.related-stock-price {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.related-stock-action {
+    background: var(--accent-color);
+    color: var(--bg-primary);
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.related-stock-action:hover {
+    background: #00cc33;
+    transform: scale(1.05);
+}
+
+/* Trade Modal Enhancements */
+.trade-summary {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-secondary);
+}
+
+.summary-row:last-child {
+    margin-bottom: 0;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Loading States */
+.skeleton-chart {
+    background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: var(--radius-md);
+    height: 100%;
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .stock-header {
+        padding: var(--spacing-lg);
+    }
+    
+    .bottom-sections {
+        padding: 0 var(--spacing-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .stock-content-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    .bottom-sections {
+        grid-template-columns: 1fr;
+        padding: 0 var(--spacing-md);
+        gap: var(--spacing-lg);
+    }
+    
+    .stock-title-section {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-md);
+    }
+    
+    .stock-logo {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .stock-title-info h1 {
+        font-size: 2rem;
+    }
+    
+    .trading-buttons {
+        flex-direction: column;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+    
+    .related-stock-item {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-md);
+    }
+}
+
+@media (max-width: 576px) {
+    .stock-main-info {
+        padding: var(--spacing-lg);
+    }
+    
+    .stock-title-info h1 {
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+    }
+    
+    .trade-btn {
+        min-height: 60px;
+        padding: var(--spacing-md);
+    }
+    
+    .btn-text {
+        font-size: var(--font-size-base);
+    }
+    
+    .performance-table-container {
+        padding: var(--spacing-md);
+    }
+    
+    .table-title {
+        font-size: var(--font-size-sm);
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    .news-section,
+    .related-section {
+        padding: var(--spacing-lg);
+    }
+    
+    .section-title {
+        font-size: 1.3rem;
+    }
+}
+
+/* Animation Delays */
+.stock-title-section {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.chart-section {
+    animation: fadeInLeft 0.8s ease-out 0.2s both;
+}
+
+.performance-section {
+    animation: fadeInRight 0.8s ease-out 0.4s both;
+}
+
+.about-section {
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+.news-section {
+    animation: fadeInLeft 0.8s ease-out 0.8s both;
+}
+
+.related-section {
+    animation: fadeInRight 0.8s ease-out 1s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

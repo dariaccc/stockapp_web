@@ -1,0 +1,214 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: white;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    background: rgba(0,0,0,0.8);
+    padding: 15px 0;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.nav {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.nav a {
+    color: white;
+    text-decoration: none;
+}
+
+.brand {
+    font-size: 32px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.modal {
+    background: rgba(0,0,0,0.9);
+    border-radius: 10px;
+    padding: 30px;
+    margin: 20px auto;
+    max-width: 500px;
+    text-align: center;
+}
+
+.stock-card {
+    background: rgba(30,30,50,0.8);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #333;
+}
+
+.stock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.stock-name {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.stock-price {
+    font-size: 24px;
+    color: #4CAF50;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-buy {
+    background: #4CAF50;
+    color: white;
+}
+
+.btn-sell {
+    background: #f44336;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.8;
+    transform: translateY(-2px);
+}
+
+.sectors {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.sector {
+    background: rgba(30,30,50,0.8);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #333;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.sector:hover {
+    transform: translateY(-5px);
+}
+
+.sector-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.sector-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.sector-change {
+    color: #4CAF50;
+    font-size: 14px;
+}
+
+.section-title {
+    background: rgba(30,30,50,0.8);
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    margin: 20px 0 10px;
+    border: 1px solid #333;
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+}
+
+.error {
+    text-align: center;
+    padding: 20px;
+    color: #f44336;
+}
+
+.error button {
+    margin-top: 10px;
+    padding: 8px 16px;
+}
+
+/* Country info styling */
+#country-info {
+    margin-top: 10px;
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+/* Enhanced loading animation */
+.loading::after {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #333;
+    border-radius: 50%;
+    border-top-color: #4CAF50;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+    .nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .stock-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .sectors {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+    
+    .container {
+        padding: 10px;
+    }
+}
