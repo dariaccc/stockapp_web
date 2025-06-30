@@ -3,313 +3,362 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VANTYX - Pro Purchase</title>
+    <title>VANTYX - Pro</title>
     
     <!-- CSS Files -->
     <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/pro.css">
+    
+    <!-- Add consistent navbar styles -->
+    <style>
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(74, 144, 226, 0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo { 
+            font-size: 1.8rem; 
+            font-weight: bold; 
+            background: linear-gradient(45deg, #4a90e2, #00ff41);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+        }
+        
+        .logo:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links { 
+            display: flex; 
+            gap: 30px; 
+        }
+        
+        .nav-links a { 
+            color: #fff; 
+            text-decoration: none; 
+            transition: all 0.3s; 
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover, .nav-links a.active { 
+            color: #4a90e2; 
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .nav-buttons { 
+            display: flex; 
+            gap: 15px; 
+            align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 15px;
+        }
+        
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #4a90e2, #00ff41);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+        
+        .btn-primary { 
+            background: linear-gradient(45deg, #4a90e2, #357abd);
+            color: white; 
+        }
+        
+        .btn-primary:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+        }
+        
+        .btn-secondary { 
+            background: transparent; 
+            color: #fff; 
+            border: 1px solid rgba(255, 255, 255, 0.3); 
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .guest-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Pro page specific styles */
+        .pro-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            color: #fff;
+        }
+
+        .pro-hero {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .pro-title {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #4a90e2, #00ff41);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .pro-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(74, 144, 226, 0.2);
+            border-color: rgba(74, 144, 226, 0.5);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #4a90e2;
+        }
+
+        .feature-description {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .pricing-section {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(74, 144, 226, 0.3);
+        }
+
+        .pricing-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #4a90e2;
+        }
+
+        .price-tag {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .price-subtitle {
+            opacity: 0.7;
+            margin-bottom: 30px;
+        }
+
+        .upgrade-btn {
+            background: linear-gradient(45deg, #00ff41, #00cc33);
+            color: #000;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .upgrade-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { 
+                display: none; 
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .pro-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .feature-card {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body class="dark-theme">
     <!-- Header Navigation -->
-    <header class="header">
-        <div class="nav-container">
-            <div class="logo">Pro Purchase</div>
-            <nav class="nav-links">
-                <a href="index.html" data-page="home">Home</a>
-                <a href="radar.html" data-page="radar">Radar</a>
-                <a href="pro.html" data-page="pro" class="active">Pro</a>
-            </nav>
-            <div class="nav-buttons">
-                <a href="dashboard.html" class="btn btn-primary" data-page="dashboard">Dashboard</a>
-                <a href="#logout" class="btn btn-secondary" id="logoutBtn">Logout</a>
-            </div>
-        </div>
-    </header>
-
     <!-- Main Content -->
-    <main class="main-container">
-        <!-- Background Trading Charts -->
-        <div class="background-charts">
-            <canvas id="backgroundChart1" class="bg-chart chart-1"></canvas>
-            <canvas id="backgroundChart2" class="bg-chart chart-2"></canvas>
-            <canvas id="backgroundChart3" class="bg-chart chart-3"></canvas>
-        </div>
+    <div class="pro-container">
+        <!-- Hero Section -->
+        <section class="pro-hero">
+            <h1 class="pro-title">VANTYX PRO</h1>
+            <p class="pro-subtitle">
+                Unlock advanced trading features, real-time analytics, and professional-grade tools 
+                designed for serious investors and traders.
+            </p>
+        </section>
 
-        <!-- Pro Info Modal -->
-        <section class="pro-modal-section">
-            <div class="pro-modal">
-                <div class="modal-header">
-                    <h1 class="luxe-title">VANTYX LUXE</h1>
-                </div>
-                
-                <div class="modal-body">
-                    <p class="luxe-description">
-                        VANTYX LUXE is designed for discerning investors who seek more than 
-                        just the basics. It delivers a premium experience with elite features, 
-                        exclusive access, and cutting-edge tools that elevate your trading to 
-                        unmatched levels. Whether you're optimizing your investment portfolio or 
-                        aiming for ambitious financial goals, VANTYX LUXE offers you advanced 
-                        insights, prioritized customer support, and exclusive market intelligence.
-                    </p>
-                    
-                    <p class="luxe-subtitle">
-                        But that's not all - LUXE comes with features and benefits that 
-                        professionals this platform represents you to make smarter, faster 
-                        decisions. Accelerate your path toward your financial success story. 
-                        Don't just invest; invest like an expert, with VANTYX LUXE.
-                    </p>
-                </div>
+        <!-- Features Grid -->
+        <section class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">📊</span>
+                <h3 class="feature-title">Advanced Analytics</h3>
+                <p class="feature-description">
+                    Access sophisticated charting tools, technical indicators, and market analysis 
+                    to make informed trading decisions.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">⚡</span>
+                <h3 class="feature-title">Real-Time Data</h3>
+                <p class="feature-description">
+                    Get lightning-fast market data updates, live price feeds, and instant 
+                    notifications for all your watched stocks.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">🎯</span>
+                <h3 class="feature-title">Smart Alerts</h3>
+                <p class="feature-description">
+                    Set custom price alerts, trend notifications, and automated trading 
+                    signals to never miss an opportunity.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">📈</span>
+                <h3 class="feature-title">Portfolio Analytics</h3>
+                <p class="feature-description">
+                    Deep dive into portfolio performance with detailed analytics, risk 
+                    assessment, and optimization recommendations.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">🔒</span>
+                <h3 class="feature-title">Priority Support</h3>
+                <p class="feature-description">
+                    Get 24/7 premium support with dedicated account managers and priority 
+                    response times for all your queries.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">🚀</span>
+                <h3 class="feature-title">API Access</h3>
+                <p class="feature-description">
+                    Build custom trading applications with our robust API, enabling 
+                    algorithmic trading and automated strategies.
+                </p>
             </div>
         </section>
 
-        <!-- Features Comparison Section -->
-        <section class="features-section">
-            <div class="features-container">
-                <h2 class="features-title">EXTRA Features with LUXE</h2>
-                
-                <div class="features-table">
-                    <div class="table-header">
-                        <div class="feature-col plan-col">Plan</div>
-                        <div class="feature-col basic-col">Basic</div>
-                        <div class="feature-col luxe-col">LUXE</div>
-                    </div>
-                    
-                    <div class="table-body">
-                        <div class="feature-row">
-                            <div class="feature-name">Real-Time Stock Tracking</div>
-                            <div class="feature-basic">
-                                <span class="check-icon">✓</span>
-                            </div>
-                            <div class="feature-luxe">
-                                <span class="check-icon">✓</span>
-                            </div>
-                        </div>
-                        
-                        <div class="feature-row">
-                            <div class="feature-name">Intuitive Trading Interface</div>
-                            <div class="feature-basic">
-                                <span class="check-icon">✓</span>
-                            </div>
-                            <div class="feature-luxe">
-                                <span class="check-icon">✓</span>
-                            </div>
-                        </div>
-                        
-                        <div class="feature-row">
-                            <div class="feature-name">Priority Market Insights</div>
-                            <div class="feature-basic">
-                                <span class="info-icon">ⓘ</span>
-                            </div>
-                            <div class="feature-luxe">
-                                <span class="check-icon">✓</span>
-                            </div>
-                        </div>
-                        
-                        <div class="feature-row">
-                            <div class="feature-name">Advanced Portfolio Analytics</div>
-                            <div class="feature-basic">
-                                <span class="info-icon">ⓘ</span>
-                            </div>
-                            <div class="feature-luxe">
-                                <span class="check-icon">✓</span>
-                            </div>
-                        </div>
-                        
-                        <div class="feature-row">
-                            <div class="feature-name">Curated Investment Bundles</div>
-                            <div class="feature-basic">
-                                <span class="info-icon">ⓘ</span>
-                            </div>
-                            <div class="feature-luxe">
-                                <span class="check-icon">✓</span>
-                            </div>
-                        </div>
-                        
-                        <div class="feature-row">
-                            <div class="feature-name">Higher Withdrawal Limits & Instant Settlements</div>
-                            <div class="feature-basic">
-                                <span class="info-icon">ⓘ</span>
-                            </div>
-                            <div class="feature-luxe">
-                                <span class="check-icon">✓</span>
-                            </div>
-                        </div>
-                        
-                        <div class="feature-row">
-                            <div class="feature-name">Exclusive IPO Access</div>
-                            <div class="feature-basic">
-                                <span class="info-icon">ⓘ</span>
-                            </div>
-                            <div class="feature-luxe">
-                                <span class="check-icon">✓</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Pricing Section -->
+        <section class="pricing-section">
+            <h2 class="pricing-title">Upgrade to Pro</h2>
+            <div class="price-tag">$29.99</div>
+            <p class="price-subtitle">per month</p>
+            <a href="#" class="upgrade-btn" id="upgradeBtn">Upgrade Now</a>
         </section>
-
-        <!-- Call to Action Section -->
-        <section class="cta-section">
-            <div class="cta-container">
-                <div class="cta-content">
-                    <p class="cta-description">
-                        Because true success isn't left to chance — it's built with smarter tools, sharper insights, and faster access. VANTYX LUXE gives you the 
-                        edge to invest beyond limits and turn your financial vision into reality.
-                    </p>
-                    
-                    <button class="luxe-purchase-btn" id="purchaseBtn">
-                        BUY VANTYX LUXE NOW
-                    </button>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="disclaimer">
-                <p>VANTYX is not a registered broker-dealer or investment advisor. Trading involves risk 
-                and may result in financial loss. Market data is provided for informational purposes 
-                only and is not intended for trading or investment advice. Past performance does not 
-                guarantee future results. Always do your own research before making financial decisions.</p>
-            </div>
-            
-            <div class="footer-controls">
-                <div class="language-selector">
-                    <span class="country-flag">🌍 Germany</span>
-                    <select id="languageSelect" class="language-dropdown">
-                        <option value="en">English(US)</option>
-                        <option value="de">Deutsch</option>
-                        <option value="fr">Français</option>
-                        <option value="es">Español</option>
-                    </select>
-                </div>
-                
-                <div class="theme-toggle" id="themeToggle">
-                    <span class="toggle-slider"></span>
-                </div>
-                
-                <div class="company-logo">
-                    <span class="logo-text">VYX</span>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Purchase Modal -->
-    <div class="modal" id="purchaseModal">
-        <div class="modal-content purchase-modal-content">
-            <div class="modal-header">
-                <h3>Upgrade to VANTYX LUXE</h3>
-                <button class="modal-close" id="purchaseModalClose">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="upgrade-info">
-                    <div class="luxe-package">
-                        <h4>VANTYX LUXE Premium</h4>
-                        <div class="price-display">
-                            <span class="currency">$</span>
-                            <span class="price">99</span>
-                            <span class="period">/month</span>
-                        </div>
-                        <ul class="package-features">
-                            <li>✓ All Basic features included</li>
-                            <li>✓ Priority market insights</li>
-                            <li>✓ Advanced portfolio analytics</li>
-                            <li>✓ Curated investment bundles</li>
-                            <li>✓ Higher withdrawal limits</li>
-                            <li>✓ Exclusive IPO access</li>
-                            <li>✓ 24/7 premium support</li>
-                        </ul>
-                    </div>
-                    
-                    <form id="purchaseForm" class="purchase-form">
-                        <h5>Payment Information</h5>
-                        
-                        <div class="form-group">
-                            <label for="cardNumber">Card Number</label>
-                            <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" required>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group form-group-half">
-                                <label for="expiryDate">Expiry Date</label>
-                                <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" required>
-                            </div>
-                            <div class="form-group form-group-half">
-                                <label for="cvv">CVV</label>
-                                <input type="text" id="cvv" name="cvv" placeholder="123" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="cardholderName">Cardholder Name</label>
-                            <input type="text" id="cardholderName" name="cardholderName" placeholder="John Doe" required>
-                        </div>
-                        
-                        <div class="billing-summary">
-                            <div class="summary-row">
-                                <span>VANTYX LUXE (Monthly)</span>
-                                <span>$99.00</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Tax</span>
-                                <span>$8.91</span>
-                            </div>
-                            <div class="summary-row total-row">
-                                <span>Total</span>
-                                <span>$107.91</span>
-                            </div>
-                        </div>
-                        
-                        <div class="terms-agreement">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="agreeTerms" required>
-                                <span class="checkmark"></span>
-                                I agree to the <a href="#terms" target="_blank">Terms of Service</a> and authorize the monthly charge
-                            </label>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="confirmPurchaseBtn">Complete Purchase</button>
-                <button class="btn btn-secondary" id="cancelPurchaseBtn">Cancel</button>
-            </div>
-        </div>
     </div>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/yahoo-finance.js"></script>
+  <script src="assets/js/chart-utils.js"></script>
+  <script src="assets/js/stock-page.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/main.js"></script>
 
-    <!-- Success Modal -->
-    <div class="modal" id="successModal">
-        <div class="modal-content success-modal-content">
-            <div class="modal-body">
-                <div class="success-animation">
-                    <div class="success-icon">✓</div>
-                    <h3>Welcome to VANTYX LUXE!</h3>
-                    <p>Your upgrade has been processed successfully. You now have access to all premium features.</p>
-                    <button class="btn btn-primary" id="goToDashboardBtn">Go to Dashboard</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
-        <div class="loading-spinner">
-            <div class="spinner"></div>
-            <p>Processing your upgrade...</p>
-        </div>
-    </div>
-
-    <!-- JavaScript Files -->
-    <script src="assets/js/config.js"></script>
-    <script src="assets/js/utils.js"></script>
-    <script src="assets/js/userManager.js"></script>
-    <script src="assets/js/apiService.js"></script>
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/pro.js"></script>
 </body>
 </html>

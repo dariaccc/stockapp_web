@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VANTYX - Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #4a90e2;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success {
+            background: rgba(0,255,65,0.2);
+            color: #00ff41;
+        }
+        .error {
+            background: rgba(255,68,68,0.2);
+            color: #ff4444;
+        }
+        .warning {
+            background: rgba(255,165,0,0.2);
+            color: #ffa500;
+        }
+        button {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #357abd;
+        }
+        .login-test {
+            background: rgba(74,144,226,0.1);
+            border: 2px solid #4a90e2;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #4a90e2;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        input::placeholder {
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 VANTYX - System Test</h1>
+        <p>This page will help you diagnose any issues with the app setup.</p>
+        
+        <div class="test-section">
+            <h2>📁 File Structure Test</h2>
+            <div id="fileTest">Testing file structure...</div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📜 JavaScript Loading Test</h2>
+            <div id="jsTest">Testing JavaScript files...</div>
+        </div>
+        
+        <div class="test-section">
+            <h2>💾 LocalStorage Test</h2>
+            <div id="storageTest">Testing localStorage...</div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔧 Quick Actions</h2>
+            <button onclick="clearAllData()">Clear All Data</button>
+            <button onclick="createTestUser()">Create Test User</button>
+            <button onclick="showDebugInfo()">Show Debug Info</button>
+        </div>
+        
+        <div class="login-test">
+            <h2>🔐 Quick Login Test</h2>
+            <p>Test login functionality without going to the main page:</p>
+            <input type="text" id="testCustomerId" placeholder="Customer ID" value="DEMO001">
+            <input type="password" id="testPin" placeholder="PIN" value="1234">
+            <button onclick="testLogin()">Test Login</button>
+            <div id="loginResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🌐 Navigation Test</h2>
+            <button onclick="goToLogin()">Go to Login Page</button>
+            <button onclick="goToRegister()">Go to Register Page</button>
+            <button onclick="goToDashboard()">Go to Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        console.log('Test page loaded');
+        
+        // Test file structure
+        function testFileStructure() {
+            const files = [
+                'assets/js/config.js',
+                'assets/js/utils.js',
+                'assets/js/userManager.js',
+                'assets/js/apiService.js',
+                'assets/js/main.js',
+                'assets/js/login.js'
+            ];
+            
+            let results = '';
+            let allGood = true;
+            
+            // We can't directly test file existence in browser, so we'll check if the objects exist
+            const checks = [
+                { name: 'config.js', test: () => typeof APP_CONFIG !== 'undefined' },
+                { name: 'utils.js', test: () => typeof Utils !== 'undefined' },
+                { name: 'userManager.js', test: () => typeof userManager !== 'undefined' },
+                { name: 'apiService.js', test: () => typeof apiService !== 'undefined' },
+                { name: 'main.js', test: () => typeof vantyxApp !== 'undefined' || typeof VantyxApp !== 'undefined' }
+            ];
+            
+            checks.forEach(check => {
+                if (check.test()) {
+                    results += `<div class="status success">✓ ${check.name} loaded successfully</div>`;
+                } else {
+                    results += `<div class="status error">✗ ${check.name} failed to load</div>`;
+                    allGood = false;
+                }
+            });
+            
+            if (allGood) {
+                results += `<div class="status success">🎉 All JavaScript files loaded correctly!</div>`;
+            } else {
+                results += `<div class="status warning">⚠️ Some files failed to load. Check file paths and names.</div>`;
+            }
+            
+            document.getElementById('jsTest').innerHTML = results;
+        }
+        
+        // Test localStorage
+        function testLocalStorage() {
+            try {
+                localStorage.setItem('vantyx_test', 'test_value');
+                const retrieved = localStorage.getItem('vantyx_test');
+                localStorage.removeItem('vantyx_test');
+                
+                if (retrieved === 'test_value') {
+                    document.getElementById('storageTest').innerHTML = 
+                        '<div class="status success">✓ LocalStorage working correctly</div>';
+                } else {
+                    throw new Error('Retrieved value mismatch');
+                }
+            } catch (error) {
+                document.getElementById('storageTest').innerHTML = 
+                    '<div class="status error">✗ LocalStorage not working: ' + error.message + '</div>';
+            }
+        }
+        
+        // Clear all data
+        function clearAllData() {
+            if (confirm('This will clear all app data. Continue?')) {
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith('vantyx_')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                alert('All VANTYX data cleared!');
+                location.reload();
+            }
+        }
+        
+        // Create test user
+        function createTestUser() {
+            try {
+                const users = [
+                    {
+                        customerId: 'DEMO001',
+                        pin: '1234',
+                        name: 'Demo User',
+                        email: 'demo@vantyx.com',
+                        portfolio: [],
+                        watchlist: ['AAPL', 'GOOGL', 'TSLA'],
+                        balance: 10000,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        customerId: 'ADMIN',
+                        pin: 'admin123',
+                        name: 'Administrator',
+                        email: 'admin@vantyx.com',
+                        isAdmin: true,
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+                
+                localStorage.setItem('vantyx_users', JSON.stringify(users));
+                alert('Test users created successfully!\n\nDemo User: DEMO001 / 1234\nAdmin: ADMIN / admin123');
+            } catch (error) {
+                alert('Error creating test users: ' + error.message);
+            }
+        }
+        
+        // Show debug info
+        function showDebugInfo() {
+            let info = 'VANTYX Debug Information:\n\n';
+            info += 'Current URL: ' + window.location.href + '\n';
+            info += 'User Agent: ' + navigator.userAgent + '\n';
+            info += 'LocalStorage available: ' + (typeof Storage !== 'undefined') + '\n';
+            info += 'Console errors: Check browser console (F12)\n\n';
+            
+            info += 'LocalStorage keys:\n';
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('vantyx_')) {
+                    info += '- ' + key + '\n';
+                }
+            });
+            
+            alert(info);
+        }
+        
+        // Test login
+        function testLogin() {
+            const customerId = document.getElementById('testCustomerId').value;
+            const pin = document.getElementById('testPin').value;
+            const resultDiv = document.getElementById('loginResult');
+            
+            try {
+                // Get users from localStorage
+                const users = JSON.parse(localStorage.getItem('vantyx_users') || '[]');
+                const user = users.find(u => u.customerId === customerId && u.pin === pin);
+                
+                if (user) {
+                    resultDiv.innerHTML = '<div class="status success">✓ Login successful! User: ' + user.name + '</div>';
+                    
+                    // Store current user
+                    localStorage.setItem('vantyx_current_user', JSON.stringify(user));
+                    
+                    setTimeout(() => {
+                        if (confirm('Login successful! Go to dashboard?')) {
+                            window.location.href = 'dashboard.html';
+                        }
+                    }, 1000);
+                } else {
+                    resultDiv.innerHTML = '<div class="status error">✗ Invalid credentials</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="status error">✗ Error: ' + error.message + '</div>';
+            }
+        }
+        
+        // Navigation functions
+        function goToLogin() {
+            window.location.href = 'index.html';
+        }
+        
+        function goToRegister() {
+            window.location.href = 'register.html';
+        }
+        
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+        
+        // Load JavaScript files for testing
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+        
+        // Initialize tests when page loads
+        window.addEventListener('DOMContentLoaded', async function() {
+            console.log('Running tests...');
+            
+            // Test file structure
+            document.getElementById('fileTest').innerHTML = 
+                '<div class="status warning">📁 File structure test requires manual verification. Check that all files are in the correct folders.</div>';
+            
+            // Try to load scripts
+            try {
+                await loadScript('assets/js/config.js');
+                await loadScript('assets/js/utils.js');
+                await loadScript('assets/js/userManager.js');
+                await loadScript('assets/js/apiService.js');
+                await loadScript('assets/js/main.js');
+                
+                // Wait a bit for scripts to initialize
+                setTimeout(testFileStructure, 1000);
+            } catch (error) {
+                document.getElementById('jsTest').innerHTML = 
+                    '<div class="status error">✗ Failed to load JavaScript files. Check file paths and console for errors.</div>';
+            }
+            
+            // Test localStorage
+            testLocalStorage();
+            
+            // Create test users if they don't exist
+            if (!localStorage.getItem('vantyx_users')) {
+                createTestUser();
+            }
+        });
+    </script>
+</body>
+</html>

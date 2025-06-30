@@ -649,3 +649,116 @@
         transform: translateX(0);
     }
 }
+
+/* Add this CSS to your stock.css or in a <style> tag */
+
+#chartTooltip {
+    position: fixed !important;
+    z-index: 9999 !important;
+    pointer-events: none !important;
+    
+    background: rgba(0, 0, 0, 0.95) !important;
+    border: 1px solid rgba(74, 144, 226, 0.6) !important;
+    border-radius: 12px !important;
+    padding: 12px !important;
+    backdrop-filter: blur(15px) !important;
+    
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(74, 144, 226, 0.2) !important;
+    
+    color: white !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-size: 14px !important;
+    min-width: 140px !important;
+    text-align: center !important;
+    
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    opacity: 0 !important;
+    display: none !important;
+}
+
+#chartTooltip.persistent {
+    background: rgba(0, 0, 0, 0.98) !important;
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(0, 255, 65, 0.3) !important;
+    border-color: rgba(0, 255, 65, 0.8) !important;
+}
+
+.tooltip-content {
+    position: relative;
+    z-index: 2;
+}
+
+.tooltip-price {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #00ff41 !important;
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.4) !important;
+    margin-bottom: 6px !important;
+}
+
+.tooltip-date {
+    font-size: 12px !important;
+    color: #999 !important;
+    margin-bottom: 4px !important;
+}
+
+.tooltip-change {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+}
+
+.tooltip-change.positive {
+    color: #00ff41 !important;
+    text-shadow: 0 0 8px rgba(0, 255, 65, 0.3) !important;
+}
+
+.tooltip-change.negative {
+    color: #ff4444 !important;
+    text-shadow: 0 0 8px rgba(255, 68, 68, 0.3) !important;
+}
+
+/* Enhanced canvas cursor */
+#stockChart {
+    cursor: crosshair !important;
+    transition: all 0.2s ease !important;
+}
+
+#stockChart:hover {
+    cursor: crosshair !important;
+}
+
+/* Chart info animation */
+#chartPrice, #chartDate {
+    transition: all 0.3s ease !important;
+}
+
+/* Ensure tooltip isn't blocked by containers */
+.chart-container,
+.main-container,
+.stock-header {
+    overflow: visible !important;
+}
+
+/* Mobile responsive tooltip */
+@media (max-width: 768px) {
+    #chartTooltip {
+        min-width: 120px !important;
+        padding: 10px !important;
+        font-size: 13px !important;
+    }
+    
+    .tooltip-price {
+        font-size: 15px !important;
+    }
+    
+    .tooltip-date {
+        font-size: 11px !important;
+    }
+    
+    .tooltip-change {
+        font-size: 12px !important;
+    }
+}

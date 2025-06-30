@@ -1,39 +1,506 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VANTYX</title>
-    <link rel="stylesheet" href="assets/css/home.css">
-    <script src="config.js"></script>
-    <script src="apiService.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VANTYX - Advanced Stock Trading Platform</title>
+  
+  <!-- Your existing CSS files -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/home.css">
+  
+  <style>
+    /* Enhanced home page styles that work with your existing CSS */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(74, 144, 226, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 255, 65, 0.1) 0%, transparent 50%),
+        var(--bg-gradient);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(74,144,226,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+      opacity: 0.3;
+      animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(100px, 100px); }
+    }
+
+    .hero-content {
+      text-align: center;
+      max-width: 800px;
+      padding: var(--spacing-xxl);
+      position: relative;
+      z-index: 2;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: var(--radius-xl);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(74, 144, 226, 0.2);
+    }
+
+    .hero-title {
+      font-size: 4rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-lg);
+      text-shadow: 0 0 40px rgba(74, 144, 226, 0.3);
+      background: linear-gradient(45deg, #4a90e2, #00ff41, #4a90e2);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 4s ease-in-out infinite;
+      letter-spacing: 2px;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .hero-subtitle {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--spacing-xl);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: var(--spacing-lg);
+      justify-content: center;
+      margin-top: var(--spacing-xl);
+    }
+
+    .cta-btn {
+      padding: var(--spacing-lg) var(--spacing-xxl);
+      border: none;
+      border-radius: var(--radius-lg);
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .cta-btn:hover::before {
+      left: 100%;
+    }
+
+    .cta-primary {
+      background: linear-gradient(45deg, var(--accent-color), #00cc33);
+      color: var(--bg-primary);
+      box-shadow: 0 4px 20px rgba(0, 255, 65, 0.3);
+    }
+
+    .cta-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0, 255, 65, 0.4);
+    }
+
+    .cta-secondary {
+      background: transparent;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+    }
+
+    .cta-secondary:hover {
+      background: var(--primary-color);
+      color: var(--text-primary);
+      transform: translateY(-3px);
+    }
+
+    .market-overview {
+      padding: var(--spacing-xxl);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: var(--spacing-xxl);
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacing-xl);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .market-card {
+      background: var(--glass-bg);
+      border: 2px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-xl);
+      backdrop-filter: blur(15px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .market-card:hover {
+      transform: translateY(-10px);
+      border-color: var(--primary-color);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .market-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.1), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .market-card:hover::before {
+      left: 100%;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      opacity: 0.7;
+    }
+
+    .gainers-list, .losers-list {
+      list-style: none;
+    }
+
+    .stock-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-md) 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    .stock-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      padding-left: var(--spacing-sm);
+      border-radius: var(--radius-sm);
+    }
+
+    .stock-item:last-child {
+      border-bottom: none;
+    }
+
+    .stock-symbol {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stock-change.positive {
+      color: var(--accent-color);
+      font-weight: 600;
+    }
+
+    .stock-change.negative {
+      color: var(--accent-red);
+      font-weight: 600;
+    }
+
+    .features-section {
+      padding: var(--spacing-xxl);
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-xl);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      text-align: center;
+      padding: var(--spacing-xl);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary-color);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-lg);
+      display: block;
+    }
+
+    .feature-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .feature-description {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      
+      .hero-cta {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .cta-btn {
+        width: 100%;
+        max-width: 300px;
+      }
+      
+      .market-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-<body>
-    <div class="header">
-        <div class="nav">
-            <a href="#" onclick="showHome()">Home</a>
-            <a href="#" onclick="showMarkets()">Markets</a>
-            <a href="#" onclick="showNews()">News</a>
-            <button class="btn btn-buy" style="padding: 8px 16px;">Open Account</button>
-            <button class="btn btn-sell" style="padding: 8px 16px;">Login</button>
+<body class="dark-theme">
+  <!-- Header Navigation will be created by JavaScript -->
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">VANTYX</h1>
+        <p class="hero-subtitle">
+          The future of stock trading is here. Experience advanced analytics, 
+          real-time data, and professional-grade tools designed for modern investors.
+        </p>
+        <div class="hero-cta">
+          <a href="register.html" class="cta-btn cta-primary">Start Trading</a>
+          <a href="radar.html" class="cta-btn cta-secondary">Explore Markets</a>
         </div>
-    </div>
+      </div>
+    </section>
 
-    <div class="container">
-        <div class="modal">
-            <div class="brand">VANTYX</div>
-            <p style="margin-top: 15px; opacity: 0.8;">
-                VANTYX empowers you to turn ambition into achievement. More than just a trading platform, VANTYX is where dreams meet opportunity. Join us as you invest smartly, grow confidently, and move closer to your financial dreams.
-            </p>
+    <!-- Market Overview Section -->
+    <section class="market-overview">
+      <h2 class="section-title">Market Overview</h2>
+      <div class="market-grid">
+        <!-- Top Gainers -->
+        <div class="market-card">
+          <div class="card-header">
+            <h3 class="card-title">Top Gainers</h3>
+            <span class="card-icon">📈</span>
+          </div>
+          <ul class="gainers-list" id="gainers-list">
+            <li class="stock-item">
+              <span class="stock-symbol">AAPL</span>
+              <span class="stock-change positive">+5.2%</span>
+            </li>
+            <li class="stock-item">
+              <span class="stock-symbol">MSFT</span>
+              <span class="stock-change positive">+3.8%</span>
+            </li>
+            <li class="stock-item">
+              <span class="stock-symbol">GOOGL</span>
+              <span class="stock-change positive">+2.9%</span>
+            </li>
+            <li class="stock-item">
+              <span class="stock-symbol">AMZN</span>
+              <span class="stock-change positive">+2.1%</span>
+            </li>
+          </ul>
         </div>
 
-        <div class="section-title">LAST VIEWED</div>
-        <div id="lastViewed" class="loading">Loading...</div>
+        <!-- Top Losers -->
+        <div class="market-card">
+          <div class="card-header">
+            <h3 class="card-title">Top Losers</h3>
+            <span class="card-icon">📉</span>
+          </div>
+          <ul class="losers-list" id="losers-list">
+            <li class="stock-item">
+              <span class="stock-symbol">TSLA</span>
+              <span class="stock-change negative">-2.4%</span>
+            </li>
+            <li class="stock-item">
+              <span class="stock-symbol">META</span>
+              <span class="stock-change negative">-1.8%</span>
+            </li>
+            <li class="stock-item">
+              <span class="stock-symbol">NFLX</span>
+              <span class="stock-change negative">-1.3%</span>
+            </li>
+            <li class="stock-item">
+              <span class="stock-symbol">NVDA</span>
+              <span class="stock-change negative">-0.9%</span>
+            </li>
+          </ul>
+        </div>
 
-        <div class="section-title">Top Sectors for Investment</div>
-        <div id="sectors" class="sectors loading">Loading...</div>
+        <!-- Market Stats -->
+        <div class="market-card">
+          <div class="card-header">
+            <h3 class="card-title">Market Stats</h3>
+            <span class="card-icon">📊</span>
+          </div>
+          <ul class="gainers-list">
+            <li class="stock-item">
+              <span class="stock-symbol">S&P 500</span>
+              <span class="stock-change positive">+0.8%</span>
+            </li>
+            <li class="stock-item">
+              <span class="stock-symbol">NASDAQ</span>
+              <span class="stock-change positive">+1.2%</span>
+            </li>
+            <li class="stock-item">
+              <span class="stock-symbol">DOW</span>
+              <span class="stock-change positive">+0.6%</span>
+            </li>
+            <li class="stock-item">
+              <span class="stock-symbol">VIX</span>
+              <span class="stock-change negative">-3.2%</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+      <h2 class="section-title">Why Choose VANTYX?</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-icon">⚡</span>
+          <h3 class="feature-title">Real-Time Data</h3>
+          <p class="feature-description">
+            Get lightning-fast market updates and live price feeds for instant decision making.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">📊</span>
+          <h3 class="feature-title">Advanced Analytics</h3>
+          <p class="feature-description">
+            Professional-grade charting tools and technical indicators for deep market analysis.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">🔒</span>
+          <h3 class="feature-title">Secure Trading</h3>
+          <p class="feature-description">
+            Bank-level security with encrypted transactions and secure data protection.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">🚀</span>
+          <h3 class="feature-title">Fast Execution</h3>
+          <p class="feature-description">
+            Ultra-low latency trading with instant order execution and competitive pricing.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="disclaimer">
+        <p>VANTYX is not a registered broker-dealer or investment advisor. Trading involves risk 
+        and may result in financial loss. Market data is provided for informational purposes 
+        only and is not intended for trading or investment advice.</p>
+      </div>
+      
+      <div class="footer-controls">
+        <div class="language-selector">
+          <select id="languageSelect" class="language-dropdown">
+            <option value="en">English(US)</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Français</option>
+            <option value="es">Español</option>
+          </select>
+        </div>
+        
+        <div class="theme-toggle" id="themeToggle">
+          <span class="toggle-slider"></span>
+        </div>
+        
+        <div class="company-logo">
+          <span class="logo-text">VYX</span>
+        </div>
+      </div>
     </div>
+  </footer>
 
-    <script src="assets/js/home.js"></script>
+  <!-- JavaScript Files -->
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/yahoo-finance.js"></script>
+  <script src="assets/js/chart-utils.js"></script>
+  <script src="assets/js/stock-page.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/main.js"></script>
 </body>
 </html>

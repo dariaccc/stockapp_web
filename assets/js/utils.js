@@ -1,460 +1,413 @@
-/**
- * VANTYX - Utility Functions
- * Common utility functions used across the application
- */
+// Utility Functions and Helpers
 
-// Utility object containing all helper functions
-const Utils = {
-    
-    /**
-     * DOM Manipulation Utilities
-     */
-    dom: {
-        // Get element by ID
-        get: (id) => document.getElementById(id),
-        
-        // Get elements by class name
-        getByClass: (className) => document.getElementsByClassName(className),
-        
-        // Get elements by query selector
-        query: (selector) => document.querySelector(selector),
-        
-        // Get multiple elements by query selector
-        queryAll: (selector) => document.querySelectorAll(selector),
-        
-        // Create element
-        create: (tag, attributes = {}, textContent = '') => {
-            const element = document.createElement(tag);
-            Object.keys(attributes).forEach(key => {
-                element.setAttribute(key, attributes[key]);
-            });
-            if (textContent) element.textContent = textContent;
-            return element;
-        },
-        
-        // Add event listener
-        on: (element, event, handler) => {
-            if (typeof element === 'string') {
-                element = Utils.dom.query(element);
-            }
-            if (element) {
-                element.addEventListener(event, handler);
-            }
-        },
-        
-        // Remove event listener
-        off: (element, event, handler) => {
-            if (typeof element === 'string') {
-                element = Utils.dom.query(element);
-            }
-            if (element) {
-                element.removeEventListener(event, handler);
-            }
-        },
-        
-        // Show element
-        show: (element) => {
-            if (typeof element === 'string') {
-                element = Utils.dom.query(element);
-            }
-            if (element) {
-                element.style.display = '';
-                element.classList.remove('d-none');
-            }
-        },
-        
-        // Hide element
-        hide: (element) => {
-            if (typeof element === 'string') {
-                element = Utils.dom.query(element);
-            }
-            if (element) {
-                element.style.display = 'none';
-                element.classList.add('d-none');
-            }
-        },
-        
-        // Toggle element visibility
-        toggle: (element) => {
-            if (typeof element === 'string') {
-                element = Utils.dom.query(element);
-            }
-            if (element) {
-                if (element.style.display === 'none' || element.classList.contains('d-none')) {
-                    Utils.dom.show(element);
-                } else {
-                    Utils.dom.hide(element);
-                }
-            }
-        }
-    },
-    
-    /**
-     * Local Storage Utilities
-     */
-    storage: {
-        // Set item in localStorage
-        set: (key, value) => {
-            try {
-                localStorage.setItem(key, JSON.stringify(value));
-                return true;
-            } catch (error) {
-                console.error('Error saving to localStorage:', error);
-                return false;
-            }
-        },
-        
-        // Get item from localStorage
-        get: (key, defaultValue = null) => {
-            try {
-                const item = localStorage.getItem(key);
-                return item ? JSON.parse(item) : defaultValue;
-            } catch (error) {
-                console.error('Error reading from localStorage:', error);
-                return defaultValue;
-            }
-        },
-        
-        // Remove item from localStorage
-        remove: (key) => {
-            try {
-                localStorage.removeItem(key);
-                return true;
-            } catch (error) {
-                console.error('Error removing from localStorage:', error);
-                return false;
-            }
-        },
-        
-        // Clear all localStorage
-        clear: () => {
-            try {
-                localStorage.clear();
-                return true;
-            } catch (error) {
-                console.error('Error clearing localStorage:', error);
-                return false;
-            }
-        }
-    },
-    
-    /**
-     * Validation Utilities
-     */
-    validate: {
-        // Validate email
-        email: (email) => {
-            return APP_CONFIG.validation.email.pattern.test(email);
-        },
-        
-        // Validate customer ID
-        customerId: (id) => {
-            const config = APP_CONFIG.validation.customerId;
-            return id.length >= config.minLength && 
-                   id.length <= config.maxLength && 
-                   config.pattern.test(id);
-        },
-        
-        // Validate PIN
-        pin: (pin) => {
-            const config = APP_CONFIG.validation.pin;
-            return pin.length >= config.minLength && 
-                   pin.length <= config.maxLength && 
-                   config.pattern.test(pin);
-        },
-        
-        // Check if value is empty
-        isEmpty: (value) => {
-            return value === null || value === undefined || value === '';
-        },
-        
-        // Check if value is a valid number
-        isNumber: (value) => {
-            return !isNaN(parseFloat(value)) && isFinite(value);
-        }
-    },
-    
-    /**
-     * Formatting Utilities
-     */
-    format: {
-        // Format currency
-        currency: (amount, currency = 'USD') => {
-            return new Intl.NumberFormat('en-US', {
+// Common utilities used across the application
+class Utils {
+    // Format currency with proper locale
+    static formatCurrency(amount, currency = 'USD', locale = 'en-US') {
+        try {
+            return new Intl.NumberFormat(locale, {
                 style: 'currency',
                 currency: currency,
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             }).format(amount);
-        },
-        
-        // Format percentage
-        percentage: (value, decimals = 2) => {
-            return `${(value * 100).toFixed(decimals)}%`;
-        },
-        
-        // Format number with commas
-        number: (value, decimals = 2) => {
-            return new Intl.NumberFormat('en-US', {
-                minimumFractionDigits: decimals,
-                maximumFractionDigits: decimals
-            }).format(value);
-        },
-        
-        // Format date
-        date: (date, options = {}) => {
-            const defaultOptions = {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            };
-            return new Intl.DateTimeFormat('en-US', { ...defaultOptions, ...options }).format(new Date(date));
-        },
-        
-        // Format time
-        time: (date, options = {}) => {
-            const defaultOptions = {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            };
-            return new Intl.DateTimeFormat('en-US', { ...defaultOptions, ...options }).format(new Date(date));
-        },
-        
-        // Format date and time
-        datetime: (date) => {
-            return `${Utils.format.date(date)} ${Utils.format.time(date)}`;
+        } catch (error) {
+            return `$${amount.toFixed(2)}`;
         }
-    },
-    
-    /**
-     * Animation Utilities
-     */
-    animate: {
-        // Fade in element
-        fadeIn: (element, duration = 300) => {
-            if (typeof element === 'string') {
-                element = Utils.dom.query(element);
-            }
-            if (element) {
-                element.style.opacity = '0';
-                element.style.display = '';
-                element.style.transition = `opacity ${duration}ms ease`;
-                
-                setTimeout(() => {
-                    element.style.opacity = '1';
-                }, 10);
-            }
-        },
-        
-        // Fade out element
-        fadeOut: (element, duration = 300) => {
-            if (typeof element === 'string') {
-                element = Utils.dom.query(element);
-            }
-            if (element) {
-                element.style.transition = `opacity ${duration}ms ease`;
-                element.style.opacity = '0';
-                
-                setTimeout(() => {
-                    element.style.display = 'none';
-                }, duration);
-            }
-        },
-        
-        // Slide up element
-        slideUp: (element, duration = 300) => {
-            if (typeof element === 'string') {
-                element = Utils.dom.query(element);
-            }
-            if (element) {
-                element.style.transform = 'translateY(20px)';
-                element.style.opacity = '0';
-                element.style.transition = `all ${duration}ms ease`;
-                
-                setTimeout(() => {
-                    element.style.transform = 'translateY(0)';
-                    element.style.opacity = '1';
-                }, 10);
-            }
+    }
+
+    // Format percentage with proper sign
+    static formatPercentage(value, decimals = 2) {
+        const sign = value >= 0 ? '+' : '';
+        return `${sign}${value.toFixed(decimals)}%`;
+    }
+
+    // Format large numbers with K, M, B suffixes
+    static formatLargeNumber(num) {
+        if (Math.abs(num) >= 1e12) {
+            return (num / 1e12).toFixed(1) + 'T';
         }
-    },
-    
-    /**
-     * Network Utilities
-     */
-    http: {
-        // Generic fetch function
-        fetch: async (url, options = {}) => {
-            const defaultOptions = {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                timeout: APP_CONFIG.api.timeout
-            };
-            
-            const finalOptions = { ...defaultOptions, ...options };
-            
-            try {
-                const response = await fetch(url, finalOptions);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                return await response.json();
-            } catch (error) {
-                console.error('Network error:', error);
-                throw error;
-            }
-        },
-        
-        // GET request
-        get: (url, options = {}) => {
-            return Utils.http.fetch(url, { ...options, method: 'GET' });
-        },
-        
-        // POST request
-        post: (url, data, options = {}) => {
-            return Utils.http.fetch(url, {
-                ...options,
-                method: 'POST',
-                body: JSON.stringify(data)
-            });
-        },
-        
-        // PUT request
-        put: (url, data, options = {}) => {
-            return Utils.http.fetch(url, {
-                ...options,
-                method: 'PUT',
-                body: JSON.stringify(data)
-            });
-        },
-        
-        // DELETE request
-        delete: (url, options = {}) => {
-            return Utils.http.fetch(url, { ...options, method: 'DELETE' });
+        if (Math.abs(num) >= 1e9) {
+            return (num / 1e9).toFixed(1) + 'B';
         }
-    },
-    
-    /**
-     * Utility Functions
-     */
-    
-    // Generate unique ID
-    generateId: () => {
-        return Date.now().toString(36) + Math.random().toString(36).substr(2);
-    },
-    
-    // Debounce function
-    debounce: (func, wait, immediate = false) => {
+        if (Math.abs(num) >= 1e6) {
+            return (num / 1e6).toFixed(1) + 'M';
+        }
+        if (Math.abs(num) >= 1e3) {
+            return (num / 1e3).toFixed(1) + 'K';
+        }
+        return num.toString();
+    }
+
+    // Debounce function for search inputs
+    static debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
             const later = () => {
-                timeout = null;
-                if (!immediate) func(...args);
+                clearTimeout(timeout);
+                func(...args);
             };
-            const callNow = immediate && !timeout;
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
-            if (callNow) func(...args);
         };
-    },
-    
-    // Throttle function
-    throttle: (func, limit) => {
+    }
+
+    // Throttle function for scroll events
+    static throttle(func, limit) {
         let inThrottle;
-        return function() {
-            const args = arguments;
-            const context = this;
+        return function executedFunction(...args) {
             if (!inThrottle) {
-                func.apply(context, args);
+                func.apply(this, args);
                 inThrottle = true;
                 setTimeout(() => inThrottle = false, limit);
             }
         };
-    },
-    
+    }
+
     // Deep clone object
-    clone: (obj) => {
-        return JSON.parse(JSON.stringify(obj));
-    },
-    
-    // Check if object is empty
-    isEmpty: (obj) => {
-        return Object.keys(obj).length === 0;
-    },
-    
-    // Get random number between min and max
-    random: (min, max) => {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    },
-    
-    // Capitalize first letter
-    capitalize: (str) => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    },
-    
-    // Convert string to slug
-    slugify: (str) => {
-        return str.toLowerCase()
-                  .replace(/[^\w\s-]/g, '')
-                  .replace(/[\s_-]+/g, '-')
-                  .replace(/^-+|-+$/g, '');
-    },
-    
-    // Get URL parameters
-    getUrlParams: () => {
-        const params = {};
-        const urlParams = new URLSearchParams(window.location.search);
-        for (const [key, value] of urlParams) {
-            params[key] = value;
+    static deepClone(obj) {
+        if (obj === null || typeof obj !== 'object') return obj;
+        if (obj instanceof Date) return new Date(obj.getTime());
+        if (obj instanceof Array) return obj.map(item => Utils.deepClone(item));
+        if (typeof obj === 'object') {
+            const clonedObj = {};
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    clonedObj[key] = Utils.deepClone(obj[key]);
+                }
+            }
+            return clonedObj;
         }
-        return params;
-    },
-    
-    // Set URL parameter
-    setUrlParam: (key, value) => {
-        const url = new URL(window.location);
-        url.searchParams.set(key, value);
-        window.history.pushState({}, '', url);
-    },
-    
-    // Copy text to clipboard
-    copyToClipboard: async (text) => {
+    }
+
+    // Generate random ID
+    static generateId(length = 8) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
+
+    // Validate email format
+    static isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    // Validate PIN format (6 digits)
+    static isValidPIN(pin) {
+        return /^\d{6}$/.test(pin);
+    }
+
+    // Get time ago string
+    static getTimeAgo(date) {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+        
+        if (diffInSeconds < 60) return 'Just now';
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+        if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+        
+        return date.toLocaleDateString();
+    }
+
+    // Format date for display
+    static formatDate(date, options = {}) {
+        const defaultOptions = {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        };
+        
+        return new Intl.DateTimeFormat('en-US', {...defaultOptions, ...options}).format(date);
+    }
+
+    // Create loading spinner element
+    static createLoadingSpinner(size = 'medium') {
+        const spinner = document.createElement('div');
+        spinner.className = `loading-spinner ${size}`;
+        spinner.innerHTML = `
+            <div class="spinner-ring"></div>
+            <div class="spinner-text">Loading...</div>
+        `;
+        return spinner;
+    }
+
+    // Show toast notification
+    static showToast(message, type = 'info', duration = 3000) {
+        // Remove existing toasts
+        const existingToasts = document.querySelectorAll('.toast');
+        existingToasts.forEach(toast => toast.remove());
+        
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `
+            <div class="toast-content">
+                <span class="toast-message">${message}</span>
+                <button class="toast-close">&times;</button>
+            </div>
+        `;
+        
+        // Add styles if not already present
+        if (!document.getElementById('toast-styles')) {
+            const styles = document.createElement('style');
+            styles.id = 'toast-styles';
+            styles.textContent = `
+                .toast {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 500;
+                    min-width: 300px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    animation: slideIn 0.3s ease-out;
+                }
+                .toast-info { background: #4a90e2; }
+                .toast-success { background: #00ff41; color: #000; }
+                .toast-error { background: #ff4444; }
+                .toast-warning { background: #ff9500; }
+                .toast-content {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 10px;
+                }
+                .toast-close {
+                    background: none;
+                    border: none;
+                    color: inherit;
+                    font-size: 18px;
+                    cursor: pointer;
+                    padding: 0;
+                    margin-left: 10px;
+                }
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(styles);
+        }
+        
+        document.body.appendChild(toast);
+        
+        // Close button handler
+        const closeBtn = toast.querySelector('.toast-close');
+        closeBtn.addEventListener('click', () => {
+            toast.style.animation = 'slideOut 0.3s ease-in';
+            setTimeout(() => toast.remove(), 300);
+        });
+        
+        // Auto remove
+        if (duration > 0) {
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.style.animation = 'slideOut 0.3s ease-in';
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, duration);
+        }
+    }
+
+    // Local storage helpers with error handling
+    static setLocalStorage(key, value) {
         try {
-            await navigator.clipboard.writeText(text);
+            localStorage.setItem(key, JSON.stringify(value));
             return true;
         } catch (error) {
-            console.error('Failed to copy to clipboard:', error);
+            console.error('Error saving to localStorage:', error);
             return false;
         }
-    },
-    
-    // Check if device is mobile
-    isMobile: () => {
+    }
+
+    static getLocalStorage(key, defaultValue = null) {
+        try {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : defaultValue;
+        } catch (error) {
+            console.error('Error reading from localStorage:', error);
+            return defaultValue;
+        }
+    }
+
+    static removeLocalStorage(key) {
+        try {
+            localStorage.removeItem(key);
+            return true;
+        } catch (error) {
+            console.error('Error removing from localStorage:', error);
+            return false;
+        }
+    }
+
+    // URL parameter helpers
+    static getUrlParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+    static setUrlParameter(name, value) {
+        const url = new URL(window.location);
+        url.searchParams.set(name, value);
+        window.history.pushState({}, '', url);
+    }
+
+    static removeUrlParameter(name) {
+        const url = new URL(window.location);
+        url.searchParams.delete(name);
+        window.history.pushState({}, '', url);
+    }
+
+    // DOM helpers
+    static createElement(tag, className = '', innerHTML = '') {
+        const element = document.createElement(tag);
+        if (className) element.className = className;
+        if (innerHTML) element.innerHTML = innerHTML;
+        return element;
+    }
+
+    static addEventListeners(element, events) {
+        Object.entries(events).forEach(([event, handler]) => {
+            element.addEventListener(event, handler);
+        });
+    }
+
+    // Animation helpers
+    static fadeIn(element, duration = 300) {
+        element.style.opacity = '0';
+        element.style.display = 'block';
+        
+        const start = performance.now();
+        const animate = (timestamp) => {
+            const elapsed = timestamp - start;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            element.style.opacity = progress.toString();
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            }
+        };
+        
+        requestAnimationFrame(animate);
+    }
+
+    static fadeOut(element, duration = 300) {
+        const start = performance.now();
+        const startOpacity = parseFloat(element.style.opacity) || 1;
+        
+        const animate = (timestamp) => {
+            const elapsed = timestamp - start;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            element.style.opacity = (startOpacity * (1 - progress)).toString();
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                element.style.display = 'none';
+            }
+        };
+        
+        requestAnimationFrame(animate);
+    }
+
+    // Color helpers for stock data
+    static getChangeColor(value, type = 'text') {
+        if (type === 'text') {
+            return value >= 0 ? '#00ff41' : '#ff4444';
+        } else if (type === 'background') {
+            return value >= 0 ? 'rgba(0, 255, 65, 0.1)' : 'rgba(255, 68, 68, 0.1)';
+        }
+    }
+
+    static getChangeClass(value) {
+        return value >= 0 ? 'positive' : 'negative';
+    }
+
+    // Error handling helpers
+    static handleError(error, userMessage = 'An error occurred') {
+        console.error('Application Error:', error);
+        
+        // Show user-friendly message
+        Utils.showToast(userMessage, 'error');
+        
+        // Log to error tracking service if available
+        if (window.errorTracker) {
+            window.errorTracker.log(error);
+        }
+    }
+
+    // Performance helpers
+    static measurePerformance(name, fn) {
+        const start = performance.now();
+        const result = fn();
+        const end = performance.now();
+        
+        console.log(`${name} took ${end - start} milliseconds`);
+        return result;
+    }
+
+    // Retry mechanism for API calls
+    static async retry(fn, maxAttempts = 3, delay = 1000) {
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                return await fn();
+            } catch (error) {
+                if (attempt === maxAttempts) {
+                    throw error;
+                }
+                
+                console.warn(`Attempt ${attempt} failed, retrying in ${delay}ms...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                delay *= 2; // Exponential backoff
+            }
+        }
+    }
+
+    // Device detection
+    static isMobile() {
         return window.innerWidth <= 768;
-    },
-    
-    // Check if device is tablet
-    isTablet: () => {
+    }
+
+    static isTablet() {
         return window.innerWidth > 768 && window.innerWidth <= 1024;
-    },
-    
-    // Check if device is desktop
-    isDesktop: () => {
+    }
+
+    static isDesktop() {
         return window.innerWidth > 1024;
     }
-};
 
-// Make Utils globally available
-if (typeof window !== 'undefined') {
-    window.Utils = Utils;
+    // Browser detection
+    static getBrowserInfo() {
+        const userAgent = navigator.userAgent;
+        
+        if (userAgent.includes('Chrome')) return 'Chrome';
+        if (userAgent.includes('Firefox')) return 'Firefox';
+        if (userAgent.includes('Safari')) return 'Safari';
+        if (userAgent.includes('Edge')) return 'Edge';
+        
+        return 'Unknown';
+    }
 }
 
-// Export for use in Node.js environment
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = Utils;
-}
+// Export Utils class
+window.Utils = Utils;
+
+// Also export individual commonly used functions
+window.formatCurrency = Utils.formatCurrency;
+window.formatPercentage = Utils.formatPercentage;
+window.showToast = Utils.showToast;
+window.debounce = Utils.debounce;
+window.throttle = Utils.throttle;

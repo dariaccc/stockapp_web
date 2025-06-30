@@ -1,776 +1,851 @@
-/**
- * VANTYX - Main Application Initialization
- * Global app setup and common functionality
- */
+// Main Application Logic - Complete Fixed Version
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing app...');
+    
+    // Wait for all dependencies to load
+    if (typeof AuthManager === 'undefined' || typeof YahooFinanceAPI === 'undefined') {
+        console.error('Dependencies not loaded. Make sure scripts are included in correct order.');
+        return;
+    }
+    
+    // Initialize managers
+    window.auth = new AuthManager();
+    window.api = new YahooFinanceAPI();
+    
+    console.log('Auth and API initialized');
+    
+    // Page routing and initialization
+    const currentPage = getCurrentPage();
+    console.log('Current page:', currentPage);
+    initializePage(currentPage);
+});
 
-class VantyxApp {
-    constructor() {
-        this.version = APP_CONFIG.version;
-        this.initialized = false;
-        this.currentPage = this.getCurrentPage();
-        this.toast = null;
-        
-        this.init();
-    }
+// Get current page name
+function getCurrentPage() {
+    const path = window.location.pathname;
+    const page = path.substring(path.lastIndexOf('/') + 1);
     
-    /**
-     * Initialize the application
-     */
-    init() {
-        console.log(`VANTYX v${this.version} initializing...`);
-        
-        // Set up global error handling
-        this.setupErrorHandling();
-        
-        // Initialize toast notification system
-        this.initializeToast();
-        
-        // Set up global event listeners
-        this.setupGlobalEventListeners();
-        
-        // Initialize theme system
-        this.initializeTheme();
-        
-        // Set up navigation
-        this.setupNavigation();
-        
-        // Initialize page-specific features
-        this.initializePageFeatures();
-        
-        // Set up periodic tasks
-        this.setupPeriodicTasks();
-        
-        this.initialized = true;
-        console.log('VANTYX initialized successfully');
-        
-        // Dispatch custom event
-        this.dispatchEvent('vantyx:initialized');
-    }
+    if (page === '' || page === 'index.html') return 'login';
+    if (page === 'home.html') return 'home';
+    if (page === 'register.html') return 'register';
+    if (page === 'dashboard.html') return 'dashboard';
+    if (page === 'radar.html') return 'radar';
+    if (page === 'stock.html') return 'stock';
+    if (page === 'pro.html') return 'pro';
     
-    /**
-     * Get current page name
-     */
-    getCurrentPage() {
-        const path = window.location.pathname;
-        const filename = path.split('/').pop() || 'index.html';
-        return filename.replace('.html', '');
-    }
+    return 'unknown';
+}
+
+// Initialize page based on current page
+function initializePage(page) {
+    console.log('Initializing page:', page);
     
-    /**
-     * Setup global error handling
-     */
-    setupErrorHandling() {
-        // Handle uncaught errors
-        window.addEventListener('error', (event) => {
-            console.error('Global error:', event.error);
-            this.showToast('An unexpected error occurred', 'error');
-        });
-        
-        // Handle unhandled promise rejections
-        window.addEventListener('unhandledrejection', (event) => {
-            console.error('Unhandled promise rejection:', event.reason);
-            this.showToast('A network error occurred', 'error');
-            event.preventDefault();
-        });
+    switch(page) {
+        case 'login':
+            initializeLoginPage();
+            break;
+        case 'home':
+            initializeHomePage();
+            break;
+        case 'register':
+            initializeRegisterPage();
+            break;
+        case 'dashboard':
+            initializeDashboardPage();
+            break;
+        case 'radar':
+            initializeRadarPage();
+            break;
+        case 'stock':
+            initializeStockPage();
+            break;
+        case 'pro':
+            initializeProPage();
+            break;
+        default:
+            console.log('Unknown page:', page);
     }
+}
+
+// Initialize login page
+function initializeLoginPage() {
+    console.log('Initializing login page');
     
-    /**
-     * Initialize toast notification system
-     */
-    initializeToast() {
-        // Create toast container if it doesn't exist
-        let toastContainer = Utils.dom.get('toastContainer');
-        if (!toastContainer) {
-            toastContainer = Utils.dom.create('div', {
-                id: 'toastContainer',
-                class: 'toast-container'
-            });
-            document.body.appendChild(toastContainer);
-        }
-        
-        // Add toast styles
-        if (!Utils.dom.get('toastStyles')) {
-            const styles = Utils.dom.create('style', { id: 'toastStyles' });
-            styles.textContent = `
-                .toast-container {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 10000;
-                    pointer-events: none;
-                }
-                
-                .toast {
-                    background: var(--glass-bg);
-                    border: 1px solid var(--glass-border);
-                    border-radius: var(--radius-md);
-                    padding: var(--spacing-md);
-                    margin-bottom: var(--spacing-sm);
-                    min-width: 300px;
-                    max-width: 400px;
-                    backdrop-filter: blur(10px);
-                    box-shadow: var(--shadow-lg);
-                    transform: translateX(100%);
-                    transition: var(--transition-standard);
-                    pointer-events: auto;
-                    position: relative;
-                }
-                
-                .toast.show {
-                    transform: translateX(0);
-                }
-                
-                .toast.success {
-                    border-left: 4px solid var(--accent-color);
-                }
-                
-                .toast.error {
-                    border-left: 4px solid var(--accent-red);
-                }
-                
-                .toast.warning {
-                    border-left: 4px solid #ffa500;
-                }
-                
-                .toast.info {
-                    border-left: 4px solid var(--primary-color);
-                }
-                
-                .toast-close {
-                    position: absolute;
-                    top: 5px;
-                    right: 10px;
-                    background: none;
-                    border: none;
-                    color: var(--text-secondary);
-                    cursor: pointer;
-                    font-size: 18px;
-                    padding: 0;
-                    width: 20px;
-                    height: 20px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                
-                .toast-close:hover {
-                    color: var(--text-primary);
-                }
-                
-                @media (max-width: 768px) {
-                    .toast-container {
-                        top: 10px;
-                        right: 10px;
-                        left: 10px;
-                    }
-                    
-                    .toast {
-                        min-width: auto;
-                    }
-                }
-            `;
-            document.head.appendChild(styles);
-        }
-    }
+    const loginForm = document.getElementById('loginForm');
+    const errorMessage = document.getElementById('errorMessage');
+    const successMessage = document.getElementById('successMessage');
+    const loginBtn = document.getElementById('loginBtn');
     
-    /**
-     * Show toast notification
-     */
-    showToast(message, type = 'info', duration = 5000) {
-        const toastContainer = Utils.dom.get('toastContainer');
-        if (!toastContainer) return;
-        
-        // Create toast element
-        const toast = Utils.dom.create('div', {
-            class: `toast ${type}`
-        });
-        
-        toast.innerHTML = `
-            <div class="toast-content">${message}</div>
-            <button class="toast-close">&times;</button>
-        `;
-        
-        // Add to container
-        toastContainer.appendChild(toast);
-        
-        // Show toast
-        setTimeout(() => {
-            toast.classList.add('show');
-        }, 100);
-        
-        // Auto-hide toast
-        if (duration > 0) {
-            setTimeout(() => {
-                this.hideToast(toast);
-            }, duration);
-        }
-        
-        // Close button
-        const closeBtn = toast.querySelector('.toast-close');
-        closeBtn.addEventListener('click', () => {
-            this.hideToast(toast);
-        });
-        
-        return toast;
-    }
-    
-    /**
-     * Hide toast notification
-     */
-    hideToast(toast) {
-        toast.classList.remove('show');
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const customerId = document.getElementById('customerId').value;
+            const pin = document.getElementById('pin').value;
+            
+            if (!customerId || !pin) {
+                showMessage(errorMessage, 'Please enter both Customer ID and PIN');
+                return;
             }
-        }, 300);
-    }
-    
-    /**
-     * Setup global event listeners
-     */
-    setupGlobalEventListeners() {
-        // Handle online/offline status
-        window.addEventListener('online', () => {
-            this.showToast('Connection restored', 'success');
-        });
-        
-        window.addEventListener('offline', () => {
-            this.showToast('Connection lost. Some features may be limited.', 'warning');
-        });
-        
-        // Handle visibility change
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                console.log('App went to background');
+            
+            // Show loading
+            showButtonLoading(loginBtn);
+            hideMessage(errorMessage);
+            hideMessage(successMessage);
+            
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            const result = auth.login(customerId, pin);
+            
+            hideButtonLoading(loginBtn);
+            
+            if (result.success) {
+                showMessage(successMessage, 'Login successful! Redirecting...');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
             } else {
-                console.log('App came to foreground');
-                // Refresh session if user is logged in
-                if (userManager.isLoggedIn()) {
-                    userManager.refreshSession();
-                }
-            }
-        });
-        
-        // Handle resize
-        window.addEventListener('resize', Utils.debounce(() => {
-            this.handleResize();
-        }, 250));
-        
-        // Handle beforeunload
-        window.addEventListener('beforeunload', (e) => {
-            // Save any pending data
-            if (userManager.currentUser) {
-                userManager.currentUser.lastActivity = new Date().toISOString();
-                userManager.saveCurrentUser();
+                showMessage(errorMessage, result.error);
             }
         });
     }
     
-    /**
-     * Handle window resize
-     */
-    handleResize() {
-        // Update mobile detection
-        document.body.classList.toggle('mobile', Utils.isMobile());
-        document.body.classList.toggle('tablet', Utils.isTablet());
-        document.body.classList.toggle('desktop', Utils.isDesktop());
-        
-        // Dispatch resize event
-        this.dispatchEvent('vantyx:resize', {
-            width: window.innerWidth,
-            height: window.innerHeight,
-            isMobile: Utils.isMobile(),
-            isTablet: Utils.isTablet(),
-            isDesktop: Utils.isDesktop()
-        });
+    // Redirect if already logged in
+    if (auth.isLoggedIn()) {
+        window.location.href = 'dashboard.html';
     }
+}
+
+// Initialize home page
+function initializeHomePage() {
+    console.log('Initializing home page');
     
-    /**
-     * Initialize theme system
-     */
-    initializeTheme() {
-        const savedTheme = Utils.storage.get(APP_CONFIG.storage.theme, APP_CONFIG.defaults.theme);
-        this.applyTheme(savedTheme);
+    // Home page is accessible to everyone (guests and logged-in users)
+    // Load market data, trending stocks, etc.
+    loadHomePageData();
+}
+
+// Load home page data
+async function loadHomePageData() {
+    console.log('Loading home page data');
+    
+    try {
+        // Load trending stocks for home page
+        const trendingStocks = await api.getTrendingStocks();
         
-        // Set device classes
-        this.handleResize();
+        // You can add more home page specific functionality here
+        // For example: market overview, top gainers, etc.
+        
+        console.log('Home page data loaded successfully');
+    } catch (error) {
+        console.error('Error loading home page data:', error);
     }
+}
+
+// Initialize register page
+function initializeRegisterPage() {
+    console.log('Initializing register page');
     
-    /**
-     * Apply theme
-     */
-    applyTheme(themeName) {
-        document.body.classList.remove('dark-theme', 'light-theme');
-        document.body.classList.add(`${themeName}-theme`);
-        
-        // Update meta theme color
-        let metaTheme = document.querySelector('meta[name="theme-color"]');
-        if (!metaTheme) {
-            metaTheme = Utils.dom.create('meta', { name: 'theme-color' });
-            document.head.appendChild(metaTheme);
-        }
-        
-        const themeColor = themeName === 'dark' ? '#1a1a2e' : '#ffffff';
-        metaTheme.setAttribute('content', themeColor);
-    }
+    const signupForm = document.getElementById('signup-form');
     
-    /**
-     * Setup navigation
-     */
-    setupNavigation() {
-        // Handle browser back/forward
-        window.addEventListener('popstate', (e) => {
-            console.log('Navigation state changed:', e.state);
-        });
-        
-        // Setup global navigation handlers
-        document.addEventListener('click', (e) => {
-            const link = e.target.closest('[data-navigate]');
-            if (link) {
-                e.preventDefault();
-                const page = link.getAttribute('data-navigate');
-                this.navigateTo(page);
+    if (signupForm) {
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const pin = document.getElementById('pin').value;
+            const pinConfirm = document.getElementById('pin-confirm').value;
+            
+            // Validate PIN match
+            if (pin !== pinConfirm) {
+                alert('PINs do not match!');
+                return;
             }
-        });
-    }
-    
-    /**
-     * Navigate to page
-     */
-    navigateTo(page) {
-        // Add transition effect
-        Utils.animate.fadeOut('body', 300);
-        
-        setTimeout(() => {
-            window.location.href = page;
-        }, 300);
-    }
-    
-    /**
-     * Initialize page-specific features
-     */
-    initializePageFeatures() {
-        switch (this.currentPage) {
-            case 'index':
-            case 'login':
-                this.initializeLoginPage();
-                break;
-            case 'register':
-                this.initializeRegisterPage();
-                break;
-            case 'dashboard':
-                this.initializeDashboardPage();
-                break;
-            default:
-                console.log(`No specific initialization for page: ${this.currentPage}`);
-        }
-    }
-    
-    /**
-     * Initialize login page features
-     */
-    initializeLoginPage() {
-        console.log('Initializing login page features');
-        
-        // Add demo account info
-        this.addDemoAccountInfo();
-    }
-    
-    /**
-     * Initialize register page features
-     */
-    initializeRegisterPage() {
-        console.log('Initializing register page features');
-        
-        // Add form progress indicator
-        this.addFormProgress();
-    }
-    
-    /**
-     * Initialize dashboard page features
-     */
-    initializeDashboardPage() {
-        console.log('Initializing dashboard page features');
-        
-        // Check if user is logged in
-        if (!userManager.isLoggedIn()) {
-            this.showToast('Please login to access the dashboard', 'warning');
-            setTimeout(() => {
+            
+            // Validate PIN format
+            if (!/^\d{6}$/.test(pin)) {
+                alert('PIN must be exactly 6 digits!');
+                return;
+            }
+            
+            const result = auth.register(email, pin);
+            
+            if (result.success) {
+                alert(`Registration successful! Your Customer ID is: ${result.customerId}\nPlease save this ID for login.`);
                 window.location.href = 'index.html';
-            }, 2000);
-        }
-    }
-    
-    /**
-     * Add demo account info
-     */
-    addDemoAccountInfo() {
-        if (this.currentPage !== 'index' && this.currentPage !== 'login') return;
-        
-        const loginContainer = Utils.dom.query('.login-container');
-        if (!loginContainer) return;
-        
-        const demoInfo = Utils.dom.create('div', {
-            class: 'demo-info',
-            style: `
-                background: rgba(74, 144, 226, 0.1);
-                border: 1px solid var(--primary-color);
-                border-radius: var(--radius-md);
-                padding: var(--spacing-md);
-                margin-top: var(--spacing-lg);
-                font-size: var(--font-size-sm);
-                color: var(--text-secondary);
-            `
-        });
-        
-        demoInfo.innerHTML = `
-            <h4 style="color: var(--primary-color); margin-bottom: var(--spacing-sm);">Demo Accounts</h4>
-            <p><strong>User:</strong> DEMO001 / 1234</p>
-            <p><strong>Admin:</strong> ADMIN / admin123</p>
-        `;
-        
-        loginContainer.appendChild(demoInfo);
-    }
-    
-    /**
-     * Add form progress indicator
-     */
-    addFormProgress() {
-        if (this.currentPage !== 'register') return;
-        
-        const form = Utils.dom.get('registerForm');
-        if (!form) return;
-        
-        const inputs = form.querySelectorAll('input[required]');
-        const progress = Utils.dom.create('div', {
-            class: 'form-progress',
-            style: `
-                background: var(--input-bg);
-                height: 4px;
-                border-radius: 2px;
-                margin-bottom: var(--spacing-lg);
-                overflow: hidden;
-            `
-        });
-        
-        const progressBar = Utils.dom.create('div', {
-            class: 'form-progress-bar',
-            style: `
-                height: 100%;
-                background: var(--primary-color);
-                width: 0%;
-                transition: var(--transition-standard);
-            `
-        });
-        
-        progress.appendChild(progressBar);
-        form.insertBefore(progress, form.firstChild);
-        
-        // Update progress on input
-        inputs.forEach(input => {
-            input.addEventListener('input', () => {
-                const filledInputs = Array.from(inputs).filter(inp => inp.value.trim() !== '').length;
-                const progressPercent = (filledInputs / inputs.length) * 100;
-                progressBar.style.width = `${progressPercent}%`;
-            });
-        });
-    }
-    
-    /**
-     * Setup periodic tasks
-     */
-    setupPeriodicTasks() {
-        // Refresh data every 30 seconds if user is logged in
-        setInterval(() => {
-            if (userManager.isLoggedIn() && !document.hidden) {
-                this.refreshData();
+            } else {
+                alert('Registration failed: ' + result.error);
             }
-        }, 30000);
-        
-        // Clean up old cache entries every 5 minutes
-        setInterval(() => {
-            this.cleanupCache();
-        }, 5 * 60 * 1000);
+        });
+    }
+}
+
+// Initialize dashboard page
+function initializeDashboardPage() {
+    console.log('Initializing dashboard page');
+    
+    // Check if user is logged in
+    if (!auth.isLoggedIn()) {
+        window.location.href = 'index.html';
+        return;
     }
     
-    /**
-     * Refresh data
-     */
-    async refreshData() {
+    loadDashboardData();
+}
+
+// Load dashboard data
+async function loadDashboardData() {
+    console.log('Loading dashboard data');
+    
+    const user = auth.getCurrentUser();
+    
+    // Update portfolio value
+    await updatePortfolioValue();
+    
+    // Load user's stocks
+    loadUserStocks();
+}
+
+// Update portfolio value
+async function updatePortfolioValue() {
+    const user = auth.getCurrentUser();
+    const portfolioValueEl = document.querySelector('.card .amount');
+    const portfolioChangeEl = document.querySelector('.card .amount-subtitle');
+    
+    if (!portfolioValueEl) return;
+    
+    let totalValue = user.balance;
+    let totalChange = 0;
+    
+    // Calculate portfolio value
+    for (const [symbol, holding] of Object.entries(user.portfolio)) {
         try {
-            // Refresh market data if on relevant pages
-            if (['dashboard', 'portfolio', 'watchlist'].includes(this.currentPage)) {
-                await apiService.getMarketIndices();
-            }
+            const quote = await api.getQuote(symbol);
+            const currentValue = holding.shares * quote.price;
+            const costBasis = holding.shares * holding.avgPrice;
+            
+            totalValue += currentValue;
+            totalChange += (currentValue - costBasis);
         } catch (error) {
-            console.warn('Failed to refresh data:', error);
+            console.error(`Error getting quote for ${symbol}:`, error);
         }
     }
     
-    /**
-     * Cleanup cache
-     */
-    cleanupCache() {
-        if (apiService && apiService.cache) {
-            const now = Date.now();
-            const cacheEntries = Array.from(apiService.cache.entries());
+    const changePercent = totalValue > 0 ? (totalChange / (totalValue - totalChange)) * 100 : 0;
+    
+    portfolioValueEl.textContent = api.formatCurrency(totalValue);
+    portfolioChangeEl.textContent = `${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(2)}% Today`;
+    portfolioChangeEl.className = `amount-subtitle ${changePercent >= 0 ? 'positive' : 'negative'}`;
+}
+
+// Load user's stocks
+async function loadUserStocks() {
+    const user = auth.getCurrentUser();
+    const stocksContainer = document.querySelector('.stocks-section');
+    
+    if (!stocksContainer || Object.keys(user.portfolio).length === 0) {
+        if (stocksContainer) {
+            stocksContainer.innerHTML = `
+                <div class="card-title">Your Stocks</div>
+                <div class="stock-item">
+                    <span>No stocks in portfolio</span>
+                    <span><a href="radar.html">Browse stocks</a></span>
+                </div>
+            `;
+        }
+        return;
+    }
+    
+    let stocksHtml = '<div class="card-title">Your Stocks</div>';
+    
+    for (const [symbol] of Object.entries(user.portfolio)) {
+        try {
+            const quote = await api.getQuote(symbol);
+            const changeClass = quote.changePercent >= 0 ? 'positive' : 'negative';
             
-            cacheEntries.forEach(([key, value]) => {
-                if (now - value.timestamp > apiService.cacheDuration) {
-                    apiService.cache.delete(key);
-                }
-            });
+            stocksHtml += `
+                <a href="stock.html?symbol=${symbol}" class="stock-item">
+                    <span>${quote.symbol}</span>
+                    <span class="${changeClass}">${api.formatPercentage(quote.changePercent)}</span>
+                </a>
+            `;
+        } catch (error) {
+            console.error(`Error loading ${symbol}:`, error);
         }
     }
     
-    /**
-     * Dispatch custom event
-     */
-    dispatchEvent(eventName, detail = {}) {
-        const event = new CustomEvent(eventName, { detail });
-        window.dispatchEvent(event);
-    }
+    stocksContainer.innerHTML = stocksHtml;
+}
+
+// Initialize radar page
+function initializeRadarPage() {
+    console.log('Initializing radar page');
     
-    /**
-     * Get app info
-     */
-    getAppInfo() {
-        return {
-            name: APP_CONFIG.name,
-            version: this.version,
-            currentPage: this.currentPage,
-            initialized: this.initialized,
-            userLoggedIn: userManager.isLoggedIn(),
-            demoMode: apiService.demoMode,
-            timestamp: new Date().toISOString()
-        };
-    }
+    // Radar page is accessible to everyone, but some features require login
+    initializeStockSearch();
+    loadRadarData();
     
-    /**
-     * Debug methods
-     */
-    debug() {
-        console.group('VANTYX Debug Info');
-        console.log('App Info:', this.getAppInfo());
-        console.log('Current User:', userManager.getCurrentUser());
-        console.log('Storage Keys:', Object.keys(localStorage).filter(key => key.startsWith('vantyx_')));
-        console.log('API Cache Size:', apiService.cache.size);
-        console.groupEnd();
-    }
-    
-    /**
-     * Reset app data (for testing)
-     */
-    resetAppData() {
-        if (confirm('This will clear all app data. Are you sure?')) {
-            // Clear localStorage
-            Object.keys(localStorage).forEach(key => {
-                if (key.startsWith('vantyx_')) {
-                    localStorage.removeItem(key);
-                }
-            });
-            
-            // Clear API cache
-            apiService.clearCache();
-            
-            // Reload page
-            window.location.reload();
-        }
+    // If user is not logged in, show login prompt for trading features
+    if (!auth.isLoggedIn()) {
+        // Add login prompts to buy buttons, etc.
+        addLoginPromptsToTradingFeatures();
     }
 }
 
-// Toast utility for global use
-class Toast {
-    static show(message, type = 'info', duration = 5000) {
-        if (window.vantyxApp) {
-            return window.vantyxApp.showToast(message, type, duration);
-        }
-        
-        // Fallback to alert if app not initialized
-        alert(message);
-    }
-    
-    static success(message, duration = 3000) {
-        return Toast.show(message, 'success', duration);
-    }
-    
-    static error(message, duration = 5000) {
-        return Toast.show(message, 'error', duration);
-    }
-    
-    static warning(message, duration = 4000) {
-        return Toast.show(message, 'warning', duration);
-    }
-    
-    static info(message, duration = 3000) {
-        return Toast.show(message, 'info', duration);
-    }
-}
-
-// Loading utility for global use
-class Loading {
-    static overlay = null;
-    
-    static show(message = 'Loading...') {
-        if (Loading.overlay) {
-            Loading.hide();
-        }
-        
-        Loading.overlay = Utils.dom.create('div', {
-            class: 'loading-overlay',
-            style: `
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0, 0, 0, 0.8);
-                backdrop-filter: blur(5px);
-                z-index: 10000;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            `
+// Add login prompts to trading features for guests
+function addLoginPromptsToTradingFeatures() {
+    // This function can add event listeners that show login prompts
+    // when guests try to use trading features
+    setTimeout(() => {
+        const buyButtons = document.querySelectorAll('.buy-btn');
+        buyButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                alert('Please login to start trading stocks!');
+                window.location.href = 'index.html';
+            });
         });
+    }, 1000);
+}
+
+// Initialize stock search
+function initializeStockSearch() {
+    const searchInput = document.getElementById('stockSearch');
+    const searchResults = document.getElementById('searchResults');
+    
+    if (!searchInput || !searchResults) return;
+    
+    let searchTimeout;
+    
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
         
-        Loading.overlay.innerHTML = `
-            <div class="loading-content" style="
-                text-align: center;
-                color: white;
-            ">
-                <div class="spinner" style="
-                    width: 40px;
-                    height: 40px;
-                    border: 3px solid rgba(255, 255, 255, 0.3);
-                    border-top: 3px solid #4a90e2;
-                    border-radius: 50%;
-                    animation: spin 1s linear infinite;
-                    margin: 0 auto 20px;
-                "></div>
-                <p>${message}</p>
+        clearTimeout(searchTimeout);
+        
+        if (query.length < 2) {
+            searchResults.style.display = 'none';
+            return;
+        }
+        
+        searchTimeout = setTimeout(async () => {
+            try {
+                const results = await api.searchStocks(query);
+                displaySearchResults(results, searchResults);
+            } catch (error) {
+                console.error('Search error:', error);
+                searchResults.style.display = 'none';
+            }
+        }, 300);
+    });
+    
+    // Hide results when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.style.display = 'none';
+        }
+    });
+}
+
+// Display search results
+function displaySearchResults(results, container) {
+    if (results.length === 0) {
+        container.innerHTML = '<div class="search-result-item">No results found</div>';
+        container.style.display = 'block';
+        return;
+    }
+    
+    container.innerHTML = results.slice(0, 8).map(result => `
+        <div class="search-result-item" data-symbol="${result.symbol}">
+            <div>
+                <div class="search-result-symbol">${result.symbol}</div>
+                <div class="search-result-name">${result.shortname || result.longname}</div>
+            </div>
+            <div class="search-result-price">View</div>
+        </div>
+    `).join('');
+    
+    // Add click handlers
+    container.querySelectorAll('.search-result-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const symbol = item.dataset.symbol;
+            window.location.href = `stock.html?symbol=${symbol}`;
+        });
+    });
+    
+    container.style.display = 'block';
+}
+
+// Load radar data
+async function loadRadarData() {
+    await Promise.all([
+        loadTopRecommended(),
+        loadWorstPerformers()
+    ]);
+}
+
+// Load top recommended stocks
+async function loadTopRecommended() {
+    const container = document.getElementById('topRecommendedGrid');
+    if (!container) return;
+    
+    try {
+        const stocks = await api.getTopGainers();
+        displayStockGrid(stocks, container);
+    } catch (error) {
+        console.error('Error loading top recommended:', error);
+        container.innerHTML = '<div class="loading-placeholder">Error loading data</div>';
+    }
+}
+
+// Load worst performers
+async function loadWorstPerformers() {
+    const container = document.getElementById('worstPerformersGrid');
+    if (!container) return;
+    
+    try {
+        const stocks = await api.getTopLosers();
+        displayStockGrid(stocks, container);
+    } catch (error) {
+        console.error('Error loading worst performers:', error);
+        container.innerHTML = '<div class="loading-placeholder">Error loading data</div>';
+    }
+}
+
+// Display stock grid
+function displayStockGrid(stocks, container) {
+    if (stocks.length === 0) {
+        container.innerHTML = '<div class="loading-placeholder">No data available</div>';
+        return;
+    }
+    
+    container.innerHTML = stocks.map(stock => {
+        const changeClass = stock.changePercent >= 0 ? 'positive' : 'negative';
+        const category = getStockCategory(stock.symbol);
+        
+        return `
+            <div class="stock-card" data-symbol="${stock.symbol}">
+                <div class="stock-info">
+                    <div class="stock-symbol">${stock.symbol}</div>
+                    <div class="stock-details">
+                        <div class="stock-category">${category}</div>
+                    </div>
+                </div>
+                <div class="stock-price">${api.formatCurrency(stock.price)}</div>
+                <div class="stock-change ${changeClass}">${api.formatPercentage(stock.changePercent)}</div>
+                <div class="stock-actions">
+                    <button class="buy-btn" onclick="openStockModal('${stock.symbol}')">BUY</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    // Add click handlers for stock cards
+    container.querySelectorAll('.stock-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('buy-btn')) {
+                const symbol = card.dataset.symbol;
+                window.location.href = `stock.html?symbol=${symbol}`;
+            }
+        });
+    });
+}
+
+// Get stock category (simplified)
+function getStockCategory(symbol) {
+    const categories = {
+        'AAPL': 'Technology', 'MSFT': 'Technology', 'GOOGL': 'Technology',
+        'AMZN': 'E-commerce', 'TSLA': 'Automotive', 'META': 'Social Media',
+        'NFLX': 'Entertainment', 'NVDA': 'Semiconductors', 'AMD': 'Semiconductors',
+        'INTC': 'Semiconductors', 'CRM': 'Software', 'ADBE': 'Software'
+    };
+    
+    return categories[symbol] || 'Equity';
+}
+
+// Open stock modal (for quick buy)
+async function openStockModal(symbol) {
+    try {
+        const quote = await api.getQuote(symbol);
+        
+        // Create modal HTML
+        const modal = document.createElement('div');
+        modal.className = 'modal active';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>${symbol} - Quick Buy</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="stock-modal-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Current Price</span>
+                            <span class="detail-value">${api.formatCurrency(quote.price)}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Change</span>
+                            <span class="detail-value ${quote.changePercent >= 0 ? 'positive' : 'negative'}">
+                                ${api.formatPercentage(quote.changePercent)}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="number" id="quickBuyQuantity" min="1" max="1000" value="1" class="form-input">
+                    </div>
+                    <div class="trade-summary">
+                        <div class="summary-row">
+                            <span>Total Cost:</span>
+                            <span id="quickBuyTotal">${api.formatCurrency(quote.price)}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Available Balance:</span>
+                            <span>${api.formatCurrency(auth.getCurrentUser().balance)}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="executeBuy('${symbol}', ${quote.price})">Buy Now</button>
+                </div>
             </div>
         `;
         
-        document.body.appendChild(Loading.overlay);
+        document.body.appendChild(modal);
         
-        setTimeout(() => {
-            Loading.overlay.style.opacity = '1';
-        }, 10);
-    }
-    
-    static hide() {
-        if (Loading.overlay) {
-            Loading.overlay.style.opacity = '0';
-            setTimeout(() => {
-                if (Loading.overlay && Loading.overlay.parentNode) {
-                    Loading.overlay.parentNode.removeChild(Loading.overlay);
-                }
-                Loading.overlay = null;
-            }, 300);
-        }
-    }
-}
-
-// Initialize app when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    // Create global app instance
-    window.vantyxApp = new VantyxApp();
-    
-    // Make utilities globally available
-    window.Toast = Toast;
-    window.Loading = Loading;
-    
-    // Add global keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-        // Ctrl/Cmd + K for search (future feature)
-        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-            e.preventDefault();
-            console.log('Search shortcut triggered');
-        }
+        // Add quantity change handler
+        const quantityInput = document.getElementById('quickBuyQuantity');
+        const totalSpan = document.getElementById('quickBuyTotal');
         
-        // Ctrl/Cmd + D for debug info
-        if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
-            e.preventDefault();
-            window.vantyxApp.debug();
-        }
-        
-        // Escape to close modals/overlays
-        if (e.key === 'Escape') {
-            // Close any open modals
-            const activeModal = Utils.dom.query('.modal.active');
-            if (activeModal) {
-                activeModal.classList.remove('active');
-            }
-            
-            // Hide loading overlay
-            Loading.hide();
-        }
-    });
-    
-    // Add development helpers in dev mode
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        console.log('Development mode detected');
-        
-        // Add reset button for testing
-        const resetBtn = Utils.dom.create('button', {
-            style: `
-                position: fixed;
-                bottom: 20px;
-                left: 20px;
-                z-index: 9999;
-                background: #ff4444;
-                color: white;
-                border: none;
-                padding: 10px;
-                border-radius: 5px;
-                font-size: 12px;
-                cursor: pointer;
-                opacity: 0.7;
-            `
-        }, 'Reset Data');
-        
-        resetBtn.addEventListener('click', () => {
-            window.vantyxApp.resetAppData();
+        quantityInput.addEventListener('input', () => {
+            const quantity = parseInt(quantityInput.value) || 0;
+            const total = quantity * quote.price;
+            totalSpan.textContent = api.formatCurrency(total);
         });
         
-        document.body.appendChild(resetBtn);
+        // Add close handler
+        modal.querySelector('.modal-close').addEventListener('click', () => {
+            closeModal();
+        });
         
-        // Make app instance globally accessible for debugging
-        window.vantyx = {
-            app: window.vantyxApp,
-            user: userManager,
-            api: apiService,
-            utils: Utils,
-            config: APP_CONFIG
-        };
+        // Close on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
         
-        console.log('Debug tools available at window.vantyx');
+    } catch (error) {
+        console.error('Error opening stock modal:', error);
+        alert('Error loading stock data');
     }
-});
+}
 
-// Handle app lifecycle events
-window.addEventListener('vantyx:initialized', () => {
-    console.log('VANTYX app fully initialized');
-});
+function closeModal() {
+    const modal = document.querySelector('.modal.active');
+    if (modal) {
+        modal.remove();
+    }
+}
 
-window.addEventListener('vantyx:resize', (e) => {
-    console.log('App resized:', e.detail);
-});
+async function executeBuy(symbol, price) {
+    const quantity = parseInt(document.getElementById('quickBuyQuantity').value);
+    
+    if (!quantity || quantity < 1) {
+        alert('Please enter a valid quantity');
+        return;
+    }
+    
+    const result = auth.buyStock(symbol, quantity, price);
+    
+    if (result.success) {
+        alert(`Successfully bought ${quantity} shares of ${symbol} for ${api.formatCurrency(quantity * price)}`);
+        closeModal();
+        
+        // Update navbar to reflect new balance
+        if (window.navbarManager) {
+            window.navbarManager.updateUserInfo();
+        }
+        
+        // Refresh dashboard if on dashboard page
+        if (getCurrentPage() === 'dashboard') {
+            loadDashboardData();
+        }
+    } else {
+        alert('Purchase failed: ' + result.error);
+    }
+}
 
-// Progressive Web App support
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        // Register service worker for PWA functionality
-        // navigator.serviceWorker.register('/sw.js')
-        //     .then(registration => console.log('SW registered'))
-        //     .catch(error => console.log('SW registration failed'));
+// Initialize stock page - FIXED TO PREVENT INFINITE RECURSION
+function initializeStockPage() {
+    console.log('Initializing stock page from main.js');
+    
+    // Check if user is logged in
+    if (!auth.isLoggedIn()) {
+        window.location.href = 'index.html';
+        return;
+    }
+    
+    // CRITICAL FIX: Use different function names to prevent recursion
+    // Try multiple approaches to initialize the stock page
+    
+    // Method 1: Try stockPageInitializer (renamed function from stock-page.js)
+    if (typeof window.stockPageInitializer === 'function') {
+        console.log('✅ Using stockPageInitializer');
+        window.stockPageInitializer();
+        return;
+    }
+    
+    // Method 2: Try calling loadStockData directly
+    if (typeof window.loadStockData === 'function') {
+        console.log('✅ Using loadStockData directly');
+        const urlParams = new URLSearchParams(window.location.search);
+        const symbol = urlParams.get('symbol');
+        
+        if (symbol) {
+            window.loadStockData(symbol);
+            
+            // Also try to initialize handlers if available
+            if (typeof window.initializeStockPageHandlers === 'function') {
+                window.initializeStockPageHandlers(symbol);
+            }
+        } else {
+            alert('No stock symbol provided');
+            window.location.href = 'radar.html';
+        }
+        return;
+    }
+    
+    // Method 3: Fallback - wait for functions to load
+    console.log('⏳ Stock page functions not ready, waiting...');
+    let attempts = 0;
+    const maxAttempts = 50; // 5 seconds max
+    
+    const waitForStockFunctions = () => {
+        attempts++;
+        
+        if (typeof window.loadStockData === 'function' || typeof window.stockPageInitializer === 'function') {
+            console.log('✅ Stock functions loaded after waiting');
+            initializeStockPage(); // Try again now that functions are loaded
+            return;
+        }
+        
+        if (attempts >= maxAttempts) {
+            console.error('❌ Stock page functions never loaded');
+            showStockPageError();
+            return;
+        }
+        
+        setTimeout(waitForStockFunctions, 100);
+    };
+    
+    setTimeout(waitForStockFunctions, 100);
+}
+
+// Show error when stock page fails to load
+function showStockPageError() {
+    const stockSymbol = document.getElementById('stockSymbol');
+    const stockName = document.getElementById('stockName');
+    
+    if (stockSymbol) {
+        stockSymbol.textContent = 'Error Loading Stock';
+        stockSymbol.style.color = '#ff4444';
+    }
+    
+    if (stockName) {
+        stockName.innerHTML = `
+            Stock page failed to load properly. 
+            <br>
+            <button onclick="window.location.reload()" style="
+                background: #4a90e2; 
+                color: white; 
+                border: none; 
+                padding: 10px 20px; 
+                border-radius: 5px; 
+                cursor: pointer;
+                margin-top: 10px;
+            ">
+                Reload Page
+            </button>
+        `;
+    }
+    
+    // Also show error in chart area
+    const chartContainer = document.querySelector('.chart-container');
+    if (chartContainer) {
+        chartContainer.innerHTML = `
+            <div style="
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+                justify-content: center; 
+                height: 100%; 
+                color: #ff4444;
+                text-align: center;
+            ">
+                <h3>⚠️ Chart Loading Error</h3>
+                <p>The stock page scripts failed to load properly.</p>
+                <button onclick="window.location.reload()" style="
+                    background: #4a90e2; 
+                    color: white; 
+                    border: none; 
+                    padding: 10px 20px; 
+                    border-radius: 5px; 
+                    cursor: pointer;
+                    margin-top: 10px;
+                ">
+                    Reload Page
+                </button>
+            </div>
+        `;
+    }
+}
+
+// Initialize pro page
+function initializeProPage() {
+    console.log('Initializing pro page');
+    
+    // Pro page is accessible to everyone
+    const upgradeBtn = document.getElementById('upgradeBtn');
+    
+    if (upgradeBtn) {
+        upgradeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            if (auth.isLoggedIn()) {
+                // Show upgrade modal for logged-in users
+                showProUpgradeModal();
+            } else {
+                // Prompt guest users to login first
+                alert('Please login to upgrade to VANTYX Pro!');
+                window.location.href = 'index.html';
+            }
+        });
+    }
+    
+    // Update page content based on login status
+    updateProPageForUserStatus();
+}
+
+// Show pro upgrade modal for logged-in users
+function showProUpgradeModal() {
+    // Create modal for pro upgrade
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Upgrade to VANTYX Pro</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="upgrade-info">
+                    <h4>🚀 VANTYX Pro Features</h4>
+                    <ul>
+                        <li>✅ Real-time market data</li>
+                        <li>✅ Advanced charting tools</li>
+                        <li>✅ Portfolio analytics</li>
+                        <li>✅ Priority customer support</li>
+                        <li>✅ API access for algorithmic trading</li>
+                    </ul>
+                    <div class="price-display">
+                        <span class="currency">$</span>
+                        <span class="price">29.99</span>
+                        <span class="period">/month</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="processProUpgrade()">Upgrade Now</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Add close handler
+    modal.querySelector('.modal-close').addEventListener('click', () => {
+        closeModal();
+    });
+    
+    // Close on outside click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
     });
 }
 
-// Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { VantyxApp, Toast, Loading };
+// Process pro upgrade (demo)
+function processProUpgrade() {
+    // Simulate upgrade process
+    alert('Pro upgrade feature coming soon! This is a demo version.\n\nIn the real version, this would integrate with payment processing.');
+    closeModal();
 }
+
+// Update pro page content based on user status
+function updateProPageForUserStatus() {
+    const user = auth.getCurrentUser();
+    
+    // Update any user-specific content on the pro page
+    if (user) {
+        // Show personalized content for logged-in users
+        const userElements = document.querySelectorAll('.user-specific');
+        userElements.forEach(el => {
+            el.style.display = 'block';
+        });
+    } else {
+        // Show generic content for guests
+        const guestElements = document.querySelectorAll('.guest-specific');
+        guestElements.forEach(el => {
+            el.style.display = 'block';
+        });
+    }
+}
+
+// Utility functions
+function showMessage(element, message) {
+    if (element) {
+        element.textContent = message;
+        element.style.display = 'block';
+    }
+}
+
+function hideMessage(element) {
+    if (element) {
+        element.style.display = 'none';
+    }
+}
+
+function showButtonLoading(button) {
+    if (button) {
+        const text = button.querySelector('.btn-text');
+        const loader = button.querySelector('.btn-loader');
+        
+        if (text) text.style.display = 'none';
+        if (loader) loader.style.display = 'inline-block';
+        
+        button.disabled = true;
+    }
+}
+
+function hideButtonLoading(button) {
+    if (button) {
+        const text = button.querySelector('.btn-text');
+        const loader = button.querySelector('.btn-loader');
+        
+        if (text) text.style.display = 'inline';
+        if (loader) loader.style.display = 'none';
+        
+        button.disabled = false;
+    }
+}
+
+// Export functions for global use
+window.openStockModal = openStockModal;
+window.closeModal = closeModal;
+window.executeBuy = executeBuy;
+window.processProUpgrade = processProUpgrade;
+window.showStockPageError = showStockPageError;

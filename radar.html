@@ -5,37 +5,399 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VANTYX - Radar</title>
     
-    <!-- CSS Files -->
+    <!-- Your existing CSS files -->
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/radar.css">
+    
+    <style>
+        /* Enhanced radar page specific styles */
+        .main-container {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(74, 144, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 65, 0.08) 0%, transparent 50%),
+                var(--bg-gradient);
+        }
+
+        .page-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid var(--primary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(74, 144, 226, 0.05), rgba(0, 255, 65, 0.05));
+            animation: headerPulse 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes headerPulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.7; }
+        }
+
+        .page-title {
+            background: linear-gradient(45deg, #4a90e2, #00ff41, #4a90e2);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleFlow 4s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(74, 144, 226, 0.3);
+        }
+
+        @keyframes titleFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .search-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .search-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(74, 144, 226, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .search-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-color);
+            box-shadow: 
+                0 0 0 3px rgba(0, 255, 65, 0.1),
+                0 0 30px rgba(0, 255, 65, 0.2);
+        }
+
+        .search-input::before {
+            content: '🔍';
+            position: absolute;
+            left: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.5;
+        }
+
+        .news-section {
+            margin-bottom: var(--spacing-xxl);
+        }
+
+        .news-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .news-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 60%, rgba(74, 144, 226, 0.1));
+            pointer-events: none;
+        }
+
+        .market-chart {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md);
+            backdrop-filter: blur(5px);
+        }
+
+        .bull-silhouette {
+            filter: drop-shadow(0 0 20px rgba(74, 144, 226, 0.3));
+        }
+
+        .market-section {
+            position: relative;
+        }
+
+        .market-section::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color), var(--primary-color));
+            border-radius: var(--radius-xl);
+            z-index: -1;
+            opacity: 0.1;
+            animation: sectionGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes sectionGlow {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.2; }
+        }
+
+        .section-title {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: titleSweep 3s ease-in-out infinite;
+        }
+
+        @keyframes titleSweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .stock-card {
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .stock-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(74, 144, 226, 0.1), 
+                rgba(0, 255, 65, 0.05), 
+                rgba(74, 144, 226, 0.1)
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: var(--radius-lg);
+        }
+
+        .stock-card:hover::before {
+            opacity: 1;
+        }
+
+        .stock-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(74, 144, 226, 0.2);
+        }
+
+        .buy-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .buy-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .buy-btn:hover::before {
+            left: 100%;
+        }
+
+        .buy-btn:hover {
+            background: #00cc33;
+            box-shadow: 0 5px 20px rgba(0, 255, 65, 0.4);
+        }
+
+        .overview-card {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .sentiment-bar {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sentiment-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: sentimentShine 2s ease-in-out infinite;
+        }
+
+        @keyframes sentimentShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .stat-value {
+            text-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+        }
+
+        /* Enhanced modal styles */
+        .modal {
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color), var(--primary-color));
+            border-radius: var(--radius-lg);
+            z-index: -1;
+            opacity: 0.3;
+            animation: modalBorder 3s ease-in-out infinite;
+        }
+
+        @keyframes modalBorder {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Loading states with enhanced animations */
+        .loading-placeholder {
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0.1) 25%, 
+                rgba(74, 144, 226, 0.2) 50%, 
+                rgba(255,255,255,0.1) 75%
+            );
+            background-size: 200% 100%;
+            animation: shimmerLoad 1.5s infinite;
+            border-radius: var(--radius-md);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        @keyframes shimmerLoad {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Responsive enhancements */
+        @media (max-width: 768px) {
+            .page-header {
+                padding: var(--spacing-lg) var(--spacing-md);
+            }
+            
+            .news-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .market-chart {
+                order: -1;
+                height: 200px;
+            }
+            
+            .stock-card {
+                padding: var(--spacing-md);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .stocks-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+            
+            .overview-cards {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+        }
+
+        /* Chart tooltip enhancements */
+        .chart-tooltip {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-sm);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            animation: tooltipAppear 0.2s ease-out;
+        }
+
+        @keyframes tooltipAppear {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tooltip-price {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .tooltip-date {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+        }
+
+        .tooltip-change.positive {
+            color: var(--accent-color);
+        }
+
+        .tooltip-change.negative {
+            color: var(--accent-red);
+        }
+    </style>
 </head>
 <body class="dark-theme">
-    <!-- Header Navigation -->
-    <header class="header">
-        <div class="nav-container">
-            <div class="logo">Radar</div>
-            <nav class="nav-links">
-                <a href="index.html" data-page="home">Home</a>
-                <a href="radar.html" data-page="radar" class="active">Radar</a>
-                <a href="#pro" data-page="pro">Pro</a>
-            </nav>
-            <div class="nav-buttons">
-                <a href="dashboard.html" class="btn btn-primary" data-page="dashboard">Dashboard</a>
-                <a href="#logout" class="btn btn-secondary" id="logoutBtn">Logout</a>
-            </div>
-        </div>
-    </header>
+    <!-- Header Navigation will be created by JavaScript -->
 
     <!-- Main Content -->
     <main class="main-container">
         <!-- Page Header -->
         <section class="page-header">
-            <h1 class="page-title">Radar</h1>
+            <h1 class="page-title">Stock Radar</h1>
             
             <!-- Search Bar -->
             <div class="search-container">
-                <input type="text" id="stockSearch" class="search-input" placeholder="Search Stocks..." autocomplete="off">
+                <input type="text" id="stockSearch" class="search-input" placeholder="🔍 Search stocks, symbols, or companies..." autocomplete="off">
                 <div class="search-results" id="searchResults" style="display: none;"></div>
             </div>
         </section>
@@ -49,8 +411,8 @@
                         <span class="news-dot"></span>
                         <span class="news-dot"></span>
                     </div>
-                    <h3 class="news-title" id="newsTitle">Multiple French prisons attacked in response to government's narco crackdown</h3>
-                    <p class="news-subtitle" id="newsSubtitle">Multiple French prisons have been attacked in recent nights by people wielding automatic weapons, in what the justice minister said...</p>
+                    <h3 class="news-title" id="newsTitle">🚀 Market Update: Technology Sector Shows Strong Growth</h3>
+                    <p class="news-subtitle" id="newsSubtitle">Major tech stocks continue their upward trend as investors show confidence in innovation and digital transformation across multiple sectors.</p>
                 </div>
                 <div class="news-visual">
                     <div class="market-chart">
@@ -61,14 +423,11 @@
                             <path d="M20,80 Q30,60 50,65 Q70,50 90,55 Q110,45 130,50 Q150,40 170,45 Q180,35 190,40" 
                                   stroke="#4a90e2" stroke-width="3" fill="none" opacity="0.8"/>
                             <path d="M80,85 Q85,75 95,80 Q105,70 120,75 Q130,65 140,70 Q150,60 165,65 Q175,55 185,60" 
-                                  fill="#4a90e2" opacity="0.6"/>
-                            <!-- Bull silhouette -->
-                            <path d="M100,60 Q120,50 140,60 Q150,65 145,75 Q140,85 120,80 Q100,85 95,75 Q90,65 100,60 Z" 
-                                  fill="url(#bullGradient)" opacity="0.8"/>
+                                  fill="#00ff41" opacity="0.6"/>
                             <defs>
                                 <linearGradient id="bullGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" stop-color="#4a90e2"/>
-                                    <stop offset="100%" stop-color="#ffffff"/>
+                                    <stop offset="100%" stop-color="#00ff41"/>
                                 </linearGradient>
                             </defs>
                         </svg>
@@ -82,20 +441,20 @@
             <!-- Top Recommended Section -->
             <section class="market-section">
                 <div class="section-header">
-                    <h2 class="section-title">Top Recommended on Radar Today</h2>
+                    <h2 class="section-title">🎯 Top Recommended Today</h2>
                 </div>
                 <div class="stocks-grid" id="topRecommendedGrid">
-                    <!-- Stock cards will be populated here -->
+                    <div class="loading-placeholder">📊 Loading recommended stocks...</div>
                 </div>
             </section>
 
             <!-- Top Worst Performers Section -->
             <section class="market-section">
                 <div class="section-header">
-                    <h2 class="section-title">Top Worst Performers</h2>
+                    <h2 class="section-title">📉 Underperforming Stocks</h2>
                 </div>
                 <div class="stocks-grid" id="worstPerformersGrid">
-                    <!-- Stock cards will be populated here -->
+                    <div class="loading-placeholder">📈 Loading market data...</div>
                 </div>
             </section>
         </div>
@@ -104,21 +463,23 @@
         <section class="market-overview">
             <div class="overview-cards">
                 <div class="overview-card">
-                    <h3>Market Sentiment</h3>
+                    <h3>📊 Market Sentiment</h3>
                     <div class="sentiment-indicator">
                         <div class="sentiment-bar">
-                            <div class="sentiment-fill bullish" style="width: 65%;"></div>
+                            <div class="sentiment-fill bullish" style="width: 68%;"></div>
                         </div>
-                        <span class="sentiment-text">Bullish (65%)</span>
+                        <span class="sentiment-text">Bullish (68%)</span>
                     </div>
                 </div>
+                
                 <div class="overview-card">
-                    <h3>Active Traders</h3>
+                    <h3>👥 Active Traders</h3>
                     <div class="stat-value">2,847</div>
                     <div class="stat-change positive">+12.5%</div>
                 </div>
+                
                 <div class="overview-card">
-                    <h3>Volume Today</h3>
+                    <h3>💰 Volume Today</h3>
                     <div class="stat-value">$2.1B</div>
                     <div class="stat-change positive">+8.3%</div>
                 </div>
@@ -133,12 +494,12 @@
                 <p>VANTYX is not a registered broker-dealer or investment advisor. Trading involves risk 
                 and may result in financial loss. Market data is provided for informational purposes 
                 only and is not intended for trading or investment advice. Past performance does not 
-                guarantee future results. Always do your own research before making financial decisions.</p>
+                guarantee future results.</p>
             </div>
             
             <div class="footer-controls">
                 <div class="language-selector">
-                    <span class="country-flag">🌍 Germany</span>
+                    <span class="country-flag">🌍 Global</span>
                     <select id="languageSelect" class="language-dropdown">
                         <option value="en">English(US)</option>
                         <option value="de">Deutsch</option>
@@ -158,19 +519,44 @@
         </div>
     </footer>
 
-    <!-- Stock Details Modal -->
+    <!-- Enhanced Quick Trade Modal -->
     <div class="modal" id="stockModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modalStockTitle">Stock Details</h3>
+                <h3 id="modalStockTitle">📈 Quick Trade</h3>
                 <button class="modal-close" id="modalClose">&times;</button>
             </div>
             <div class="modal-body" id="modalStockBody">
-                <!-- Stock details will be populated here -->
+                <div class="stock-modal-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Current Price</span>
+                        <span class="detail-value" id="modalPrice">$0.00</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">24h Change</span>
+                        <span class="detail-value" id="modalChange">+0.00%</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Volume</span>
+                        <span class="detail-value" id="modalVolume">0</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quickQuantity">Quantity</label>
+                    <input type="number" id="quickQuantity" class="form-input" min="1" max="1000" value="1" placeholder="Enter quantity">
+                </div>
+                
+                <div class="trade-summary">
+                    <div class="summary-row">
+                        <span>Estimated Total:</span>
+                        <span id="quickTotal">$0.00</span>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" id="modalBuyBtn">BUY</button>
-                <button class="btn btn-outline" id="modalWatchlistBtn">Add to Watchlist</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" id="modalBuyBtn">🚀 Buy Now</button>
             </div>
         </div>
     </div>
@@ -179,16 +565,254 @@
     <div class="loading-overlay" id="loadingOverlay" style="display: none;">
         <div class="loading-spinner">
             <div class="spinner"></div>
-            <p>Loading market data...</p>
+            <p>🚀 Loading market data...</p>
         </div>
     </div>
 
     <!-- JavaScript Files -->
-    <script src="assets/js/config.js"></script>
     <script src="assets/js/utils.js"></script>
-    <script src="assets/js/userManager.js"></script>
-    <script src="assets/js/apiService.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/yahoo-finance.js"></script>
+    <script src="assets/js/chart-utils.js"></script>
+    <script src="assets/js/stock-page.js"></script>
+    <script src="assets/js/navbar.js"></script>
     <script src="assets/js/main.js"></script>
-    <script src="assets/js/radar.js"></script>
+
+    <script>
+        // Enhanced radar page interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate loading placeholders
+            setTimeout(() => {
+                // Replace loading placeholders with actual stock cards
+                populateStockGrid('topRecommendedGrid', generateMockStocks(true));
+                populateStockGrid('worstPerformersGrid', generateMockStocks(false));
+            }, 2000);
+            
+            // Initialize news chart
+            initializeNewsChart();
+            
+            // Add search functionality
+            initializeSearch();
+        });
+        
+        function generateMockStocks(isGainers) {
+            const symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META'];
+            return symbols.map(symbol => ({
+                symbol: symbol,
+                price: Math.random() * 300 + 100,
+                changePercent: isGainers ? 
+                    Math.random() * 8 + 1 : 
+                    -(Math.random() * 5 + 0.5)
+            }));
+        }
+        
+        function populateStockGrid(gridId, stocks) {
+            const grid = document.getElementById(gridId);
+            if (!grid) return;
+            
+            grid.innerHTML = stocks.map(stock => {
+                const changeClass = stock.changePercent >= 0 ? 'positive' : 'negative';
+                const category = getStockCategory(stock.symbol);
+                
+                return `
+                    <div class="stock-card" data-symbol="${stock.symbol}">
+                        <div class="stock-info">
+                            <div class="stock-symbol">${stock.symbol}</div>
+                            <div class="stock-details">
+                                <div class="stock-category">${category}</div>
+                            </div>
+                        </div>
+                        <div class="stock-price">${stock.price.toFixed(2)}</div>
+                        <div class="stock-change ${changeClass}">${stock.changePercent >= 0 ? '+' : ''}${stock.changePercent.toFixed(2)}%</div>
+                        <div class="stock-actions">
+                            <button class="buy-btn" onclick="openQuickTrade('${stock.symbol}', ${stock.price})">BUY</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Add click handlers for stock cards
+            grid.querySelectorAll('.stock-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('buy-btn')) {
+                        const symbol = card.dataset.symbol;
+                        window.location.href = `stock.html?symbol=${symbol}`;
+                    }
+                });
+            });
+        }
+        
+        function getStockCategory(symbol) {
+            const categories = {
+                'AAPL': 'Technology', 'MSFT': 'Technology', 'GOOGL': 'Technology',
+                'AMZN': 'E-commerce', 'TSLA': 'Automotive', 'META': 'Social Media'
+            };
+            return categories[symbol] || 'Equity';
+        }
+        
+        function initializeNewsChart() {
+            const canvas = document.getElementById('newsChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Draw a simple trending line
+            ctx.strokeStyle = '#4a90e2';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(50, height - 50);
+            
+            for (let i = 1; i <= 10; i++) {
+                const x = (i * width) / 10;
+                const y = height - 50 - (Math.random() * 80 + i * 5);
+                ctx.lineTo(x, y);
+            }
+            
+            ctx.stroke();
+            
+            // Add glow effect
+            ctx.shadowColor = '#4a90e2';
+            ctx.shadowBlur = 10;
+            ctx.stroke();
+        }
+        
+        function initializeSearch() {
+            const searchInput = document.getElementById('stockSearch');
+            const searchResults = document.getElementById('searchResults');
+            
+            if (!searchInput || !searchResults) return;
+            
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.trim();
+                
+                if (query.length < 2) {
+                    searchResults.style.display = 'none';
+                    return;
+                }
+                
+                // Mock search results
+                const mockResults = [
+                    { symbol: 'AAPL', name: 'Apple Inc.' },
+                    { symbol: 'MSFT', name: 'Microsoft Corporation' },
+                    { symbol: 'GOOGL', name: 'Alphabet Inc.' }
+                ].filter(stock => 
+                    stock.symbol.toLowerCase().includes(query.toLowerCase()) ||
+                    stock.name.toLowerCase().includes(query.toLowerCase())
+                );
+                
+                displaySearchResults(mockResults, searchResults);
+            });
+            
+            // Hide results when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.style.display = 'none';
+                }
+            });
+        }
+        
+        function displaySearchResults(results, container) {
+            if (results.length === 0) {
+                container.innerHTML = '<div class="search-result-item">No results found</div>';
+                container.style.display = 'block';
+                return;
+            }
+            
+            container.innerHTML = results.map(result => `
+                <div class="search-result-item" data-symbol="${result.symbol}">
+                    <div>
+                        <div class="search-result-symbol">${result.symbol}</div>
+                        <div class="search-result-name">${result.name}</div>
+                    </div>
+                    <div class="search-result-price">View →</div>
+                </div>
+            `).join('');
+            
+            // Add click handlers
+            container.querySelectorAll('.search-result-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const symbol = item.dataset.symbol;
+                    window.location.href = `stock.html?symbol=${symbol}`;
+                });
+            });
+            
+            container.style.display = 'block';
+        }
+        
+        function openQuickTrade(symbol, price) {
+            const modal = document.getElementById('stockModal');
+            const modalTitle = document.getElementById('modalStockTitle');
+            const modalPrice = document.getElementById('modalPrice');
+            const modalChange = document.getElementById('modalChange');
+            const modalVolume = document.getElementById('modalVolume');
+            const quickTotal = document.getElementById('quickTotal');
+            const quickQuantity = document.getElementById('quickQuantity');
+            const buyBtn = document.getElementById('modalBuyBtn');
+            
+            if (!modal) return;
+            
+            // Set modal content
+            modalTitle.textContent = `📈 Quick Trade - ${symbol}`;
+            modalPrice.textContent = `${price.toFixed(2)}`;
+            modalChange.textContent = `+${(Math.random() * 5).toFixed(2)}%`;
+            modalChange.className = 'detail-value positive';
+            modalVolume.textContent = `${(Math.random() * 10 + 1).toFixed(1)}M`;
+            
+            // Update total when quantity changes
+            const updateTotal = () => {
+                const quantity = parseInt(quickQuantity.value) || 1;
+                const total = quantity * price;
+                quickTotal.textContent = `${total.toFixed(2)}`;
+            };
+            
+            quickQuantity.addEventListener('input', updateTotal);
+            updateTotal();
+            
+            // Set buy button handler
+            buyBtn.onclick = () => {
+                const quantity = parseInt(quickQuantity.value) || 1;
+                executeTrade(symbol, quantity, price);
+            };
+            
+            modal.style.display = 'flex';
+        }
+        
+        function executeTrade(symbol, quantity, price) {
+            // Check if user is logged in
+            if (!window.auth || !window.auth.isLoggedIn()) {
+                alert('Please login to start trading!');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            const total = quantity * price;
+            const confirmed = confirm(`Confirm purchase:\n${quantity} shares of ${symbol}\nTotal: ${total.toFixed(2)}`);
+            
+            if (confirmed) {
+                // Simulate trade execution
+                alert(`✅ Successfully bought ${quantity} shares of ${symbol}!`);
+                closeModal();
+            }
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('stockModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Close modal on outside click
+        document.getElementById('stockModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Close modal with close button
+        document.getElementById('modalClose')?.addEventListener('click', closeModal);
+    </script>
 </body>
 </html>

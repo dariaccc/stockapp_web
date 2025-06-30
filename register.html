@@ -1,268 +1,619 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VANTYX - Registration</title>
-    
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/register.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VANTYX - Create Account</title>
+  
+  <!-- Your existing CSS files -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/register.css">
+  
+  <style>
+    /* Enhanced registration page styles */
+    .register-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(74, 144, 226, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 255, 65, 0.1) 0%, transparent 50%),
+        var(--bg-gradient);
+      position: relative;
+      overflow: hidden;
+      padding: var(--spacing-xl);
+    }
+
+    .register-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(0,255,65,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+      opacity: 0.2;
+      animation: gridFloat 25s linear infinite;
+    }
+
+    @keyframes gridFloat {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(60px, 60px) rotate(1deg); }
+    }
+
+    .register-container {
+      background: var(--glass-bg);
+      border: 2px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-xxl);
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      z-index: 10;
+      max-width: 500px;
+      width: 100%;
+      animation: slideUp 0.8s ease-out;
+    }
+
+    .register-container::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, var(--accent-color), var(--primary-color), var(--accent-color));
+      border-radius: var(--radius-xl);
+      z-index: -1;
+      opacity: 0.4;
+      animation: borderGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes borderGlow {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+
+    .brand-title {
+      font-size: 3.5rem;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: var(--spacing-lg);
+      text-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+      background: linear-gradient(45deg, #00ff41, #4a90e2, #00ff41);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: titleShimmer 4s ease-in-out infinite;
+      letter-spacing: 3px;
+    }
+
+    @keyframes titleShimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .register-form-wrapper {
+      animation: fadeIn 0.6s ease-out 0.3s both;
+    }
+
+    .register-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-align: center;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xl);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      opacity: 0.9;
+    }
+
+    .form-group {
+      margin-bottom: var(--spacing-lg);
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .form-group:hover {
+      transform: translateY(-2px);
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--text-primary);
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+      font-size: var(--font-size-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: var(--spacing-lg) var(--spacing-md);
+      border: 2px solid var(--input-border);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      font-size: var(--font-size-base);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .form-input:focus {
+      border-color: var(--accent-color);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 
+        0 0 0 3px rgba(0, 255, 65, 0.1),
+        0 0 20px rgba(0, 255, 65, 0.3);
+      outline: none;
+      transform: translateY(-2px);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    .register-btn {
+      width: 100%;
+      padding: var(--spacing-lg);
+      background: linear-gradient(45deg, var(--accent-color), #00cc33);
+      color: var(--bg-primary);
+      border: none;
+      border-radius: var(--radius-lg);
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: var(--spacing-lg);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 255, 65, 0.3);
+    }
+
+    .register-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .register-btn:hover {
+      background: linear-gradient(45deg, #00cc33, var(--accent-color));
+      box-shadow: 0 8px 30px rgba(0, 255, 65, 0.4);
+      transform: translateY(-3px);
+    }
+
+    .register-btn:hover::before {
+      left: 100%;
+    }
+
+    .register-btn:active {
+      transform: translateY(-1px);
+    }
+
+    .register-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-loader {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .loader {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(0, 0, 0, 0.3);
+      border-top: 2px solid var(--bg-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .login-link {
+      text-align: center;
+      animation: fadeIn 0.6s ease-out 0.6s both;
+    }
+
+    .login-link p {
+      color: var(--text-secondary);
+      font-size: var(--font-size-sm);
+      margin: 0;
+    }
+
+    .login-link a {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .login-link a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent-color);
+      transition: width 0.3s ease;
+    }
+
+    .login-link a:hover::after {
+      width: 100%;
+    }
+
+    .login-link a:hover {
+      color: #00cc33;
+      transform: translateY(-1px);
+    }
+
+    /* Success Modal Styling */
+    .success-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .success-modal.show {
+      display: flex;
+    }
+
+    .success-modal-content {
+      background: var(--glass-bg);
+      border: 2px solid var(--accent-color);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-xxl);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      backdrop-filter: blur(15px);
+      animation: slideUp 0.5s ease-out;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--accent-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: var(--bg-primary);
+      margin: 0 auto var(--spacing-lg);
+      animation: successPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes successPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 255, 65, 0.3); }
+      50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 255, 65, 0.5); }
+    }
+
+    .success-modal h3 {
+      color: var(--text-primary);
+      font-size: var(--font-size-xl);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .success-modal p {
+      color: var(--text-secondary);
+      margin-bottom: var(--spacing-lg);
+      line-height: 1.6;
+    }
+
+    .customer-id-display {
+      background: rgba(0, 255, 65, 0.1);
+      border: 1px solid var(--accent-color);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      margin: var(--spacing-lg) 0;
+      font-family: var(--font-mono);
+      font-size: var(--font-size-lg);
+      font-weight: bold;
+      color: var(--accent-color);
+      letter-spacing: 2px;
+    }
+
+    /* Floating elements */
+    .floating-element {
+      position: absolute;
+      opacity: 0.1;
+      animation: float 8s ease-in-out infinite;
+      font-size: 2rem;
+    }
+
+    .floating-element:nth-child(1) {
+      top: 15%;
+      left: 15%;
+      animation-delay: 0s;
+    }
+
+    .floating-element:nth-child(2) {
+      top: 25%;
+      right: 20%;
+      animation-delay: 3s;
+    }
+
+    .floating-element:nth-child(3) {
+      bottom: 20%;
+      left: 25%;
+      animation-delay: 6s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-30px) rotate(10deg); }
+    }
+
+    /* Form validation states */
+    .form-group.error .form-input {
+      border-color: var(--accent-red);
+      background: rgba(255, 68, 68, 0.1);
+    }
+
+    .form-group.success .form-input {
+      border-color: var(--accent-color);
+      background: rgba(0, 255, 65, 0.1);
+    }
+
+    .field-error {
+      color: var(--accent-red);
+      font-size: var(--font-size-xs);
+      margin-top: var(--spacing-xs);
+      padding: var(--spacing-xs);
+      border-radius: var(--radius-sm);
+      background: rgba(255, 68, 68, 0.1);
+      border-left: 3px solid var(--accent-red);
+    }
+
+    @media (max-width: 768px) {
+      .register-section {
+        padding: var(--spacing-md);
+      }
+      
+      .register-container {
+        padding: var(--spacing-xl);
+        margin: var(--spacing-md);
+      }
+      
+      .brand-title {
+        font-size: 2.5rem;
+        letter-spacing: 2px;
+      }
+      
+      .register-title {
+        font-size: 1.5rem;
+      }
+      
+      .form-input {
+        padding: var(--spacing-md);
+      }
+      
+      .register-btn {
+        padding: var(--spacing-md);
+        font-size: var(--font-size-base);
+      }
+    }
+
+    @media (max-width: 576px) {
+      .brand-title {
+        font-size: 2rem;
+        letter-spacing: 1px;
+      }
+      
+      .register-container {
+        padding: var(--spacing-lg);
+        margin: var(--spacing-sm);
+      }
+      
+      .success-modal-content {
+        padding: var(--spacing-xl);
+        margin: var(--spacing-md);
+      }
+    }
+  </style>
 </head>
 <body class="dark-theme">
-    <!-- Header Navigation -->
-    <header class="header">
-        <div class="nav-container">
-            <div class="logo">Registration</div>
-            <nav class="nav-links">
-                <a href="#home" data-page="home">Home</a>
-                <a href="#radar" data-page="radar">Radar</a>
-                <a href="#pro" data-page="pro">Pro</a>
-            </nav>
-            <div class="nav-buttons">
-                <a href="#dashboard" class="btn btn-primary" data-page="dashboard">Dashboard</a>
-                <a href="#logout" class="btn btn-secondary" id="logoutBtn">Logout</a>
-            </div>
-        </div>
-    </header>
+  <!-- Floating background elements -->
+  <div class="floating-element">🚀</div>
+  <div class="floating-element">💎</div>
+  <div class="floating-element">⚡</div>
 
-    <!-- Main Content -->
-    <main class="main-container">
-        <!-- Registration Form Section -->
-        <section class="register-section">
-            <div class="register-container">
-                <h1 class="brand-title">VANTYX</h1>
-                
-                <div class="register-form-wrapper">
-                    <h2 class="register-title">REGISTER</h2>
-                    
-                    <form id="registerForm" class="register-form">
-                        <!-- Full Name -->
-                        <div class="form-group">
-                            <label for="fullName">Full Name</label>
-                            <input 
-                                type="text" 
-                                id="fullName" 
-                                name="fullName" 
-                                placeholder="Enter your full name" 
-                                required
-                                autocomplete="name"
-                            >
-                        </div>
-                        
-                        <!-- Customer ID -->
-                        <div class="form-group">
-                            <label for="customerId">Customer ID</label>
-                            <input 
-                                type="text" 
-                                id="customerId" 
-                                name="customerId" 
-                                placeholder="Choose your Customer ID" 
-                                required
-                                autocomplete="username"
-                            >
-                        </div>
-                        
-                        <!-- Date of Birth -->
-                        <div class="form-group">
-                            <label for="dateOfBirth">Date of Birth</label>
-                            <input 
-                                type="date" 
-                                id="dateOfBirth" 
-                                name="dateOfBirth" 
-                                required
-                                autocomplete="bday"
-                            >
-                        </div>
-                        
-                        <!-- National Card Number -->
-                        <div class="form-group">
-                            <label for="nationalCardNumber">National Card Number</label>
-                            <input 
-                                type="text" 
-                                id="nationalCardNumber" 
-                                name="nationalCardNumber" 
-                                placeholder="Enter your national ID number" 
-                                required
-                            >
-                        </div>
-                        
-                        <!-- Phone Number -->
-                        <div class="form-group">
-                            <label for="phoneNumber">Phone Number</label>
-                            <input 
-                                type="tel" 
-                                id="phoneNumber" 
-                                name="phoneNumber" 
-                                placeholder="Enter your phone number" 
-                                required
-                                autocomplete="tel"
-                            >
-                        </div>
-                        
-                        <!-- Email ID -->
-                        <div class="form-group">
-                            <label for="emailId">Email ID</label>
-                            <input 
-                                type="email" 
-                                id="emailId" 
-                                name="emailId" 
-                                placeholder="Enter your email address" 
-                                required
-                                autocomplete="email"
-                            >
-                        </div>
-                        
-                        <!-- Card Details -->
-                        <div class="form-group">
-                            <label for="cardDetails">Card Details</label>
-                            <input 
-                                type="text" 
-                                id="cardDetails" 
-                                name="cardDetails" 
-                                placeholder="Enter your card number" 
-                                required
-                                autocomplete="cc-number"
-                            >
-                        </div>
-                        
-                        <!-- Card Expiry and CVV -->
-                        <div class="form-row">
-                            <div class="form-group form-group-half">
-                                <label for="expiry">Expiry</label>
-                                <input 
-                                    type="text" 
-                                    id="expiry" 
-                                    name="expiry" 
-                                    placeholder="MM/YY" 
-                                    required
-                                    autocomplete="cc-exp"
-                                    maxlength="5"
-                                >
-                            </div>
-                            <div class="form-group form-group-half">
-                                <label for="cvv">CVV</label>
-                                <input 
-                                    type="text" 
-                                    id="cvv" 
-                                    name="cvv" 
-                                    placeholder="123" 
-                                    required
-                                    autocomplete="cc-csc"
-                                    maxlength="4"
-                                >
-                            </div>
-                        </div>
-                        
-                        <!-- PIN -->
-                        <div class="form-group">
-                            <label for="pin">PIN</label>
-                            <input 
-                                type="password" 
-                                id="pin" 
-                                name="pin" 
-                                placeholder="Create a 4-digit PIN" 
-                                required
-                                autocomplete="new-password"
-                                maxlength="8"
-                            >
-                        </div>
-                        
-                        <!-- Terms and Conditions -->
-                        <div class="form-group checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
-                                <span class="checkmark"></span>
-                                I agree to the <a href="#terms" target="_blank">Terms and Conditions</a> and <a href="#privacy" target="_blank">Privacy Policy</a>
-                            </label>
-                        </div>
-                        
-                        <!-- Register Button -->
-                        <button type="submit" class="register-btn" id="registerBtn">
-                            <span class="btn-text">REGISTER</span>
-                            <span class="btn-loader" style="display: none;">
-                                <span class="loader"></span>
-                            </span>
-                        </button>
-                        
-                        <div class="error-message" id="errorMessage" style="display: none;"></div>
-                    </form>
-                    
-                    <div class="login-link">
-                        <p>Already have an account? <a href="index.html">Login here</a></p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+  <!-- Header Navigation will be created by JavaScript -->
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="disclaimer">
-                <p>VANTYX is not a registered broker-dealer or investment advisor. Trading involves risk 
-                and may result in financial loss. Market data is provided for informational purposes 
-                only and is not intended for trading or investment advice. Past performance does not 
-                guarantee future results. Always do your own research before making financial decisions.</p>
+  <!-- Registration Form -->
+  <main class="main-container">
+    <section class="register-section">
+      <div class="register-container">
+        <h1 class="brand-title">VANTYX</h1>
+        <div class="register-form-wrapper">
+          <h2 class="register-title">Join the Future</h2>
+          <form id="signup-form" class="register-form">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" required class="form-input" placeholder="Enter your email address" />
             </div>
             
-            <div class="footer-controls">
-                <div class="language-selector">
-                    <span class="country-flag">🌍 Germany</span>
-                    <select id="languageSelect" class="language-dropdown">
-                        <option value="en">English(US)</option>
-                        <option value="de">Deutsch</option>
-                        <option value="fr">Français</option>
-                        <option value="es">Español</option>
-                    </select>
-                </div>
-                
-                <div class="theme-toggle" id="themeToggle">
-                    <span class="toggle-slider"></span>
-                </div>
-                
-                <div class="company-logo">
-                    <span class="logo-text">VYX</span>
-                </div>
+            <div class="form-group">
+              <label for="pin">Create 6-Digit PIN</label>
+              <input type="password" id="pin" name="pin" pattern="\d{6}" required maxlength="6" class="form-input" placeholder="Create a secure PIN" />
+              <div class="field-error" id="pinError" style="display: none;">PIN must be exactly 6 digits</div>
             </div>
+            
+            <div class="form-group">
+              <label for="pin-confirm">Confirm PIN</label>
+              <input type="password" id="pin-confirm" name="pin-confirm" pattern="\d{6}" required maxlength="6" class="form-input" placeholder="Confirm your PIN" />
+              <div class="field-error" id="pinConfirmError" style="display: none;">PINs do not match</div>
+            </div>
+            
+            <button type="submit" class="register-btn" id="registerBtn">
+              <span class="btn-text">Create Account</span>
+              <span class="btn-loader">
+                <span class="loader"></span>
+                Creating Account...
+              </span>
+            </button>
+          </form>
+          
+          <div class="login-link">
+            <p>Already have an account? <a href="index.html">Sign in here</a></p>
+          </div>
         </div>
-    </footer>
+      </div>
+    </section>
+  </main>
 
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
-        <div class="loading-spinner">
-            <div class="spinner"></div>
-            <p>Creating your account...</p>
-        </div>
+  <!-- Success Modal -->
+  <div class="success-modal" id="successModal">
+    <div class="success-modal-content">
+      <div class="success-icon">✓</div>
+      <h3>Account Created Successfully!</h3>
+      <p>Welcome to VANTYX! Your account has been created and you're ready to start trading.</p>
+      <div class="customer-id-display" id="customerIdDisplay">
+        VYX123456789
+      </div>
+      <p><strong>Important:</strong> Please save your Customer ID safely. You'll need it to log in.</p>
+      <button class="register-btn" onclick="redirectToLogin()">Continue to Login</button>
     </div>
+  </div>
 
-    <!-- Success Modal -->
-    <div class="modal" id="successModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Registration Successful!</h3>
-                <button class="modal-close" id="modalClose">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="success-icon">✓</div>
-                <p>Your account has been created successfully.</p>
-                <p><strong>Customer ID:</strong> <span id="generatedCustomerId"></span></p>
-                <p>You can now login with your credentials.</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="goToLogin">Go to Login</button>
-            </div>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="disclaimer">
+        <p>VANTYX is not a registered broker-dealer or investment advisor. Trading involves risk 
+        and may result in financial loss. Market data is provided for informational purposes 
+        only and is not intended for trading or investment advice.</p>
+      </div>
+      
+      <div class="footer-controls">
+        <div class="language-selector">
+          <select id="languageSelect" class="language-dropdown">
+            <option value="en">English(US)</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Français</option>
+            <option value="es">Español</option>
+          </select>
         </div>
+        
+        <div class="theme-toggle" id="themeToggle">
+          <span class="toggle-slider"></span>
+        </div>
+        
+        <div class="company-logo">
+          <span class="logo-text">VYX</span>
+        </div>
+      </div>
     </div>
+  </footer>
 
-    <!-- JavaScript Files -->
-    <script src="assets/js/config.js" defer></script>
-    <script src="assets/js/utils.js" defer></script>
-    <script src="assets/js/userManager.js" defer></script>
-    <script src="assets/js/apiService.js" defer></script>
-    <script src="assets/js/main.js" defer></script>
-    <script src="assets/js/register.js" defer></script>
+  <!-- JavaScript Files -->
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/yahoo-finance.js"></script>
+  <script src="assets/js/chart-utils.js"></script>
+  <script src="assets/js/stock-page.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/main.js"></script>
 
+  <script>
+    // Enhanced form validation and submission
+    document.getElementById('signup-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const pin = document.getElementById('pin').value;
+      const pinConfirm = document.getElementById('pin-confirm').value;
+      const registerBtn = document.getElementById('registerBtn');
+      const btnText = registerBtn.querySelector('.btn-text');
+      const btnLoader = registerBtn.querySelector('.btn-loader');
+      
+      // Reset errors
+      document.querySelectorAll('.field-error').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.form-group').forEach(el => el.classList.remove('error', 'success'));
+      
+      let hasError = false;
+      
+      // Validate PIN
+      if (!/^\d{6}$/.test(pin)) {
+        document.getElementById('pinError').style.display = 'block';
+        document.getElementById('pin').closest('.form-group').classList.add('error');
+        hasError = true;
+      } else {
+        document.getElementById('pin').closest('.form-group').classList.add('success');
+      }
+      
+      // Validate PIN confirmation
+      if (pin !== pinConfirm) {
+        document.getElementById('pinConfirmError').style.display = 'block';
+        document.getElementById('pin-confirm').closest('.form-group').classList.add('error');
+        hasError = true;
+      } else if (pinConfirm) {
+        document.getElementById('pin-confirm').closest('.form-group').classList.add('success');
+      }
+      
+      if (hasError) return;
+      
+      // Show loading state
+      btnText.style.display = 'none';
+      btnLoader.style.display = 'flex';
+      registerBtn.disabled = true;
+      
+      // Simulate registration process
+      setTimeout(() => {
+        // Hide loading state
+        btnText.style.display = 'inline';
+        btnLoader.style.display = 'none';
+        registerBtn.disabled = false;
+        
+        // Generate customer ID
+        const customerId = 'VYX' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        document.getElementById('customerIdDisplay').textContent = customerId;
+        
+        // Show success modal
+        document.getElementById('successModal').classList.add('show');
+        
+        // Store customer ID for potential login redirect
+        sessionStorage.setItem('newCustomerId', customerId);
+      }, 2000);
+    });
+    
+    function redirectToLogin() {
+      window.location.href = 'index.html';
+    }
+    
+    // Close modal on outside click
+    document.getElementById('successModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        redirectToLogin();
+      }
+    });
+  </script>
 </body>
 </html>

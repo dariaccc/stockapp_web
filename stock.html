@@ -4,129 +4,623 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VANTYX - Stock Details</title>
+    <meta name="description" content="View detailed stock information, charts, and trading options on VANTYX">
     
-    <!-- CSS Files -->
+    <!-- Your existing CSS files -->
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/stock.css">
+    
+    <style>
+        /* Enhanced dynamic stock page styles that work with your existing CSS */
+        .main-container {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(74, 144, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 65, 0.08) 0%, transparent 50%),
+                var(--bg-gradient);
+        }
+
+        .back-navigation {
+            padding: var(--spacing-lg) var(--spacing-xxl);
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(74, 144, 226, 0.2);
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+            background: rgba(74, 144, 226, 0.1);
+            transform: translateX(-5px);
+        }
+
+        .stock-main-info {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stock-main-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(74, 144, 226, 0.05), rgba(0, 255, 65, 0.03));
+            animation: stockGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes stockGlow {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.6; }
+        }
+
+        .stock-title-section {
+            position: relative;
+            z-index: 2;
+        }
+
+        .stock-logo {
+            background: var(--glass-bg);
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 30px rgba(74, 144, 226, 0.3);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .stock-title-info h1 {
+            background: linear-gradient(45deg, #4a90e2, #00ff41, #4a90e2);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGradient 4s ease-in-out infinite;
+        }
+
+        @keyframes titleGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .chart-controls {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(74, 144, 226, 0.2);
+        }
+
+        .time-period-selector {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .period-btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            flex: 1;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .period-btn:hover,
+        .period-btn.active {
+            background: var(--primary-color);
+            color: var(--text-primary);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+
+        .chart-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .chart-info-left {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .chart-price {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--accent-color);
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .chart-date {
+            color: var(--text-muted);
+            font-size: var(--font-size-sm);
+            transition: all 0.3s ease;
+        }
+
+        .chart-info-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .chart-hint {
+            color: var(--text-muted);
+            font-size: var(--font-size-xs);
+            background: rgba(74, 144, 226, 0.1);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .chart-hint:hover {
+            opacity: 1;
+            background: rgba(74, 144, 226, 0.2);
+        }
+
+        .chart-container {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(74, 144, 226, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            height: 400px;
+            position: relative;
+            overflow: visible;
+            margin-bottom: var(--spacing-lg);
+            transition: all 0.3s ease;
+        }
+
+        .chart-container:hover {
+            border-color: rgba(74, 144, 226, 0.4);
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.2);
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(45deg, rgba(74, 144, 226, 0.1) 0%, transparent 50%),
+                linear-gradient(-45deg, rgba(0, 255, 65, 0.05) 0%, transparent 50%);
+            animation: chartShimmer 6s ease-in-out infinite alternate;
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        @keyframes chartShimmer {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.6; }
+        }
+
+        #stockChart {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 2;
+            cursor: crosshair;
+            transition: all 0.2s ease;
+        }
+
+        #stockChart:hover {
+            filter: brightness(1.05);
+        }
+
+        .trading-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .trade-btn {
+            flex: 1;
+            padding: var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-lg);
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-xs);
+            position: relative;
+            overflow: hidden;
+            min-height: 80px;
+            justify-content: center;
+        }
+
+        .trade-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .trade-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .trade-btn:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .buy-btn {
+            background: linear-gradient(45deg, var(--accent-color), #00cc33);
+            color: var(--bg-primary);
+            box-shadow: 0 4px 20px rgba(0, 255, 65, 0.3);
+        }
+
+        .buy-btn:hover:not(:disabled) {
+            background: linear-gradient(45deg, #00cc33, var(--accent-color));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 255, 65, 0.4);
+        }
+
+        .sell-btn {
+            background: linear-gradient(45deg, var(--accent-red), #cc3333);
+            color: var(--text-primary);
+            box-shadow: 0 4px 20px rgba(255, 68, 68, 0.3);
+        }
+
+        .sell-btn:hover:not(:disabled) {
+            background: linear-gradient(45deg, #cc3333, var(--accent-red));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 68, 68, 0.4);
+        }
+
+        .performance-row:hover {
+            background: rgba(74, 144, 226, 0.1);
+            transform: translateX(5px);
+        }
+
+        .metric-value.positive {
+            color: var(--accent-color);
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+
+        .metric-value.negative {
+            color: var(--accent-red);
+            text-shadow: 0 0 10px rgba(255, 68, 68, 0.3);
+        }
+
+        .news-item,
+        .related-stock-item {
+            transition: all 0.3s ease;
+        }
+
+        .news-item:hover {
+            transform: translateX(10px);
+            border-color: var(--primary-color);
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .related-stock-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .stock-content-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-lg);
+            }
+            
+            .trading-buttons {
+                flex-direction: column;
+            }
+            
+            .chart-container {
+                height: 300px;
+            }
+            
+            .chart-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-sm);
+            }
+            
+            .chart-hint {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+            
+            .time-period-selector {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: var(--spacing-xs);
+            }
+            
+            .period-btn {
+                font-size: var(--font-size-sm);
+                padding: var(--spacing-xs) var(--spacing-sm);
+            }
+        }
+
+        /* Animation delays for staggered loading */
+        .stock-title-section { animation: fadeInUp 0.8s ease-out; }
+        .chart-section { animation: fadeInLeft 0.8s ease-out 0.2s both; }
+        .performance-section { animation: fadeInRight 0.8s ease-out 0.4s both; }
+        .about-section { animation: fadeInUp 0.8s ease-out 0.6s both; }
+        .bottom-sections { animation: fadeInUp 0.8s ease-out 0.8s both; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
 </head>
 <body class="dark-theme">
-    <!-- Header Navigation -->
-    <header class="header">
-        <div class="nav-container">
-            <div class="logo">Stock Page</div>
-            <nav class="nav-links">
-                <a href="index.html" data-page="home">Home</a>
-                <a href="radar.html" data-page="radar">Radar</a>
-                <a href="#pro" data-page="pro">Pro</a>
-            </nav>
-            <div class="nav-buttons">
-                <a href="dashboard.html" class="btn btn-primary" data-page="dashboard">Dashboard</a>
-                <a href="#logout" class="btn btn-secondary" id="logoutBtn">Logout</a>
-            </div>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>📊 Loading stock data...</p>
         </div>
-    </header>
+    </div>
 
-    <!-- Main Content -->
+    <!-- Header Navigation will be created by JavaScript -->
+
+    <!-- Main Container -->
     <main class="main-container">
-        <!-- Stock Header -->
+        <!-- Back Navigation -->
+        <div class="back-navigation">
+            <a href="radar.html" class="back-link">
+                <span>←</span>
+                <span>Back to Radar</span>
+            </a>
+        </div>
+
+        <!-- Stock Header Section -->
         <section class="stock-header">
             <div class="stock-main-info">
-                <!-- Stock Logo and Title -->
+                <!-- Stock Title Section -->
                 <div class="stock-title-section">
                     <div class="stock-logo" id="stockLogo">
-                        <span class="logo-text">🍎</span>
+                        <span class="logo-text">📈</span>
                     </div>
                     <div class="stock-title-info">
-                        <h1 class="stock-symbol" id="stockSymbol">APPLE</h1>
-                        <p class="stock-name" id="stockName">Apple Inc.</p>
+                        <h1 id="stockSymbol">Loading...</h1>
+                        <p class="stock-name" id="stockName">Loading...</p>
                     </div>
                 </div>
 
-                <!-- Chart and Trading Section -->
+                <!-- Content Grid -->
                 <div class="stock-content-grid">
                     <!-- Chart Section -->
                     <div class="chart-section">
+                        <!-- Enhanced Chart Controls -->
+                        <div class="chart-controls">
+                            <div class="time-period-selector">
+                                <button class="period-btn active" data-period="1D">1D</button>
+                                <button class="period-btn" data-period="1W">1W</button>
+                                <button class="period-btn" data-period="1M">1M</button>
+                                <button class="period-btn" data-period="3M">3M</button>
+                                <button class="period-btn" data-period="1Y">1Y</button>
+                                <button class="period-btn" data-period="5Y">5Y</button>
+                            </div>
+                            
+                            <div class="chart-info" id="chartInfo">
+                                <div class="chart-info-left">
+                                    <span class="chart-price" id="chartPrice">$0.00</span>
+                                    <span class="chart-date" id="chartDate">Loading...</span>
+                                </div>
+                                <div class="chart-info-right">
+                                    <span class="chart-hint">💡 Click on chart for details</span>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="chart-container">
-                            <canvas id="stockChart" width="400" height="300"></canvas>
+                            <canvas id="stockChart" width="800" height="400"></canvas>
                         </div>
                         
                         <!-- Trading Buttons -->
                         <div class="trading-buttons">
                             <button class="trade-btn buy-btn" id="buyBtn">
                                 <span class="btn-text">BUY</span>
-                                <span class="btn-price" id="buyPrice">$3300</span>
+                                <span class="btn-price" id="buyPrice">$0.00</span>
                             </button>
                             <button class="trade-btn sell-btn" id="sellBtn">
                                 <span class="btn-text">SELL</span>
-                                <span class="btn-price" id="sellPrice">$3300</span>
+                                <span class="btn-price" id="sellPrice">$0.00</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Performance Table -->
+                    <!-- Performance Section -->
                     <div class="performance-section">
                         <div class="performance-table-container">
-                            <h3 class="table-title">Key Performance Table</h3>
+                            <h3 class="table-title">Performance Metrics</h3>
                             <div class="performance-table">
                                 <div class="performance-row">
                                     <span class="metric-label">1 Month Return</span>
-                                    <span class="metric-value positive" id="oneMonthReturn">3.54%</span>
+                                    <span class="metric-value" id="oneMonthReturn">+0.00%</span>
                                 </div>
                                 <div class="performance-row">
                                     <span class="metric-label">3 Month Return</span>
-                                    <span class="metric-value negative" id="threeMonthReturn">-0.3%</span>
+                                    <span class="metric-value" id="threeMonthReturn">+0.00%</span>
                                 </div>
                                 <div class="performance-row">
                                     <span class="metric-label">1 Year Return</span>
-                                    <span class="metric-value positive" id="oneYearReturn">15.2%</span>
+                                    <span class="metric-value" id="oneYearReturn">+0.00%</span>
                                 </div>
                                 <div class="performance-row">
                                     <span class="metric-label">Previous Close</span>
-                                    <span class="metric-value" id="previousClose">$3325</span>
+                                    <span class="metric-value" id="previousClose">$0.00</span>
                                 </div>
                                 <div class="performance-row">
                                     <span class="metric-label">52 Week High</span>
-                                    <span class="metric-value" id="weekHigh">$3500</span>
+                                    <span class="metric-value" id="weekHigh">$0.00</span>
                                 </div>
                                 <div class="performance-row">
                                     <span class="metric-label">52 Week Low</span>
-                                    <span class="metric-value" id="weekLow">$2900</span>
+                                    <span class="metric-value" id="weekLow">$0.00</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- More About Section -->
+                <!-- About Section -->
                 <div class="about-section">
-                    <button class="about-btn" id="aboutBtn">MORE ABOUT APPLE</button>
-                    <div class="about-content" id="aboutContent">
-                        <p>Apple Inc. is a global tech leader, driving innovation with iPhones, Macs, and services. Known for premium design, brand loyalty, and steady growth, Apple remains a top pick for long-term investors and market watchers.</p>
+                    <button class="about-btn" id="aboutBtn">MORE ABOUT</button>
+                    <div class="about-content" id="aboutContent" style="display: none;">
+                        <p>Loading company information...</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- News and Related Stocks Section -->
-        <div class="bottom-sections">
-            <!-- Latest Articles -->
-            <section class="news-section">
-                <h2 class="section-title">Latest Articles</h2>
+        <!-- Bottom Sections -->
+        <section class="bottom-sections">
+            <!-- News Section -->
+            <div class="news-section">
+                <h2 class="section-title">Latest News</h2>
                 <div class="news-list" id="newsList">
-                    <!-- News items will be populated here -->
+                    <div class="news-item loading-placeholder">
+                        <h4 class="news-title">Loading financial news...</h4>
+                        <div class="news-meta">
+                            <span class="news-source">VANTYX</span>
+                            <span class="news-time">Just now</span>
+                        </div>
+                    </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- Related Stocks -->
-            <section class="related-section">
+            <!-- Related Stocks Section -->
+            <div class="related-section">
                 <h2 class="section-title">Related Stocks</h2>
                 <div class="related-stocks" id="relatedStocks">
-                    <!-- Related stocks will be populated here -->
+                    <div class="related-stock-item loading-placeholder">
+                        <div class="related-stock-info">
+                            <div class="related-stock-symbol">Loading...</div>
+                            <div class="related-stock-price">$0.00</div>
+                            <div class="related-stock-change">0.00%</div>
+                        </div>
+                    </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
     </main>
+
+    <!-- Trade Modal -->
+    <div id="tradeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="tradeModalTitle">Place Order</h2>
+                <span class="modal-close" id="tradeModalClose">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <form id="tradeForm" class="trade-form">
+                    <!-- Symbol -->
+                    <div class="form-group">
+                        <label for="tradeSymbol">Symbol</label>
+                        <input type="text" id="tradeSymbol" name="symbol" readonly class="form-input">
+                    </div>
+
+                    <!-- Order Type -->
+                    <div class="form-group">
+                        <label for="orderType">Order Type</label>
+                        <select id="orderType" name="type" class="form-select">
+                            <option value="market">Market Order</option>
+                            <option value="limit">Limit Order</option>
+                        </select>
+                    </div>
+
+                    <!-- Side -->
+                    <div class="form-group">
+                        <label for="tradeSide">Side</label>
+                        <select id="tradeSide" name="side" class="form-select">
+                            <option value="buy">Buy</option>
+                            <option value="sell">Sell</option>
+                        </select>
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="form-group">
+                        <label for="tradeQuantity">Quantity</label>
+                        <input type="number" id="tradeQuantity" name="quantity" min="1" max="10000" class="form-input" placeholder="Enter quantity">
+                    </div>
+
+                    <!-- Price (for limit orders) -->
+                    <div class="form-group" id="priceGroup" style="display: none;">
+                        <label for="tradePrice">Price</label>
+                        <input type="number" id="tradePrice" name="price" step="0.01" min="0.01" class="form-input" placeholder="Enter price">
+                    </div>
+
+                    <!-- Trade Summary -->
+                    <div class="trade-summary">
+                        <div class="summary-row">
+                            <span>Available Balance:</span>
+                            <span id="availableBalance">$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Estimated Total:</span>
+                            <span id="estimatedTotal">$0.00</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelTradeBtn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="submitTradeBtn">Place Order</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -134,13 +628,11 @@
             <div class="disclaimer">
                 <p>VANTYX is not a registered broker-dealer or investment advisor. Trading involves risk 
                 and may result in financial loss. Market data is provided for informational purposes 
-                only and is not intended for trading or investment advice. Past performance does not 
-                guarantee future results. Always do your own research before making financial decisions.</p>
+                only and is not intended for trading or investment advice.</p>
             </div>
             
             <div class="footer-controls">
                 <div class="language-selector">
-                    <span class="country-flag">🌍 Germany</span>
                     <select id="languageSelect" class="language-dropdown">
                         <option value="en">English(US)</option>
                         <option value="de">Deutsch</option>
@@ -160,78 +652,373 @@
         </div>
     </footer>
 
-    <!-- Trade Modal -->
-    <div class="modal" id="tradeModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="tradeModalTitle">Place Order</h3>
-                <button class="modal-close" id="tradeModalClose">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="tradeForm">
-                    <div class="form-group">
-                        <label for="tradeSymbol">Symbol</label>
-                        <input type="text" id="tradeSymbol" name="symbol" readonly>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group form-group-half">
-                            <label for="tradeType">Order Type</label>
-                            <select id="tradeType" name="type">
-                                <option value="market">Market</option>
-                                <option value="limit">Limit</option>
-                            </select>
-                        </div>
-                        <div class="form-group form-group-half">
-                            <label for="tradeSide">Side</label>
-                            <select id="tradeSide" name="side">
-                                <option value="buy">Buy</option>
-                                <option value="sell">Sell</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group form-group-half">
-                            <label for="tradeQuantity">Quantity</label>
-                            <input type="number" id="tradeQuantity" name="quantity" min="1" required>
-                        </div>
-                        <div class="form-group form-group-half">
-                            <label for="tradePrice">Price</label>
-                            <input type="number" id="tradePrice" name="price" step="0.01" min="0">
-                        </div>
-                    </div>
-                    <div class="trade-summary">
-                        <div class="summary-row">
-                            <span>Estimated Total:</span>
-                            <span id="estimatedTotal">$0.00</span>
-                        </div>
-                        <div class="summary-row">
-                            <span>Available Balance:</span>
-                            <span id="availableBalance">$0.00</span>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="submitTradeBtn">Place Order</button>
-                <button class="btn btn-secondary" id="cancelTradeBtn">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
-        <div class="loading-spinner">
-            <div class="spinner"></div>
-            <p>Loading stock data...</p>
-        </div>
-    </div>
-
-    <!-- JavaScript Files -->
-    <script src="assets/js/config.js"></script>
+    <!-- JavaScript Files - Load in the correct order -->
     <script src="assets/js/utils.js"></script>
-    <script src="assets/js/userManager.js"></script>
-    <script src="assets/js/apiService.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/yahoo-finance.js"></script>
+    <script src="assets/js/chart-utils.js"></script>
+    <script src="assets/js/stock-page.js"></script>
+    <script src="assets/js/navbar.js"></script>
     <script src="assets/js/main.js"></script>
-    <script src="assets/js/stock.js"></script>
+
+    <!-- Enhanced Tooltip and Chart Functionality -->
+    <script>
+        // Enhanced initialization with tooltip support
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Initializing enhanced stock page with tooltip support...');
+            
+            // Wait for all dependencies to load
+            const checkDependencies = () => {
+                if (typeof window.auth !== 'undefined' && 
+                    typeof window.api !== 'undefined' && 
+                    typeof window.ChartUtils !== 'undefined') {
+                    
+                    console.log('✅ All dependencies loaded');
+                    
+                    // Initialize page enhancements
+                    initializeEnhancements();
+                    
+                } else {
+                    console.log('⏳ Waiting for dependencies...');
+                    setTimeout(checkDependencies, 100);
+                }
+            };
+            
+            checkDependencies();
+        });
+        
+        function initializeEnhancements() {
+            // Add keyboard shortcuts
+            setupKeyboardShortcuts();
+            
+            // Add chart interaction hints
+            setupChartHints();
+            
+            // Add real-time updates
+            setupRealTimeFeatures();
+            
+            console.log('🎨 Stock page enhancements loaded');
+        }
+        
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', function(e) {
+                // ESC key to close modal
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('tradeModal');
+                    if (modal && modal.style.display === 'flex') {
+                        window.closeTradeModal();
+                    }
+                }
+                
+                // B key to buy (when not in input)
+                if (e.key === 'b' || e.key === 'B') {
+                    if (!e.target.matches('input, textarea, select')) {
+                        e.preventDefault();
+                        const buyBtn = document.getElementById('buyBtn');
+                        if (buyBtn && !buyBtn.disabled) {
+                            buyBtn.click();
+                        }
+                    }
+                }
+                
+                // S key to sell (when not in input)
+                if (e.key === 's' || e.key === 'S') {
+                    if (!e.target.matches('input, textarea, select')) {
+                        e.preventDefault();
+                        const sellBtn = document.getElementById('sellBtn');
+                        if (sellBtn && !sellBtn.disabled) {
+                            sellBtn.click();
+                        }
+                    }
+                }
+                
+                // R key to refresh data
+                if (e.key === 'r' || e.key === 'R') {
+                    if (!e.target.matches('input, textarea, select')) {
+                        e.preventDefault();
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const symbol = urlParams.get('symbol');
+                        if (symbol && window.loadStockData) {
+                            console.log('🔄 Refreshing data via keyboard shortcut...');
+                            window.loadStockData(symbol);
+                        }
+                    }
+                }
+                
+                // T key to test tooltip
+                if (e.key === 't' || e.key === 'T') {
+                    if (!e.target.matches('input, textarea, select')) {
+                        e.preventDefault();
+                        testTooltipFunctionality();
+                    }
+                }
+            });
+            
+            console.log('⌨️ Keyboard shortcuts active: B=Buy, S=Sell, R=Refresh, T=Test tooltip, ESC=Close modal');
+        }
+        
+        function setupChartHints() {
+            const chartHint = document.querySelector('.chart-hint');
+            if (chartHint) {
+                // Add click handler to show more info
+                chartHint.addEventListener('click', function() {
+                    const message = `
+📊 Chart Interactions:
+• Hover over the chart line to see price details
+• Click anywhere on the chart to pin the tooltip
+• Use keyboard shortcuts: T=Test, R=Refresh
+• Chart updates in real-time during market hours
+                    `;
+                    alert(message);
+                });
+                
+                // Update hint text based on screen size
+                function updateHintText() {
+                    if (window.innerWidth < 768) {
+                        chartHint.textContent = '💡 Tap chart';
+                    } else {
+                        chartHint.textContent = '💡 Click on chart for details';
+                    }
+                }
+                
+                updateHintText();
+                window.addEventListener('resize', updateHintText);
+            }
+        }
+        
+        function setupRealTimeFeatures() {
+            // Add real-time clock for chart date when no point is selected
+            const updateClock = () => {
+                const chartDate = document.getElementById('chartDate');
+                if (chartDate && chartDate.textContent === 'Loading...') {
+                    const now = new Date();
+                    chartDate.textContent = `Live • ${now.toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    })}`;
+                    chartDate.style.color = 'var(--accent-color)';
+                }
+            };
+            
+            setInterval(updateClock, 1000);
+            updateClock();
+            
+            // Add window focus handler to refresh data
+            let lastFocusTime = Date.now();
+            window.addEventListener('focus', function() {
+                const now = Date.now();
+                // Only refresh if tab was inactive for more than 30 seconds
+                if (now - lastFocusTime > 30000) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const symbol = urlParams.get('symbol');
+                    if (symbol && window.loadStockData) {
+                        console.log('🔄 Refreshing data after tab focus...');
+                        window.loadStockData(symbol);
+                    }
+                }
+                lastFocusTime = now;
+            });
+        }
+        
+        function testTooltipFunctionality() {
+            console.log('🧪 Testing tooltip functionality...');
+            
+            const canvas = document.getElementById('stockChart');
+            if (canvas) {
+                const rect = canvas.getBoundingClientRect();
+                const testEvent = {
+                    clientX: rect.left + rect.width / 2,
+                    clientY: rect.top + rect.height / 2,
+                    target: canvas
+                };
+                
+                // If chart exists and has tooltip functionality
+                if (window.stockChart && typeof window.stockChart.handleClick === 'function') {
+                    window.stockChart.handleClick(testEvent);
+                    console.log('✅ Tooltip test completed via chart method');
+                } else {
+                    // Fallback: show simple test tooltip
+                    showTestTooltip(testEvent.clientX, testEvent.clientY);
+                    console.log('✅ Fallback tooltip test completed');
+                }
+            } else {
+                console.warn('⚠️ Canvas not found for tooltip test');
+            }
+        }
+        
+        function showTestTooltip(x, y) {
+            let tooltip = document.getElementById('chartTooltip');
+            if (!tooltip) {
+                tooltip = document.createElement('div');
+                tooltip.id = 'chartTooltip';
+                tooltip.style.cssText = `
+                    position: fixed;
+                    z-index: 9999;
+                    background: rgba(0, 0, 0, 0.95);
+                    border: 1px solid rgba(74, 144, 226, 0.6);
+                    border-radius: 12px;
+                    padding: 12px;
+                    color: white;
+                    font-size: 14px;
+                    text-align: center;
+                    pointer-events: none;
+                    transition: all 0.2s ease;
+                `;
+                document.body.appendChild(tooltip);
+            }
+            
+            const mockPrice = 150 + Math.random() * 50;
+            const mockChange = (Math.random() - 0.5) * 10;
+            const mockPercent = (mockChange / mockPrice) * 100;
+            
+            tooltip.innerHTML = `
+                <div style="color: #00ff41; font-weight: bold; margin-bottom: 6px;">
+                    ${mockPrice.toFixed(2)}
+                </div>
+                <div style="color: #ccc; font-size: 12px; margin-bottom: 4px;">
+                    ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}
+                </div>
+                <div style="color: ${mockChange >= 0 ? '#00ff41' : '#ff4444'};">
+                    ${mockChange >= 0 ? '+' : ''}${mockChange.toFixed(2)} (${mockPercent.toFixed(2)}%)
+                </div>
+            `;
+            
+            tooltip.style.left = (x + 15) + 'px';
+            tooltip.style.top = (y - 50) + 'px';
+            tooltip.style.display = 'block';
+            tooltip.style.opacity = '1';
+            
+            // Auto-hide test tooltip
+            setTimeout(() => {
+                tooltip.style.opacity = '0';
+                setTimeout(() => {
+                    if (tooltip.style.opacity === '0') {
+                        tooltip.style.display = 'none';
+                    }
+                }, 200);
+            }, 3000);
+        }
+        
+        // Add error recovery
+        window.addEventListener('error', function(e) {
+            console.error('💥 JavaScript error detected:', e.error);
+            
+            // Try to recover gracefully for chart errors
+            if (e.message.includes('ChartUtils') || e.message.includes('chart')) {
+                console.log('🔧 Attempting chart recovery...');
+                setTimeout(() => {
+                    const canvas = document.getElementById('stockChart');
+                    if (canvas) {
+                        const ctx = canvas.getContext('2d');
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                        ctx.font = '16px sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(
+                            '📊 Chart temporarily unavailable', 
+                            canvas.width / 2, 
+                            canvas.height / 2
+                        );
+                        ctx.fillText(
+                            'Press R to retry or click here to reload', 
+                            canvas.width / 2, 
+                            canvas.height / 2 + 30
+                        );
+                        
+                        canvas.style.cursor = 'pointer';
+                        canvas.onclick = () => {
+                            window.location.reload();
+                        };
+                    }
+                }, 1000);
+            }
+        });
+        
+        // Add performance monitoring
+        if (typeof PerformanceObserver !== 'undefined') {
+            const observer = new PerformanceObserver((list) => {
+                const entries = list.getEntries();
+                entries.forEach((entry) => {
+                    if (entry.entryType === 'measure') {
+                        console.log(`⚡ Performance: ${entry.name} took ${entry.duration.toFixed(2)}ms`);
+                    }
+                });
+            });
+            
+            try {
+                observer.observe({ entryTypes: ['measure'] });
+            } catch (e) {
+                // PerformanceObserver not supported, skip
+            }
+        }
+        
+        // Enhanced back button functionality
+        const backLink = document.querySelector('.back-link');
+        if (backLink) {
+            backLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Add smooth exit animation
+                document.body.style.opacity = '0.8';
+                document.body.style.transform = 'translateX(-20px)';
+                document.body.style.transition = 'all 0.3s ease';
+                
+                setTimeout(() => {
+                    window.location.href = 'radar.html';
+                }, 300);
+            });
+        }
+        
+        // Add final initialization check
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                // Verify everything loaded correctly
+                const canvas = document.getElementById('stockChart');
+                const stockSymbol = document.getElementById('stockSymbol');
+                
+                if (canvas && stockSymbol && stockSymbol.textContent === 'Loading...') {
+                    console.warn('⚠️ Stock data may not have loaded properly');
+                    
+                    // Show user-friendly retry option
+                    const container = document.querySelector('.stock-title-info');
+                    if (container && !container.querySelector('.retry-btn')) {
+                        const retryBtn = document.createElement('button');
+                        retryBtn.textContent = '🔄 Retry Loading';
+                        retryBtn.className = 'btn btn-primary retry-btn';
+                        retryBtn.style.cssText = `
+                            margin-top: var(--spacing-md);
+                            background: var(--primary-color);
+                            color: white;
+                            border: none;
+                            padding: 10px 20px;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        `;
+                        retryBtn.onmouseover = () => {
+                            retryBtn.style.background = 'var(--primary-dark)';
+                            retryBtn.style.transform = 'translateY(-2px)';
+                        };
+                        retryBtn.onmouseout = () => {
+                            retryBtn.style.background = 'var(--primary-color)';
+                            retryBtn.style.transform = 'translateY(0)';
+                        };
+                        retryBtn.onclick = () => window.location.reload();
+                        container.appendChild(retryBtn);
+                    }
+                }
+            }, 5000); // Check after 5 seconds
+        });
+        
+        // Export test function globally for debugging
+        window.testTooltip = testTooltipFunctionality;
+        
+        console.log('🎯 Enhanced stock page initialization complete!');
+        console.log('💡 Available commands:');
+        console.log('  - window.testTooltip() - Test tooltip functionality');
+        console.log('  - Keyboard: B=Buy, S=Sell, R=Refresh, T=Test, ESC=Close');
+        console.log('  - Click chart hint for interaction help');
+    </script>
 </body>
 </html>

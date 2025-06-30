@@ -1,274 +1,323 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VANTYX - Dashboard</title>
-    
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/dashboard.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VANTYX - Dashboard</title>
+  
+  <!-- Your existing CSS files -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  
+  <style>
+    /* Additional enhancements to your existing styles */
+    .dashboard-enhancement {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dashboard-enhancement::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(74, 144, 226, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 255, 65, 0.1) 0%, transparent 50%);
+      animation: backgroundPulse 6s ease-in-out infinite alternate;
+      z-index: 1;
+    }
+
+    @keyframes backgroundPulse {
+      0% { opacity: 0.3; }
+      100% { opacity: 0.8; }
+    }
+
+    .content-wrapper {
+      position: relative;
+      z-index: 2;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--spacing-lg);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .amount {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-sm);
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .amount-subtitle {
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-sm);
+    }
+
+    .amount-subtitle.positive {
+      color: var(--accent-color);
+      background: rgba(0, 255, 65, 0.1);
+    }
+
+    .amount-subtitle.negative {
+      color: var(--accent-red);
+      background: rgba(255, 68, 68, 0.1);
+    }
+
+    .stock-item .stock-change.positive {
+      color: var(--accent-color);
+    }
+
+    .stock-item .stock-change.negative {
+      color: var(--accent-red);
+    }
+
+    /* Enhanced floating animation */
+    .card:hover {
+      animation: cardFloat 2s ease-in-out infinite;
+    }
+
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(-5px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* Pulse effect for important data */
+    .amount {
+      animation: dataPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes dataPulse {
+      0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
+      50% { text-shadow: 0 0 30px rgba(74, 144, 226, 0.4); }
+    }
+  </style>
 </head>
-<body class="dark-theme">
-    <!-- Header Navigation -->
-    <header class="header">
-        <div class="nav-container">
-            <div class="logo">Dashboard</div>
-            <nav class="nav-links">
-                <a href="#home" data-page="home">Home</a>
-                <a href="radar.html" data-page="radar">Radar</a>
-                <a href="#pro" data-page="pro">Pro</a>
-            </nav>
-            <div class="nav-buttons">
-                <a href="#dashboard" class="btn btn-primary active" data-page="dashboard">Dashboard</a>
-                <a href="#logout" class="btn btn-secondary" id="logoutBtn">Logout</a>
-            </div>
+<body class="dark-theme dashboard-enhancement">
+  <!-- Header Navigation will be created by JavaScript -->
+
+  <main class="content-wrapper">
+    <div class="main-container">
+      <div class="dashboard-header">
+        <div class="page-title">
+          <h2>Dashboard</h2>
         </div>
-    </header>
+      </div>
 
-    <!-- Main Content -->
-    <main class="main-container">
-        <!-- Dashboard Header -->
-        <section class="dashboard-header">
-            <div class="brand-section">
-                <h1 class="brand-title">VANTYX</h1>
+      <div class="dashboard-content">
+        <!-- Left Column -->
+        <div class="left-column">
+          <!-- Profile Card -->
+          <div class="profile-card">
+            <div class="profile-info">
+              <div class="user-name">Welcome Back!</div>
+              <div class="user-location">Trading from Berlin, Germany</div>
+              <div class="fund-type">Premium Account</div>
             </div>
-            <div class="page-title">
-                <h2>DASHBOARD</h2>
+            <div class="profile-chart">
+              <div class="circular-progress">
+                <div class="progress-circle">
+                  <svg width="120" height="120">
+                    <circle cx="60" cy="60" r="50" stroke="rgba(74,144,226,0.2)" stroke-width="8" fill="none"/>
+                    <circle cx="60" cy="60" r="50" stroke="var(--accent-color)" stroke-width="8" 
+                            fill="none" stroke-dasharray="314" stroke-dashoffset="94" 
+                            style="transition: stroke-dashoffset 2s ease-in-out;"/>
+                  </svg>
+                  <div class="progress-value">70%</div>
+                </div>
+              </div>
             </div>
-        </section>
+          </div>
 
-        <!-- Dashboard Content -->
-        <div class="dashboard-content">
-            <!-- Left Column -->
-            <div class="left-column">
-                <!-- User Profile Card -->
-                <div class="profile-card card">
-                    <div class="profile-info">
-                        <h3 class="user-name" id="userName">Shresht Prasad</h3>
-                        <p class="user-location" id="userLocation">Mumbai, India</p>
-                        <p class="fund-type">Mutual Fund Shark</p>
-                    </div>
-                    <div class="profile-chart">
-                        <div class="circular-progress" id="profileProgress">
-                            <div class="progress-circle">
-                                <svg viewBox="0 0 120 120">
-                                    <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
-                                    <circle cx="60" cy="60" r="54" fill="none" stroke="#00ff41" stroke-width="8" 
-                                            stroke-dasharray="339.29" stroke-dashoffset="271.432" 
-                                            stroke-linecap="round" transform="rotate(-90 60 60)"/>
-                                </svg>
-                                <div class="progress-value">20%</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Summary Card -->
-                <div class="summary-card card">
-                    <h3 class="card-title">Quick Summary</h3>
-                    <div class="summary-item">
-                        <h4>Investment Value</h4>
-                        <div class="value-row">
-                            <span class="amount" id="investmentValue">$ 10000</span>
-                            <span class="percentage positive" id="investmentReturn">▲ 5.7%</span>
-                        </div>
-                        <p class="sub-text">Return Acc (%)</p>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="quick-actions">
-                    <div class="action-grid">
-                        <button class="action-btn" data-action="mutual-funds">
-                            <div class="action-icon">📊</div>
-                            <span>Mutual Funds</span>
-                            <div class="action-value">$2000</div>
-                        </button>
-                        <button class="action-btn" data-action="stocks">
-                            <div class="action-icon">📈</div>
-                            <span>Stocks</span>
-                            <div class="action-value">$7500</div>
-                        </button>
-                        <button class="action-btn" data-action="fixed-deposits">
-                            <div class="action-icon">🏦</div>
-                            <span>Fixed Dep</span>
-                            <div class="action-value">$500</div>
-                        </button>
-                        <button class="action-btn" data-action="monthly-sip">
-                            <div class="action-icon">💰</div>
-                            <span>Monthly SIP</span>
-                            <div class="action-value">$100</div>
-                        </button>
-                    </div>
-                </div>
+          <!-- Summary Card -->
+          <div class="summary-card">
+            <h3 class="card-title">Portfolio Summary</h3>
+            
+            <div class="summary-item">
+              <h4>Total Portfolio Value</h4>
+              <div class="value-row">
+                <div class="amount">$23,450.12</div>
+                <div class="percentage positive">+3.4%</div>
+              </div>
+              <div class="sub-text">Since yesterday</div>
             </div>
 
-            <!-- Right Column -->
-            <div class="right-column">
-                <!-- Portfolio Overview -->
-                <div class="portfolio-overview">
-                    <div class="overview-item">
-                        <h4>Current Value</h4>
-                        <div class="value-display">
-                            <span class="amount" id="currentValue">$ 10300</span>
-                            <span class="trend positive" id="currentTrend">▲ 13.0%</span>
-                        </div>
-                        <p class="sub-text">Return Acc (%)</p>
-                    </div>
-
-                    <div class="overview-item">
-                        <h4>Short Term Gain</h4>
-                        <div class="amount" id="shortTermGain">$ 300</div>
-                    </div>
-
-                    <div class="overview-item">
-                        <h4>Long Term Gain</h4>
-                        <div class="amount" id="longTermGain">$ 1300</div>
-                    </div>
-
-                    <div class="overview-item">
-                        <h4>Monthly SIP</h4>
-                        <div class="amount" id="monthlySip">$ 100</div>
-                    </div>
-                </div>
-
-                <!-- Favourites Section -->
-                <div class="favourites-section card">
-                    <div class="section-header">
-                        <h3>Favourites</h3>
-                    </div>
-                    <div class="favourites-list" id="favouritesList">
-                        <!-- Favourite items will be populated here -->
-                    </div>
-                </div>
+            <div class="summary-item" style="margin-top: var(--spacing-xl);">
+              <h4>Available Cash</h4>
+              <div class="value-row">
+                <div class="amount" style="font-size: 1.5rem;">$5,847.88</div>
+                <div class="percentage">Ready</div>
+              </div>
+              <div class="sub-text">Available for trading</div>
             </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+              <div class="action-grid">
+                <div class="action-btn" onclick="window.location.href='radar.html'">
+                  <div class="action-icon">📊</div>
+                  <span>Discover</span>
+                  <div class="action-value">New Stocks</div>
+                </div>
+                <div class="action-btn" onclick="window.location.href='pro.html'">
+                  <div class="action-icon">⚡</div>
+                  <span>Upgrade</span>
+                  <div class="action-value">Pro Features</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="disclaimer">
-                <p>VANTYX is not a registered broker-dealer or investment advisor. Trading involves risk 
-                and may result in financial loss. Market data is provided for informational purposes 
-                only and is not intended for trading or investment advice. Past performance does not 
-                guarantee future results. Always do your own research before making financial decisions.</p>
+        <!-- Right Column -->
+        <div class="right-column">
+          <!-- Portfolio Overview -->
+          <div class="portfolio-overview">
+            <div class="overview-item">
+              <h4>Day's Gain/Loss</h4>
+              <div class="value-display">
+                <div class="amount" style="font-size: 1.8rem;">+$847.32</div>
+                <div class="trend positive">+3.8%</div>
+              </div>
+              <div class="sub-text">Strong performance today</div>
+            </div>
+
+            <div class="overview-item">
+              <h4>Top Performer</h4>
+              <div class="value-display">
+                <div class="amount" style="font-size: 1.5rem;">AAPL</div>
+                <div class="trend positive">+5.2%</div>
+              </div>
+              <div class="sub-text">Leading your portfolio</div>
+            </div>
+
+            <div class="overview-item">
+              <h4>Diversification</h4>
+              <div class="value-display">
+                <div class="amount" style="font-size: 1.5rem;">8 Stocks</div>
+                <div class="trend positive">Well Balanced</div>
+              </div>
+              <div class="sub-text">Across 4 sectors</div>
+            </div>
+          </div>
+
+          <!-- Favourites Section -->
+          <div class="favourites-section">
+            <div class="section-header">
+              <h3>Your Holdings</h3>
             </div>
             
-            <div class="footer-controls">
-                <div class="language-selector">
-                    <span class="country-flag">🌍 Germany</span>
-                    <select id="languageSelect" class="language-dropdown">
-                        <option value="en">English(US)</option>
-                        <option value="de">Deutsch</option>
-                        <option value="fr">Français</option>
-                        <option value="es">Español</option>
-                    </select>
+            <div class="favourites-list">
+              <div class="favourite-item" onclick="window.location.href='stock.html?symbol=AAPL'">
+                <div class="stock-info">
+                  <div class="stock-symbol">AAPL</div>
+                  <div class="stock-details">
+                    <span>25 shares</span>
+                    <span>$175.84 avg</span>
+                  </div>
                 </div>
-                
-                <div class="theme-toggle" id="themeToggle">
-                    <span class="toggle-slider"></span>
+                <div class="stock-price">$182.52</div>
+                <div class="stock-actions">
+                  <button class="action-btn-small sell">SELL</button>
                 </div>
-                
-                <div class="company-logo">
-                    <span class="logo-text">VYX</span>
+              </div>
+
+              <div class="favourite-item" onclick="window.location.href='stock.html?symbol=MSFT'">
+                <div class="stock-info">
+                  <div class="stock-symbol">MSFT</div>
+                  <div class="stock-details">
+                    <span>15 shares</span>
+                    <span>$368.90 avg</span>
+                  </div>
                 </div>
-            </div>
-        </div>
-    </footer>
+                <div class="stock-price">$373.85</div>
+                <div class="stock-actions">
+                  <button class="action-btn-small sell">SELL</button>
+                </div>
+              </div>
 
-    <!-- Stock Details Modal -->
-    <div class="modal" id="stockModal">
-        <div class="modal-content stock-modal-content">
-            <div class="modal-header">
-                <h3 id="stockModalTitle">Stock Details</h3>
-                <button class="modal-close" id="stockModalClose">&times;</button>
+              <div class="favourite-item" onclick="window.location.href='stock.html?symbol=TSLA'">
+                <div class="stock-info">
+                  <div class="stock-symbol">TSLA</div>
+                  <div class="stock-details">
+                    <span>8 shares</span>
+                    <span>$248.75 avg</span>
+                  </div>
+                </div>
+                <div class="stock-price">$251.33</div>
+                <div class="stock-actions">
+                  <button class="action-btn-small sell">SELL</button>
+                </div>
+              </div>
+
+              <div class="favourite-item" onclick="window.location.href='stock.html?symbol=GOOGL'">
+                <div class="stock-info">
+                  <div class="stock-symbol">GOOGL</div>
+                  <div class="stock-details">
+                    <span>12 shares</span>
+                    <span>$138.42 avg</span>
+                  </div>
+                </div>
+                <div class="stock-price">$142.18</div>
+                <div class="stock-actions">
+                  <button class="action-btn-small sell">SELL</button>
+                </div>
+              </div>
             </div>
-            <div class="modal-body" id="stockModalBody">
-                <!-- Stock details will be populated here -->
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="buyStockBtn">Buy</button>
-                <button class="btn btn-secondary" id="sellStockBtn">Sell</button>
-                <button class="btn btn-outline" id="addToWatchlistBtn">Add to Watchlist</button>
-            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </main>
 
-    <!-- Trade Modal -->
-    <div class="modal" id="tradeModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="tradeModalTitle">Place Order</h3>
-                <button class="modal-close" id="tradeModalClose">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="tradeForm">
-                    <div class="form-group">
-                        <label for="tradeSymbol">Symbol</label>
-                        <input type="text" id="tradeSymbol" name="symbol" readonly>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group form-group-half">
-                            <label for="tradeType">Order Type</label>
-                            <select id="tradeType" name="type">
-                                <option value="market">Market</option>
-                                <option value="limit">Limit</option>
-                            </select>
-                        </div>
-                        <div class="form-group form-group-half">
-                            <label for="tradeSide">Side</label>
-                            <select id="tradeSide" name="side">
-                                <option value="buy">Buy</option>
-                                <option value="sell">Sell</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group form-group-half">
-                            <label for="tradeQuantity">Quantity</label>
-                            <input type="number" id="tradeQuantity" name="quantity" min="1" required>
-                        </div>
-                        <div class="form-group form-group-half">
-                            <label for="tradePrice">Price</label>
-                            <input type="number" id="tradePrice" name="price" step="0.01" min="0">
-                        </div>
-                    </div>
-                    <div class="trade-summary">
-                        <div class="summary-row">
-                            <span>Estimated Total:</span>
-                            <span id="estimatedTotal">$0.00</span>
-                        </div>
-                        <div class="summary-row">
-                            <span>Available Balance:</span>
-                            <span id="availableBalance">$0.00</span>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="submitTradeBtn">Place Order</button>
-                <button class="btn btn-secondary" id="cancelTradeBtn">Cancel</button>
-            </div>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="disclaimer">
+        <p>VANTYX is not a registered broker-dealer or investment advisor. Trading involves risk 
+        and may result in financial loss. Market data is provided for informational purposes 
+        only and is not intended for trading or investment advice.</p>
+      </div>
+      
+      <div class="footer-controls">
+        <div class="language-selector">
+          <select id="languageSelect" class="language-dropdown">
+            <option value="en">English(US)</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Français</option>
+            <option value="es">Español</option>
+          </select>
         </div>
-    </div>
-
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
-        <div class="loading-spinner">
-            <div class="spinner"></div>
-            <p>Loading dashboard...</p>
+        
+        <div class="theme-toggle" id="themeToggle">
+          <span class="toggle-slider"></span>
         </div>
+        
+        <div class="company-logo">
+          <span class="logo-text">VYX</span>
+        </div>
+      </div>
     </div>
+  </footer>
 
-    <!-- JavaScript Files -->
-    <script src="assets/js/config.js"></script>
-    <script src="assets/js/utils.js"></script>
-    <script src="assets/js/userManager.js"></script>
-    <script src="assets/js/apiService.js"></script>
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/dashboard.js"></script>
+  <!-- JavaScript Files -->
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/yahoo-finance.js"></script>
+  <script src="assets/js/chart-utils.js"></script>
+  <script src="assets/js/stock-page.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/main.js"></script>
 </body>
 </html>
