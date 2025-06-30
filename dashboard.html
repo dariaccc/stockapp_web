@@ -11,13 +11,17 @@
   <link rel="stylesheet" href="assets/css/dashboard.css">
   
   <style>
-    /* Additional enhancements to your existing styles */
-    .dashboard-enhancement {
+    /* Enhanced Dashboard Styles */
+    .main-container {
+      min-height: 100vh;
+      background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.95));
+      padding-top: 120px;
+      padding-bottom: 120px;
       position: relative;
       overflow: hidden;
     }
 
-    .dashboard-enhancement::before {
+    .main-container::before {
       content: '';
       position: absolute;
       top: 0;
@@ -27,7 +31,7 @@
       background: 
         radial-gradient(circle at 20% 80%, rgba(74, 144, 226, 0.15) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(0, 255, 65, 0.1) 0%, transparent 50%);
-      animation: backgroundPulse 6s ease-in-out infinite alternate;
+      animation: backgroundPulse 8s ease-in-out infinite alternate;
       z-index: 1;
     }
 
@@ -36,7 +40,148 @@
       100% { opacity: 0.8; }
     }
 
-    .content-wrapper {
+    .dashboard-header {
+      position: relative;
+      z-index: 10;
+      padding: 0 var(--spacing-xxl);
+      margin-bottom: var(--spacing-xl);
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .page-title h2 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      text-shadow: 0 0 30px rgba(74, 144, 226, 0.3);
+      background: linear-gradient(45deg, #4a90e2, #00ff41);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+
+    .dashboard-content {
+      position: relative;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: var(--spacing-xxl);
+      padding: 0 var(--spacing-xxl);
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Enhanced Cards */
+    .card, .profile-card, .summary-card, .portfolio-overview, .favourites-section {
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(74, 144, 226, 0.3);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-xl);
+      backdrop-filter: blur(15px);
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 5;
+    }
+
+    .card::before, .profile-card::before, .summary-card::before, 
+    .portfolio-overview::before, .favourites-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(74, 144, 226, 0.05), rgba(0, 255, 65, 0.03));
+      z-index: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .card:hover, .profile-card:hover, .summary-card:hover, 
+    .portfolio-overview:hover, .favourites-section:hover {
+      transform: translateY(-5px);
+      border-color: rgba(74, 144, 226, 0.5);
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(74, 144, 226, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .card:hover::before, .profile-card:hover::before, .summary-card:hover::before, 
+    .portfolio-overview:hover::before, .favourites-section:hover::before {
+      opacity: 1.5;
+    }
+
+    /* Profile Card */
+    .profile-card {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+      background: linear-gradient(135deg, rgba(74, 144, 226, 0.15), rgba(0, 255, 65, 0.1));
+    }
+
+    .profile-info {
+      flex: 1;
+      position: relative;
+      z-index: 2;
+    }
+
+    .user-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xs);
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .user-location {
+      color: var(--text-secondary);
+      margin-bottom: var(--spacing-xs);
+      font-size: 0.9rem;
+    }
+
+    .fund-type {
+      background: var(--accent-color);
+      color: var(--bg-primary);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-block;
+      box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
+    }
+
+    .circular-progress {
+      position: relative;
+      z-index: 2;
+    }
+
+    .progress-circle {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .progress-value {
+      position: absolute;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+    }
+
+    /* Summary Card */
+    .summary-card {
       position: relative;
       z-index: 2;
     }
@@ -45,181 +190,799 @@
       font-size: 1.1rem;
       color: var(--text-secondary);
       margin-bottom: var(--spacing-lg);
-      font-weight: 500;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .summary-item {
+      margin-bottom: var(--spacing-lg);
+      position: relative;
+      z-index: 2;
+    }
+
+    .summary-item h4 {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: var(--spacing-sm);
+      font-weight: 500;
+    }
+
+    .value-row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-xs);
     }
 
     .amount {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       font-weight: 900;
       color: var(--text-primary);
-      margin-bottom: var(--spacing-sm);
       text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    }
-
-    .amount-subtitle {
-      font-size: 0.9rem;
-      font-weight: 600;
-      padding: var(--spacing-xs) var(--spacing-sm);
-      border-radius: var(--radius-sm);
-    }
-
-    .amount-subtitle.positive {
-      color: var(--accent-color);
-      background: rgba(0, 255, 65, 0.1);
-    }
-
-    .amount-subtitle.negative {
-      color: var(--accent-red);
-      background: rgba(255, 68, 68, 0.1);
-    }
-
-    .stock-item .stock-change.positive {
-      color: var(--accent-color);
-    }
-
-    .stock-item .stock-change.negative {
-      color: var(--accent-red);
-    }
-
-    /* Enhanced floating animation */
-    .card:hover {
-      animation: cardFloat 2s ease-in-out infinite;
-    }
-
-    @keyframes cardFloat {
-      0%, 100% { transform: translateY(-5px); }
-      50% { transform: translateY(-8px); }
-    }
-
-    /* Pulse effect for important data */
-    .amount {
-      animation: dataPulse 3s ease-in-out infinite;
+      animation: dataPulse 4s ease-in-out infinite;
     }
 
     @keyframes dataPulse {
       0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
       50% { text-shadow: 0 0 30px rgba(74, 144, 226, 0.4); }
     }
+
+    .percentage {
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .percentage.positive {
+      color: var(--accent-color);
+      background: rgba(0, 255, 65, 0.15);
+      border: 1px solid rgba(0, 255, 65, 0.3);
+      box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
+    }
+
+    .percentage.negative {
+      color: var(--accent-red);
+      background: rgba(255, 68, 68, 0.15);
+      border: 1px solid rgba(255, 68, 68, 0.3);
+      box-shadow: 0 0 10px rgba(255, 68, 68, 0.2);
+    }
+
+    .sub-text {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      margin-top: var(--spacing-xl);
+      position: relative;
+      z-index: 2;
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+    }
+
+    .action-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(74, 144, 226, 0.3);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+
+    .action-btn:hover {
+      background: rgba(74, 144, 226, 0.1);
+      border-color: var(--primary-color);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+    }
+
+    .action-icon {
+      font-size: 1.5rem;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .action-btn span {
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .action-value {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+    }
+
+    /* Portfolio Overview */
+    .portfolio-overview {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .overview-item {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .overview-item h4 {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: var(--spacing-sm);
+      font-weight: 500;
+    }
+
+    .value-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-xs);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .trend {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .trend.positive {
+      color: var(--accent-color);
+      background: rgba(0, 255, 65, 0.15);
+      border: 1px solid rgba(0, 255, 65, 0.3);
+    }
+
+    /* Holdings & Watchlist */
+    .favourites-section {
+      position: relative;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-header h3 {
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .tab-buttons {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      border: 1px solid rgba(74, 144, 226, 0.2);
+    }
+
+    .tab-btn {
+      padding: var(--spacing-xs) var(--spacing-md);
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .tab-btn.active {
+      background: var(--primary-color);
+      color: var(--text-primary);
+      box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+    }
+
+    .favourites-list, .watchlist {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      position: relative;
+      z-index: 2;
+    }
+
+    .favourite-item, .watchlist-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-lg);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(74, 144, 226, 0.2);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .favourite-item::before, .watchlist-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(74, 144, 226, 0.05), rgba(0, 255, 65, 0.03));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .favourite-item:hover, .watchlist-item:hover {
+      background: rgba(74, 144, 226, 0.1);
+      border-color: var(--primary-color);
+      transform: translateX(5px);
+      box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+    }
+
+    .favourite-item:hover::before, .watchlist-item:hover::before {
+      opacity: 1;
+    }
+
+    .stock-info {
+      flex: 1;
+      position: relative;
+      z-index: 2;
+    }
+
+    .stock-symbol {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .stock-details {
+      display: flex;
+      gap: var(--spacing-sm);
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+    }
+
+    .stock-price {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      position: relative;
+      z-index: 2;
+    }
+
+    .stock-change {
+      font-size: 0.9rem;
+      font-weight: 600;
+      position: relative;
+      z-index: 2;
+    }
+
+    .stock-change.positive {
+      color: var(--accent-color);
+    }
+
+    .stock-change.negative {
+      color: var(--accent-red);
+    }
+
+    .stock-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+      position: relative;
+      z-index: 2;
+    }
+
+    .action-btn-small {
+      padding: var(--spacing-xs) var(--spacing-md);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+    }
+
+    .action-btn-small.sell {
+      background: rgba(255, 68, 68, 0.2);
+      color: var(--accent-red);
+      border: 1px solid rgba(255, 68, 68, 0.3);
+    }
+
+    .action-btn-small.sell:hover {
+      background: var(--accent-red);
+      color: var(--text-primary);
+      transform: scale(1.05);
+    }
+
+    .action-btn-small.add {
+      background: rgba(0, 255, 65, 0.2);
+      color: var(--accent-color);
+      border: 1px solid rgba(0, 255, 65, 0.3);
+    }
+
+    .action-btn-small.add:hover {
+      background: var(--accent-color);
+      color: var(--bg-primary);
+      transform: scale(1.05);
+    }
+
+    .action-btn-small.remove {
+      background: rgba(255, 68, 68, 0.2);
+      color: var(--accent-red);
+      border: 1px solid rgba(255, 68, 68, 0.3);
+    }
+
+    .action-btn-small.remove:hover {
+      background: var(--accent-red);
+      color: var(--text-primary);
+      transform: scale(1.05);
+    }
+
+    /* Add Stock Modal */
+    .add-stock-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 15000;
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    .add-stock-modal.show {
+      display: flex !important;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: rgba(26, 26, 46, 0.95);
+      border: 2px solid rgba(74, 144, 226, 0.5);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-xxl);
+      max-width: 500px;
+      width: 90%;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from { 
+        opacity: 0; 
+        transform: translateY(-30px) scale(0.95); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .modal-header h3 {
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: var(--spacing-xs);
+      border-radius: var(--radius-sm);
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .search-input {
+      width: 100%;
+      padding: var(--spacing-md);
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(74, 144, 226, 0.3);
+      border-radius: var(--radius-lg);
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
+    }
+
+    .search-results {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(26, 26, 46, 0.95);
+      border: 2px solid rgba(74, 144, 226, 0.3);
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(15px);
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+    }
+
+    .search-result-item {
+      padding: var(--spacing-md);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .search-result-item:hover {
+      background: rgba(74, 144, 226, 0.1);
+    }
+
+    .search-result-item:last-child {
+      border-bottom: none;
+    }
+
+    .search-result-symbol {
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .search-result-name {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: var(--spacing-xxl);
+      color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-lg);
+      opacity: 0.5;
+    }
+
+    .empty-state h4 {
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-primary);
+    }
+
+    .add-watchlist-btn {
+      background: var(--primary-color);
+      color: var(--text-primary);
+      border: none;
+      padding: var(--spacing-sm) var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: var(--spacing-md);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .add-watchlist-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
+    }
+
+    /* Tab Content */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Animation classes */
+    .fade-in {
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Loading states */
+    .loading-placeholder {
+      background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(74, 144, 226, 0.2) 50%, rgba(255,255,255,0.1) 75%);
+      background-size: 200% 100%;
+      animation: shimmerLoad 1.5s infinite;
+      border-radius: var(--radius-md);
+      height: 60px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes shimmerLoad {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Notification styles */
+    .notification {
+      position: fixed;
+      top: 90px;
+      right: 20px;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      z-index: 12000;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+      animation: slideInRight 0.3s ease-out;
+      max-width: 300px;
+      word-wrap: break-word;
+      color: white;
+    }
+
+    .notification.success {
+      background: rgba(0, 255, 65, 0.9);
+    }
+
+    .notification.warning {
+      background: rgba(255, 193, 7, 0.9);
+    }
+
+    .notification.error {
+      background: rgba(255, 68, 68, 0.9);
+    }
+
+    .notification.info {
+      background: rgba(74, 144, 226, 0.9);
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideOutRight {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .main-container {
+        padding-top: 100px;
+      }
+
+      .dashboard-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+      }
+      
+      .portfolio-overview {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        padding-top: 90px;
+      }
+
+      .dashboard-header,
+      .dashboard-content {
+        padding: 0 var(--spacing-lg);
+      }
+      
+      .page-title h2 {
+        font-size: 2rem;
+      }
+      
+      .profile-card {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .action-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stock-details {
+        flex-direction: column;
+        gap: 2px;
+      }
+      
+      .favourite-item,
+      .watchlist-item {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-sm);
+      }
+    }
   </style>
 </head>
-<body class="dark-theme dashboard-enhancement">
+<body class="dark-theme">
   <!-- Header Navigation will be created by JavaScript -->
 
-  <main class="content-wrapper">
-    <div class="main-container">
-      <div class="dashboard-header">
-        <div class="page-title">
-          <h2>Dashboard</h2>
+  <main class="main-container">
+    <div class="dashboard-header">
+      <div class="page-title">
+        <h2>Portfolio Dashboard</h2>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      <!-- Left Column -->
+      <div class="left-column">
+        <!-- Profile Card -->
+        <div class="profile-card">
+          <div class="profile-info">
+            <div class="user-name">Welcome Back!</div>
+            <div class="user-location">Trading from Berlin, Germany</div>
+            <div class="fund-type">Premium Account</div>
+          </div>
+          <div class="profile-chart">
+            <div class="circular-progress">
+              <div class="progress-circle">
+                <svg width="120" height="120">
+                  <circle cx="60" cy="60" r="50" stroke="rgba(74,144,226,0.2)" stroke-width="8" fill="none"/>
+                  <circle cx="60" cy="60" r="50" stroke="var(--accent-color)" stroke-width="8" 
+                          fill="none" stroke-dasharray="314" stroke-dashoffset="94" 
+                          style="transition: stroke-dashoffset 2s ease-in-out;"/>
+                </svg>
+                <div class="progress-value">70%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Card -->
+        <div class="summary-card">
+          <h3 class="card-title">Portfolio Summary</h3>
+          
+          <div class="summary-item">
+            <h4>Total Portfolio Value</h4>
+            <div class="value-row">
+              <div class="amount" id="portfolioValue">$23,450.12</div>
+              <div class="percentage positive" id="portfolioChange">+3.4%</div>
+            </div>
+            <div class="sub-text">Since yesterday</div>
+          </div>
+
+          <div class="summary-item">
+            <h4>Available Cash</h4>
+            <div class="value-row">
+              <div class="amount" style="font-size: 1.5rem;" id="availableCash">$5,847.88</div>
+              <div class="percentage">Ready</div>
+            </div>
+            <div class="sub-text">Available for trading</div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="quick-actions">
+            <div class="action-grid">
+              <div class="action-btn" onclick="window.location.href='radar.html'">
+                <div class="action-icon">📊</div>
+                <span>Discover</span>
+                <div class="action-value">New Stocks</div>
+              </div>
+              <div class="action-btn" onclick="window.location.href='pro.html'">
+                <div class="action-icon">⚡</div>
+                <span>Upgrade</span>
+                <div class="action-value">Pro Features</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="dashboard-content">
-        <!-- Left Column -->
-        <div class="left-column">
-          <!-- Profile Card -->
-          <div class="profile-card">
-            <div class="profile-info">
-              <div class="user-name">Welcome Back!</div>
-              <div class="user-location">Trading from Berlin, Germany</div>
-              <div class="fund-type">Premium Account</div>
+      <!-- Right Column -->
+      <div class="right-column">
+        <!-- Portfolio Overview -->
+        <div class="portfolio-overview">
+          <div class="overview-item">
+            <h4>Day's Gain/Loss</h4>
+            <div class="value-display">
+              <div class="amount" style="font-size: 1.8rem;" id="dayGainLoss">+$847.32</div>
+              <div class="trend positive" id="dayGainLossPercent">+3.8%</div>
             </div>
-            <div class="profile-chart">
-              <div class="circular-progress">
-                <div class="progress-circle">
-                  <svg width="120" height="120">
-                    <circle cx="60" cy="60" r="50" stroke="rgba(74,144,226,0.2)" stroke-width="8" fill="none"/>
-                    <circle cx="60" cy="60" r="50" stroke="var(--accent-color)" stroke-width="8" 
-                            fill="none" stroke-dasharray="314" stroke-dashoffset="94" 
-                            style="transition: stroke-dashoffset 2s ease-in-out;"/>
-                  </svg>
-                  <div class="progress-value">70%</div>
-                </div>
-              </div>
-            </div>
+            <div class="sub-text">Strong performance today</div>
           </div>
 
-          <!-- Summary Card -->
-          <div class="summary-card">
-            <h3 class="card-title">Portfolio Summary</h3>
-            
-            <div class="summary-item">
-              <h4>Total Portfolio Value</h4>
-              <div class="value-row">
-                <div class="amount">$23,450.12</div>
-                <div class="percentage positive">+3.4%</div>
-              </div>
-              <div class="sub-text">Since yesterday</div>
+          <div class="overview-item">
+            <h4>Top Performer</h4>
+            <div class="value-display">
+              <div class="amount" style="font-size: 1.5rem;" id="topPerformer">AAPL</div>
+              <div class="trend positive" id="topPerformerChange">+5.2%</div>
             </div>
+            <div class="sub-text">Leading your portfolio</div>
+          </div>
 
-            <div class="summary-item" style="margin-top: var(--spacing-xl);">
-              <h4>Available Cash</h4>
-              <div class="value-row">
-                <div class="amount" style="font-size: 1.5rem;">$5,847.88</div>
-                <div class="percentage">Ready</div>
-              </div>
-              <div class="sub-text">Available for trading</div>
+          <div class="overview-item">
+            <h4>Diversification</h4>
+            <div class="value-display">
+              <div class="amount" style="font-size: 1.5rem;" id="stockCount">8 Stocks</div>
+              <div class="trend positive">Well Balanced</div>
             </div>
-
-            <!-- Quick Actions -->
-            <div class="quick-actions">
-              <div class="action-grid">
-                <div class="action-btn" onclick="window.location.href='radar.html'">
-                  <div class="action-icon">📊</div>
-                  <span>Discover</span>
-                  <div class="action-value">New Stocks</div>
-                </div>
-                <div class="action-btn" onclick="window.location.href='pro.html'">
-                  <div class="action-icon">⚡</div>
-                  <span>Upgrade</span>
-                  <div class="action-value">Pro Features</div>
-                </div>
-              </div>
-            </div>
+            <div class="sub-text">Across 4 sectors</div>
           </div>
         </div>
 
-        <!-- Right Column -->
-        <div class="right-column">
-          <!-- Portfolio Overview -->
-          <div class="portfolio-overview">
-            <div class="overview-item">
-              <h4>Day's Gain/Loss</h4>
-              <div class="value-display">
-                <div class="amount" style="font-size: 1.8rem;">+$847.32</div>
-                <div class="trend positive">+3.8%</div>
-              </div>
-              <div class="sub-text">Strong performance today</div>
-            </div>
-
-            <div class="overview-item">
-              <h4>Top Performer</h4>
-              <div class="value-display">
-                <div class="amount" style="font-size: 1.5rem;">AAPL</div>
-                <div class="trend positive">+5.2%</div>
-              </div>
-              <div class="sub-text">Leading your portfolio</div>
-            </div>
-
-            <div class="overview-item">
-              <h4>Diversification</h4>
-              <div class="value-display">
-                <div class="amount" style="font-size: 1.5rem;">8 Stocks</div>
-                <div class="trend positive">Well Balanced</div>
-              </div>
-              <div class="sub-text">Across 4 sectors</div>
+        <!-- Holdings & Watchlist Section -->
+        <div class="favourites-section">
+          <div class="section-header">
+            <h3>Portfolio & Watchlist</h3>
+            <div class="tab-buttons">
+              <button class="tab-btn active" data-tab="holdings">Holdings</button>
+              <button class="tab-btn" data-tab="watchlist">Watchlist</button>
             </div>
           </div>
-
-          <!-- Favourites Section -->
-          <div class="favourites-section">
-            <div class="section-header">
-              <h3>Your Holdings</h3>
-            </div>
-            
-            <div class="favourites-list">
-              <div class="favourite-item" onclick="window.location.href='stock.html?symbol=AAPL'">
+          
+          <!-- Holdings Tab -->
+          <div class="tab-content active" id="holdings-tab">
+            <div class="favourites-list" id="holdingsList">
+              <div class="favourite-item" onclick="navigateToStock('AAPL', event)">
                 <div class="stock-info">
                   <div class="stock-symbol">AAPL</div>
                   <div class="stock-details">
@@ -228,12 +991,13 @@
                   </div>
                 </div>
                 <div class="stock-price">$182.52</div>
+                <div class="stock-change positive">+3.8%</div>
                 <div class="stock-actions">
-                  <button class="action-btn-small sell">SELL</button>
+                  <button class="action-btn-small sell" onclick="sellStock('AAPL', event)">SELL</button>
                 </div>
               </div>
 
-              <div class="favourite-item" onclick="window.location.href='stock.html?symbol=MSFT'">
+              <div class="favourite-item" onclick="navigateToStock('MSFT', event)">
                 <div class="stock-info">
                   <div class="stock-symbol">MSFT</div>
                   <div class="stock-details">
@@ -242,12 +1006,13 @@
                   </div>
                 </div>
                 <div class="stock-price">$373.85</div>
+                <div class="stock-change positive">+1.3%</div>
                 <div class="stock-actions">
-                  <button class="action-btn-small sell">SELL</button>
+                  <button class="action-btn-small sell" onclick="sellStock('MSFT', event)">SELL</button>
                 </div>
               </div>
 
-              <div class="favourite-item" onclick="window.location.href='stock.html?symbol=TSLA'">
+              <div class="favourite-item" onclick="navigateToStock('TSLA', event)">
                 <div class="stock-info">
                   <div class="stock-symbol">TSLA</div>
                   <div class="stock-details">
@@ -256,12 +1021,13 @@
                   </div>
                 </div>
                 <div class="stock-price">$251.33</div>
+                <div class="stock-change positive">+1.0%</div>
                 <div class="stock-actions">
-                  <button class="action-btn-small sell">SELL</button>
+                  <button class="action-btn-small sell" onclick="sellStock('TSLA', event)">SELL</button>
                 </div>
               </div>
 
-              <div class="favourite-item" onclick="window.location.href='stock.html?symbol=GOOGL'">
+              <div class="favourite-item" onclick="navigateToStock('GOOGL', event)">
                 <div class="stock-info">
                   <div class="stock-symbol">GOOGL</div>
                   <div class="stock-details">
@@ -270,16 +1036,56 @@
                   </div>
                 </div>
                 <div class="stock-price">$142.18</div>
+                <div class="stock-change positive">+2.7%</div>
                 <div class="stock-actions">
-                  <button class="action-btn-small sell">SELL</button>
+                  <button class="action-btn-small sell" onclick="sellStock('GOOGL', event)">SELL</button>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Watchlist Tab -->
+          <div class="tab-content" id="watchlist-tab">
+            <div class="watchlist" id="watchlistContainer">
+              <!-- Watchlist items will be populated by JavaScript -->
+            </div>
+            
+            <!-- Empty State for Watchlist -->
+            <div class="empty-state" id="watchlistEmpty">
+              <div class="empty-state-icon">👀</div>
+              <h4>Your Watchlist is Empty</h4>
+              <p>Add stocks to your watchlist by visiting individual stock pages and clicking the "Add to Watchlist" button.</p>
             </div>
           </div>
         </div>
       </div>
     </div>
   </main>
+
+  <!-- Add Stock to Watchlist Modal -->
+  <div class="add-stock-modal" id="addStockModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add Stock to Watchlist</h3>
+        <button class="modal-close" onclick="closeAddStockModal()">&times;</button>
+      </div>
+      
+      <div class="search-container">
+        <input 
+          type="text" 
+          class="search-input" 
+          id="stockSearchInput" 
+          placeholder="Search for stocks (e.g., AAPL, Tesla, Microsoft)"
+          autocomplete="off"
+        >
+        <div class="search-results" id="stockSearchResults"></div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeAddStockModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer class="footer">
@@ -319,5 +1125,439 @@
   <script src="assets/js/stock-page.js"></script>
   <script src="assets/js/navbar.js"></script>
   <script src="assets/js/main.js"></script>
+
+  <!-- Enhanced Dashboard JavaScript -->
+  <script>
+    // Dashboard functionality - Clean, simplified version
+    class DashboardManager {
+      constructor() {
+        this.watchlist = this.loadWatchlist();
+        this.searchTimeout = null;
+        this.init();
+      }
+
+      init() {
+        console.log('🚀 Dashboard Manager initialized');
+        this.setupTabs();
+        this.setupSearch();
+        this.loadWatchlistUI();
+        this.setupModalHandlers();
+      }
+
+      // Tab Management
+      setupTabs() {
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        tabButtons.forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.switchTab(btn.dataset.tab);
+          });
+        });
+      }
+
+      switchTab(tabName) {
+        // Update button states
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+        // Update content visibility
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        document.getElementById(`${tabName}-tab`).classList.add('active');
+
+        console.log(`📋 Switched to ${tabName} tab`);
+      }
+
+      // Modal Handlers
+      setupModalHandlers() {
+        const modal = document.getElementById('addStockModal');
+        
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            this.closeAddStockModal();
+          }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && modal.style.display === 'flex') {
+            this.closeAddStockModal();
+          }
+        });
+      }
+
+      // Watchlist Management
+      loadWatchlist() {
+        try {
+          const saved = localStorage.getItem('vantyx_watchlist');
+          return saved ? JSON.parse(saved) : [];
+        } catch (error) {
+          console.error('Error loading watchlist:', error);
+          return [];
+        }
+      }
+
+      saveWatchlist() {
+        try {
+          localStorage.setItem('vantyx_watchlist', JSON.stringify(this.watchlist));
+          console.log('💾 Watchlist saved:', this.watchlist);
+        } catch (error) {
+          console.error('Error saving watchlist:', error);
+        }
+      }
+
+      addToWatchlist(symbol, name) {
+        if (!this.watchlist.find(item => item.symbol === symbol)) {
+          this.watchlist.push({
+            symbol: symbol,
+            name: name,
+            addedAt: new Date().toISOString()
+          });
+          this.saveWatchlist();
+          this.loadWatchlistUI();
+          
+          this.showNotification(`${symbol} added to watchlist`, 'success');
+          return true;
+        } else {
+          this.showNotification(`${symbol} is already in your watchlist`, 'warning');
+          return false;
+        }
+      }
+
+      removeFromWatchlist(symbol) {
+        this.watchlist = this.watchlist.filter(item => item.symbol !== symbol);
+        this.saveWatchlist();
+        this.loadWatchlistUI();
+        this.showNotification(`${symbol} removed from watchlist`, 'info');
+      }
+
+      async loadWatchlistUI() {
+        const container = document.getElementById('watchlistContainer');
+        const emptyState = document.getElementById('watchlistEmpty');
+
+        if (this.watchlist.length === 0) {
+          container.style.display = 'none';
+          emptyState.style.display = 'block';
+          return;
+        }
+
+        container.style.display = 'block';
+        emptyState.style.display = 'none';
+
+        // Show loading state
+        container.innerHTML = '<div class="loading-placeholder">Loading watchlist...</div>';
+
+        try {
+          // Create HTML for watchlist items with mock data
+          const watchlistHTML = this.watchlist.map(item => {
+            // Mock price data - replace with real API call
+            const mockPrice = (Math.random() * 300 + 50).toFixed(2);
+            const mockChange = (Math.random() - 0.5) * 10;
+            const changeClass = mockChange >= 0 ? 'positive' : 'negative';
+            
+            return `
+              <div class="watchlist-item fade-in" onclick="navigateToStock('${item.symbol}', event)">
+                <div class="stock-info">
+                  <div class="stock-symbol">${item.symbol}</div>
+                  <div class="stock-details">
+                    <span>Watching</span>
+                    <span>${this.formatDate(item.addedAt)}</span>
+                  </div>
+                </div>
+                <div class="stock-price">${mockPrice}</div>
+                <div class="stock-change ${changeClass}">${mockChange >= 0 ? '+' : ''}${mockChange.toFixed(2)}%</div>
+                <div class="stock-actions">
+                  <button class="action-btn-small add" onclick="buyFromWatchlist('${item.symbol}', event)">BUY</button>
+                  <button class="action-btn-small remove" onclick="removeFromWatchlist('${item.symbol}', event)">REMOVE</button>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          container.innerHTML = watchlistHTML;
+          console.log('✅ Watchlist UI updated');
+
+        } catch (error) {
+          console.error('❌ Error loading watchlist:', error);
+          container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--accent-red);">Error loading watchlist data</div>';
+        }
+      }
+
+      // Search Functionality
+      setupSearch() {
+        const searchInput = document.getElementById('stockSearchInput');
+        const searchResults = document.getElementById('stockSearchResults');
+
+        if (!searchInput || !searchResults) return;
+
+        searchInput.addEventListener('input', (e) => {
+          const query = e.target.value.trim();
+          
+          clearTimeout(this.searchTimeout);
+          
+          if (query.length < 2) {
+            searchResults.style.display = 'none';
+            return;
+          }
+
+          this.searchTimeout = setTimeout(() => {
+            // Mock search results - replace with real API
+            const mockResults = this.getMockSearchResults(query);
+            this.displaySearchResults(mockResults, searchResults);
+          }, 300);
+        });
+
+        // Hide results when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.style.display = 'none';
+          }
+        });
+      }
+
+      getMockSearchResults(query) {
+        const mockStocks = [
+          { symbol: 'AAPL', shortname: 'Apple Inc.' },
+          { symbol: 'MSFT', shortname: 'Microsoft Corporation' },
+          { symbol: 'GOOGL', shortname: 'Alphabet Inc.' },
+          { symbol: 'TSLA', shortname: 'Tesla, Inc.' },
+          { symbol: 'AMZN', shortname: 'Amazon.com, Inc.' },
+          { symbol: 'NVDA', shortname: 'NVIDIA Corporation' },
+          { symbol: 'META', shortname: 'Meta Platforms, Inc.' },
+          { symbol: 'NFLX', shortname: 'Netflix, Inc.' },
+          { symbol: 'AMD', shortname: 'Advanced Micro Devices, Inc.' },
+          { symbol: 'INTC', shortname: 'Intel Corporation' },
+          { symbol: 'CRM', shortname: 'Salesforce, Inc.' },
+          { symbol: 'UBER', shortname: 'Uber Technologies, Inc.' }
+        ];
+
+        return mockStocks.filter(stock => 
+          stock.symbol.toLowerCase().includes(query.toLowerCase()) ||
+          stock.shortname.toLowerCase().includes(query.toLowerCase())
+        );
+      }
+
+      displaySearchResults(results, container) {
+        if (results.length === 0) {
+          container.innerHTML = '<div class="search-result-item">No results found</div>';
+          container.style.display = 'block';
+          return;
+        }
+
+        container.innerHTML = results.slice(0, 8).map(result => `
+          <div class="search-result-item" data-symbol="${result.symbol}" data-name="${result.shortname}">
+            <div class="search-result-symbol">${result.symbol}</div>
+            <div class="search-result-name">${result.shortname}</div>
+          </div>
+        `).join('');
+
+        // Add click handlers
+        container.querySelectorAll('.search-result-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const symbol = item.dataset.symbol;
+            const name = item.dataset.name;
+            console.log(`🎯 Selected stock: ${symbol} - ${name}`);
+            
+            // Use the simple add function
+            addToWatchlistSimple(symbol, name);
+          });
+        });
+
+        container.style.display = 'block';
+      }
+
+      // Modal Management
+      openAddStockModal() {
+        const modal = document.getElementById('addStockModal');
+        modal.style.display = 'flex';
+        
+        // Focus on search input
+        setTimeout(() => {
+          const input = document.getElementById('stockSearchInput');
+          if (input) input.focus();
+        }, 100);
+      }
+
+      closeAddStockModal() {
+        const modal = document.getElementById('addStockModal');
+        modal.style.display = 'none';
+        
+        // Clear search
+        const input = document.getElementById('stockSearchInput');
+        const results = document.getElementById('stockSearchResults');
+        if (input) input.value = '';
+        if (results) results.style.display = 'none';
+      }
+
+      // Utility Functions
+      formatDate(dateString) {
+        if (!dateString) return 'Recently';
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 1) return 'Yesterday';
+        if (diffDays < 7) return `${diffDays} days ago`;
+        if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
+        return date.toLocaleDateString();
+      }
+
+      showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+          notification.style.animation = 'slideOutRight 0.3s ease-out';
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.remove();
+            }
+          }, 300);
+        }, 3000);
+      }
+    }
+
+    // Global Functions for Navigation and Actions
+    function navigateToStock(symbol, event) {
+      if (event && event.target.classList.contains('action-btn-small')) {
+        return; // Don't navigate if clicking on action buttons
+      }
+      console.log(`Navigating to stock: ${symbol}`);
+      window.location.href = `stock.html?symbol=${symbol}`;
+    }
+
+    function sellStock(symbol, event) {
+      event.stopPropagation();
+      alert(`Sell functionality for ${symbol} would be implemented here`);
+    }
+
+    function buyFromWatchlist(symbol, event) {
+      event.stopPropagation();
+      console.log(`Buying ${symbol} from watchlist`);
+      window.location.href = `stock.html?symbol=${symbol}`;
+    }
+
+    function removeFromWatchlist(symbol, event) {
+      event.stopPropagation();
+      if (window.dashboardManager) {
+        window.dashboardManager.removeFromWatchlist(symbol);
+      }
+    }
+
+    // Fixed modal functions - work independently of dashboard manager
+    window.openAddStockModal = function() {
+      console.log('🎯 Opening add stock modal...');
+      alert('Opening modal!');
+      const modal = document.getElementById('addStockModal');
+      if (modal) {
+        modal.classList.add('show');
+        modal.style.display = 'flex';
+        console.log('✅ Modal should now be visible');
+        
+        // Focus on search input
+        setTimeout(() => {
+          const input = document.getElementById('stockSearchInput');
+          if (input) {
+            input.focus();
+            console.log('✅ Search input focused');
+          }
+        }, 100);
+      } else {
+        console.error('❌ Modal element not found!');
+        alert('Modal not found!');
+      }
+    };
+
+    window.closeAddStockModal = function() {
+      console.log('🎯 Closing add stock modal...');
+      const modal = document.getElementById('addStockModal');
+      if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        console.log('✅ Modal hidden');
+        
+        // Clear search
+        const input = document.getElementById('stockSearchInput');
+        const results = document.getElementById('stockSearchResults');
+        if (input) input.value = '';
+        if (results) results.style.display = 'none';
+      }
+    };
+
+    // Simple add to watchlist function
+    function addToWatchlistSimple(symbol, name) {
+      console.log(`📝 Adding ${symbol} to watchlist...`);
+      
+      // Get current watchlist
+      let watchlist = [];
+      try {
+        const saved = localStorage.getItem('vantyx_watchlist');
+        watchlist = saved ? JSON.parse(saved) : [];
+      } catch (error) {
+        console.error('Error loading watchlist:', error);
+      }
+      
+      // Check if already exists
+      if (watchlist.find(item => item.symbol === symbol)) {
+        alert(`${symbol} is already in your watchlist`);
+        return;
+      }
+      
+      // Add to watchlist
+      watchlist.push({
+        symbol: symbol,
+        name: name,
+        addedAt: new Date().toISOString()
+      });
+      
+      // Save
+      try {
+        localStorage.setItem('vantyx_watchlist', JSON.stringify(watchlist));
+        console.log(`✅ ${symbol} added to watchlist`);
+        alert(`${symbol} added to watchlist!`);
+        
+        // Reload watchlist UI if dashboard manager exists
+        if (window.dashboardManager) {
+          window.dashboardManager.loadWatchlistUI();
+        }
+        
+        closeAddStockModal();
+      } catch (error) {
+        console.error('Error saving watchlist:', error);
+        alert('Error adding to watchlist');
+      }
+    }
+
+    // Initialize Dashboard when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🎯 Initializing Dashboard...');
+      window.dashboardManager = new DashboardManager();
+      
+      // Test if modal button is accessible
+      setTimeout(() => {
+        const button = document.querySelector('.add-watchlist-btn');
+        const modal = document.getElementById('addStockModal');
+        console.log('🔍 Button found:', !!button);
+        console.log('🔍 Modal found:', !!modal);
+        
+        if (button && modal) {
+          console.log('✅ Modal system should work!');
+        } else {
+          console.error('❌ Missing elements for modal system');
+        }
+      }, 1000);
+    });
+
+    console.log('📈 Enhanced Dashboard loaded successfully!');
+  </script>
 </body>
 </html>

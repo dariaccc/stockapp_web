@@ -69,6 +69,16 @@
         .stock-title-section {
             position: relative;
             z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .stock-title-main {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
         }
 
         .stock-logo {
@@ -95,6 +105,60 @@
         @keyframes titleGradient {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
+        }
+
+        /* Watchlist Button Styles */
+        .watchlist-actions {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .watchlist-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: 2px solid rgba(74, 144, 226, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+            min-width: 180px;
+            justify-content: center;
+        }
+
+        .watchlist-btn:hover {
+            background: rgba(74, 144, 226, 0.1);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+        }
+
+        .watchlist-btn.in-watchlist {
+            background: rgba(0, 255, 65, 0.1);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .watchlist-btn.in-watchlist:hover {
+            background: rgba(255, 68, 68, 0.1);
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .watchlist-status {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: center;
+            font-weight: normal;
+            text-transform: none;
+            letter-spacing: normal;
         }
 
         .chart-controls {
@@ -335,6 +399,49 @@
             background: rgba(0, 255, 65, 0.05);
         }
 
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 12000;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            animation: slideInRight 0.3s ease-out;
+            max-width: 300px;
+            word-wrap: break-word;
+            color: white;
+        }
+
+        .notification.success {
+            background: rgba(0, 255, 65, 0.9);
+        }
+
+        .notification.warning {
+            background: rgba(255, 193, 7, 0.9);
+        }
+
+        .notification.error {
+            background: rgba(255, 68, 68, 0.9);
+        }
+
+        .notification.info {
+            background: rgba(74, 144, 226, 0.9);
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
         /* Mobile responsive */
         @media (max-width: 768px) {
             .stock-content-grid {
@@ -370,6 +477,20 @@
             .period-btn {
                 font-size: var(--font-size-sm);
                 padding: var(--spacing-xs) var(--spacing-sm);
+            }
+
+            .stock-title-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-md);
+            }
+
+            .watchlist-actions {
+                width: 100%;
+            }
+
+            .watchlist-btn {
+                min-width: 100%;
             }
         }
 
@@ -416,23 +537,36 @@
     <main class="main-container">
         <!-- Back Navigation -->
         <div class="back-navigation">
-            <a href="radar.html" class="back-link">
+            <a href="dashboard.html" class="back-link">
                 <span>←</span>
-                <span>Back to Radar</span>
+                <span>Back to Dashboard</span>
             </a>
         </div>
 
         <!-- Stock Header Section -->
         <section class="stock-header">
             <div class="stock-main-info">
-                <!-- Stock Title Section -->
+                <!-- Stock Title Section with Watchlist Button -->
                 <div class="stock-title-section">
-                    <div class="stock-logo" id="stockLogo">
-                        <span class="logo-text">📈</span>
+                    <div class="stock-title-main">
+                        <div class="stock-logo" id="stockLogo">
+                            <span class="logo-text">📈</span>
+                        </div>
+                        <div class="stock-title-info">
+                            <h1 id="stockSymbol">Loading...</h1>
+                            <p class="stock-name" id="stockName">Loading...</p>
+                        </div>
                     </div>
-                    <div class="stock-title-info">
-                        <h1 id="stockSymbol">Loading...</h1>
-                        <p class="stock-name" id="stockName">Loading...</p>
+                    
+                    <!-- Watchlist Actions -->
+                    <div class="watchlist-actions">
+                        <button class="watchlist-btn" id="watchlistBtn" onclick="toggleWatchlist()">
+                            <span id="watchlistIcon">👁️</span>
+                            <span id="watchlistText">Add to Watchlist</span>
+                        </button>
+                        <div class="watchlist-status" id="watchlistStatus">
+                            Track this stock without buying
+                        </div>
                     </div>
                 </div>
 
@@ -661,11 +795,184 @@
     <script src="assets/js/navbar.js"></script>
     <script src="assets/js/main.js"></script>
 
-    <!-- Enhanced Tooltip and Chart Functionality -->
+    <!-- Watchlist Management Script -->
     <script>
+        // Watchlist Management for Stock Page
+        let currentStock = {
+            symbol: '',
+            name: ''
+        };
+
+        // Load watchlist from localStorage
+        function loadWatchlist() {
+            try {
+                const saved = localStorage.getItem('vantyx_watchlist');
+                return saved ? JSON.parse(saved) : [];
+            } catch (error) {
+                console.error('Error loading watchlist:', error);
+                return [];
+            }
+        }
+
+        // Save watchlist to localStorage
+        function saveWatchlist(watchlist) {
+            try {
+                localStorage.setItem('vantyx_watchlist', JSON.stringify(watchlist));
+                console.log('💾 Watchlist saved:', watchlist);
+                return true;
+            } catch (error) {
+                console.error('Error saving watchlist:', error);
+                return false;
+            }
+        }
+
+        // Check if current stock is in watchlist
+        function isInWatchlist(symbol) {
+            const watchlist = loadWatchlist();
+            return watchlist.some(item => item.symbol === symbol);
+        }
+
+        // Add stock to watchlist
+        function addToWatchlist(symbol, name) {
+            const watchlist = loadWatchlist();
+            
+            // Check if already exists
+            if (watchlist.find(item => item.symbol === symbol)) {
+                return false;
+            }
+            
+            // Add to watchlist
+            watchlist.push({
+                symbol: symbol,
+                name: name,
+                addedAt: new Date().toISOString()
+            });
+            
+            return saveWatchlist(watchlist);
+        }
+
+        // Remove stock from watchlist
+        function removeFromWatchlist(symbol) {
+            const watchlist = loadWatchlist();
+            const filtered = watchlist.filter(item => item.symbol !== symbol);
+            return saveWatchlist(filtered);
+        }
+
+        // Toggle watchlist status
+        function toggleWatchlist() {
+            const symbol = currentStock.symbol;
+            const name = currentStock.name;
+            
+            if (!symbol) {
+                showNotification('Stock symbol not available', 'error');
+                return;
+            }
+
+            const inWatchlist = isInWatchlist(symbol);
+            
+            if (inWatchlist) {
+                // Remove from watchlist
+                if (removeFromWatchlist(symbol)) {
+                    showNotification(`${symbol} removed from watchlist`, 'info');
+                    updateWatchlistButton(false);
+                } else {
+                    showNotification('Failed to remove from watchlist', 'error');
+                }
+            } else {
+                // Add to watchlist
+                if (addToWatchlist(symbol, name)) {
+                    showNotification(`${symbol} added to watchlist`, 'success');
+                    updateWatchlistButton(true);
+                } else {
+                    showNotification('Failed to add to watchlist', 'error');
+                }
+            }
+        }
+
+        // Update watchlist button appearance
+        function updateWatchlistButton(inWatchlist) {
+            const btn = document.getElementById('watchlistBtn');
+            const icon = document.getElementById('watchlistIcon');
+            const text = document.getElementById('watchlistText');
+            const status = document.getElementById('watchlistStatus');
+            
+            if (!btn || !icon || !text || !status) return;
+            
+            if (inWatchlist) {
+                btn.classList.add('in-watchlist');
+                icon.textContent = '✅';
+                text.textContent = 'Remove from Watchlist';
+                status.textContent = 'Currently watching this stock';
+            } else {
+                btn.classList.remove('in-watchlist');
+                icon.textContent = '👁️';
+                text.textContent = 'Add to Watchlist';
+                status.textContent = 'Track this stock without buying';
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize watchlist functionality when page loads
+        function initializeWatchlist() {
+            // Get stock symbol from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const symbol = urlParams.get('symbol');
+            
+            if (symbol) {
+                currentStock.symbol = symbol.toUpperCase();
+                
+                // Wait for stock name to be loaded
+                const checkStockName = () => {
+                    const nameElement = document.getElementById('stockName');
+                    if (nameElement && nameElement.textContent !== 'Loading...') {
+                        currentStock.name = nameElement.textContent;
+                        console.log('✅ Stock info loaded:', currentStock);
+                    } else {
+                        setTimeout(checkStockName, 500);
+                    }
+                };
+                
+                checkStockName();
+                
+                // Update button based on current watchlist status
+                const inWatchlist = isInWatchlist(symbol);
+                updateWatchlistButton(inWatchlist);
+                
+                console.log(`📊 Watchlist initialized for ${symbol}, in watchlist: ${inWatchlist}`);
+            } else {
+                console.warn('⚠️ No stock symbol found in URL');
+                // Hide watchlist button if no symbol
+                const watchlistActions = document.querySelector('.watchlist-actions');
+                if (watchlistActions) {
+                    watchlistActions.style.display = 'none';
+                }
+            }
+        }
+
         // Enhanced initialization with tooltip support
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Initializing enhanced stock page with tooltip support...');
+            console.log('🚀 Initializing enhanced stock page with watchlist support...');
+            
+            // Initialize watchlist first
+            initializeWatchlist();
             
             // Wait for all dependencies to load
             const checkDependencies = () => {
@@ -732,6 +1039,14 @@
                     }
                 }
                 
+                // W key to toggle watchlist (when not in input)
+                if (e.key === 'w' || e.key === 'W') {
+                    if (!e.target.matches('input, textarea, select')) {
+                        e.preventDefault();
+                        toggleWatchlist();
+                    }
+                }
+                
                 // R key to refresh data
                 if (e.key === 'r' || e.key === 'R') {
                     if (!e.target.matches('input, textarea, select')) {
@@ -754,7 +1069,7 @@
                 }
             });
             
-            console.log('⌨️ Keyboard shortcuts active: B=Buy, S=Sell, R=Refresh, T=Test tooltip, ESC=Close modal');
+            console.log('⌨️ Keyboard shortcuts active: B=Buy, S=Sell, W=Watchlist, R=Refresh, T=Test tooltip, ESC=Close modal');
         }
         
         function setupChartHints() {
@@ -766,7 +1081,7 @@
 📊 Chart Interactions:
 • Hover over the chart line to see price details
 • Click anywhere on the chart to pin the tooltip
-• Use keyboard shortcuts: T=Test, R=Refresh
+• Use keyboard shortcuts: W=Watchlist, T=Test, R=Refresh
 • Chart updates in real-time during market hours
                     `;
                     alert(message);
@@ -965,7 +1280,7 @@
                 document.body.style.transition = 'all 0.3s ease';
                 
                 setTimeout(() => {
-                    window.location.href = 'radar.html';
+                    window.location.href = 'dashboard.html';
                 }, 300);
             });
         }
@@ -1011,13 +1326,16 @@
             }, 5000); // Check after 5 seconds
         });
         
-        // Export test function globally for debugging
+        // Export functions globally for debugging
         window.testTooltip = testTooltipFunctionality;
+        window.toggleWatchlist = toggleWatchlist;
+        window.showNotification = showNotification;
         
-        console.log('🎯 Enhanced stock page initialization complete!');
+        console.log('🎯 Enhanced stock page with watchlist functionality loaded!');
         console.log('💡 Available commands:');
         console.log('  - window.testTooltip() - Test tooltip functionality');
-        console.log('  - Keyboard: B=Buy, S=Sell, R=Refresh, T=Test, ESC=Close');
+        console.log('  - window.toggleWatchlist() - Toggle watchlist status');
+        console.log('  - Keyboard: B=Buy, S=Sell, W=Watchlist, R=Refresh, T=Test, ESC=Close');
         console.log('  - Click chart hint for interaction help');
     </script>
 </body>
