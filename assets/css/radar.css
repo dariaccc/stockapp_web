@@ -677,3 +677,38 @@
     height: 2px;
     background: var(--primary-color);
 }
+.footer-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    margin: var(--spacing-xl) 0;
+    opacity: 0.6;
+}
+/* Footer styles */
+.footer {
+    background: var(--bg-secondary);
+    border-top: 2px solid var(--primary-color);
+    margin-top: auto;
+    transition: background 0.3s ease;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-lg);
+}
+.footer-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+.company-logo .logo-text {
+    font-weight: 900;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}

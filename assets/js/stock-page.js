@@ -53,6 +53,9 @@ function updateStockHeader(quote) {
     document.getElementById('stockSymbol').textContent = quote.symbol;
     document.getElementById('stockName').textContent = getCompanyName(quote.symbol);
     
+    // ADD THIS LINE - Update chart price display
+    document.getElementById('chartPrice').textContent = api.formatCurrency(quote.price);
+    
     // Update trading buttons
     const buyBtn = document.getElementById('buyBtn');
     const sellBtn = document.getElementById('sellBtn');
@@ -67,7 +70,6 @@ function updateStockHeader(quote) {
     if (buyBtn) buyBtn.className = `trade-btn buy-btn ${changeClass}`;
     if (sellBtn) sellBtn.className = `trade-btn sell-btn ${changeClass}`;
 }
-
 // Initialize chart
 function initializeChart(symbol, initialData) {
     const chart = new ChartUtils('stockChart');

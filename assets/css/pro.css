@@ -942,3 +942,9 @@
         transform: translateY(100vh) rotate(720deg);
     }
 }
+.footer-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    margin: var(--spacing-xl) 0;
+    opacity: 0.6;
+}

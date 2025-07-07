@@ -603,3 +603,107 @@
     color: transparent;
     border-radius: var(--radius-sm);
 }
+/* Light theme specific adjustments */
+body.light-theme .market-overview {
+    background: rgba(248, 249, 250, 0.5);
+}
+
+body.light-theme .features-section {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+body.light-theme .footer {
+    background: var(--bg-secondary);
+}
+
+/* Ensure proper contrast in light theme */
+body.light-theme .hero-content {
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid rgba(74, 144, 226, 0.2);
+}
+
+body.light-theme .hero-title {
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color), var(--primary-color));
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Debug styles */
+.theme-debug {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-sm);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-primary);
+    z-index: 9999;
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* Animation improvements */
+.hero-section {
+    animation: fadeIn 1s ease-out;
+}
+
+.market-card:nth-child(1) { animation: fadeInUp 0.6s ease-out 0.2s both; }
+.market-card:nth-child(2) { animation: fadeInUp 0.6s ease-out 0.4s both; }
+.market-card:nth-child(3) { animation: fadeInUp 0.6s ease-out 0.6s both; }
+
+.feature-card:nth-child(1) { animation: fadeInUp 0.6s ease-out 0.8s both; }
+.feature-card:nth-child(2) { animation: fadeInUp 0.6s ease-out 1s both; }
+.feature-card:nth-child(3) { animation: fadeInUp 0.6s ease-out 1.2s both; }
+.feature-card:nth-child(4) { animation: fadeInUp 0.6s ease-out 1.4s both; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.footer-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    margin: var(--spacing-xl) 0;
+    opacity: 0.6;
+}
+
+/* Footer styles */
+.footer {
+    background: var(--bg-secondary);
+    border-top: 2px solid var(--primary-color);
+    margin-top: auto;
+    transition: background 0.3s ease;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-lg);
+}
+.footer-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+.company-logo .logo-text {
+    font-weight: 900;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}

@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize managers
     window.auth = new AuthManager();
-    window.api = new YahooFinanceAPI();
-    
+    window.api = new RealYahooFinanceAPI();
+
     console.log('Auth and API initialized');
     
     // Page routing and initialization
@@ -842,6 +842,208 @@ function hideButtonLoading(button) {
         button.disabled = false;
     }
 }
+
+
+// Theme Toggle Functionality
+// Add this to your main.js or create a separate theme.js file
+
+class ThemeManager {
+    constructor() {
+        this.currentTheme = this.getStoredTheme() || 'dark';
+        this.init();
+    }
+
+    init() {
+        // Apply the current theme
+        this.applyTheme(this.currentTheme);
+        
+        // Set up theme toggle listeners
+        this.setupThemeToggle();
+        
+        console.log('🎨 Theme Manager initialized with theme:', this.currentTheme);
+    }
+
+    getStoredTheme() {
+        try {
+            return localStorage.getItem('vantyx_theme');
+        } catch (error) {
+            console.error('Error reading theme from localStorage:', error);
+            return null;
+        }
+    }
+
+    setStoredTheme(theme) {
+        try {
+            localStorage.setItem('vantyx_theme', theme);
+        } catch (error) {
+            console.error('Error storing theme in localStorage:', error);
+        }
+    }
+
+    applyTheme(theme) {
+        const body = document.body;
+        
+        // Remove all theme classes
+        body.classList.remove('dark-theme', 'light-theme');
+        
+        // Add the new theme class
+        body.classList.add(`${theme}-theme`);
+        
+        // Update the theme toggle button state
+        this.updateThemeToggleState(theme);
+        
+        // Store the theme
+        this.setStoredTheme(theme);
+        
+        this.currentTheme = theme;
+        
+        console.log('🎨 Theme applied:', theme);
+    }
+
+    toggleTheme() {
+        const newTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+        this.applyTheme(newTheme);
+        
+        // Show a brief notification
+        this.showThemeChangeNotification(newTheme);
+    }
+
+    setupThemeToggle() {
+        // Find theme toggle buttons
+        const themeToggles = document.querySelectorAll('.theme-toggle, #themeToggle');
+        
+        themeToggles.forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggleTheme();
+            });
+        });
+
+        // Also listen for keyboard shortcut (Ctrl/Cmd + Shift + T)
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'T') {
+                e.preventDefault();
+                this.toggleTheme();
+            }
+        });
+    }
+
+    updateThemeToggleState(theme) {
+        const themeToggles = document.querySelectorAll('.theme-toggle, #themeToggle');
+        
+        themeToggles.forEach(toggle => {
+            if (theme === 'light') {
+                toggle.classList.add('active');
+                toggle.setAttribute('aria-label', 'Switch to dark theme');
+                toggle.title = 'Switch to dark theme';
+            } else {
+                toggle.classList.remove('active');
+                toggle.setAttribute('aria-label', 'Switch to light theme');
+                toggle.title = 'Switch to light theme';
+            }
+        });
+    }
+
+    showThemeChangeNotification(theme) {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = 'theme-notification';
+        notification.innerHTML = `
+            <div class="theme-notification-content">
+                <span class="theme-icon">${theme === 'light' ? '☀️' : '🌙'}</span>
+                <span class="theme-text">${theme === 'light' ? 'Light' : 'Dark'} theme enabled</span>
+            </div>
+        `;
+        
+        // Style the notification
+        notification.style.cssText = `
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            background: ${theme === 'light' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(0, 0, 0, 0.95)'};
+            color: ${theme === 'light' ? '#212529' : '#ffffff'};
+            border: 1px solid ${theme === 'light' ? 'rgba(74, 144, 226, 0.2)' : 'rgba(74, 144, 226, 0.6)'};
+            border-radius: 12px;
+            padding: 12px 16px;
+            z-index: 10000;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            animation: slideInRight 0.3s ease-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, ${theme === 'light' ? '0.1' : '0.3'});
+        `;
+        
+        // Add CSS for the slide animation if not already present
+        if (!document.getElementById('theme-notification-styles')) {
+            const styles = document.createElement('style');
+            styles.id = 'theme-notification-styles';
+            styles.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOutRight {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+                .theme-notification-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+                .theme-icon {
+                    font-size: 16px;
+                }
+                .theme-text {
+                    font-size: 14px;
+                }
+            `;
+            document.head.appendChild(styles);
+        }
+        
+        document.body.appendChild(notification);
+        
+        // Remove notification after 2 seconds
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease-in';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 300);
+        }, 2000);
+    }
+
+    // Method to get current theme
+    getCurrentTheme() {
+        return this.currentTheme;
+    }
+
+    // Method to check if dark theme is active
+    isDarkTheme() {
+        return this.currentTheme === 'dark';
+    }
+
+    // Method to check if light theme is active
+    isLightTheme() {
+        return this.currentTheme === 'light';
+    }
+}
+
+// Initialize theme manager when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait a bit for other scripts to load
+    setTimeout(() => {
+        window.themeManager = new ThemeManager();
+        
+        // Make theme manager globally accessible for debugging
+        window.toggleTheme = () => window.themeManager.toggleTheme();
+        
+        console.log('🎨 Theme system ready! Use Ctrl+Shift+T to toggle themes');
+    }, 100);
+});
+
+// Export for use in other files
+window.ThemeManager = ThemeManager;
 
 // Export functions for global use
 window.openStockModal = openStockModal;
